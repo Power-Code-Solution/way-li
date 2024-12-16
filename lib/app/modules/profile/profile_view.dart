@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/profile_list_item/profile_list_item_page.dart';
 
@@ -16,6 +17,7 @@ class ProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.put(AuthController());
     ScreenUtil.init(context,
         designSize: Size(414, 896), minTextAdapt: true, splitScreenMode: true);
 
@@ -82,20 +84,26 @@ class ProfileView extends GetView<ProfileController> {
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Column(
               children: [
-                AutoSizeText(
-                  'Musa Turay',
-                  style: GoogleFonts.montserrat(
-                      color: primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-                AutoSizeText(
-                  'turaymusaa@gmail.com',
-                  style: GoogleFonts.montserrat(
-                      color: primaryColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                ),
+                Obx(() => AutoSizeText(
+                      authController.userName.value.isNotEmpty
+                          ? authController.userName.value
+                          : "N/A",
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.montserrat(
+                          color: primaryColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700),
+                    )),
+                Obx(() => AutoSizeText(
+                      authController.userEmail.value.isNotEmpty
+                          ? authController.userEmail.value
+                          : "N/A",
+                      textAlign: TextAlign.left,
+                      style: GoogleFonts.montserrat(
+                          color: kWhiteColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700),
+                    )),
               ],
             ),
           ),
@@ -130,9 +138,9 @@ class ProfileView extends GetView<ProfileController> {
                 decoration: BoxDecoration(
                   // color: Colors.white,
                   image: DecorationImage(
-                image: AssetImage('assets/images/black-bg1.jpg'),
-                fit: BoxFit.cover,
-              ),
+                    image: AssetImage('assets/images/black-bg1.jpg'),
+                    fit: BoxFit.cover,
+                  ),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
@@ -166,6 +174,9 @@ class ProfileView extends GetView<ProfileController> {
                       text: 'Settings',
                     ),
                     ProfileListItemPage(
+                      onPressed: () {
+                        authController.logout();
+                      },
                       icon: LineAwesomeIcons.sign_out_alt_solid,
                       text: 'Logout',
                       hasNavigation: false,

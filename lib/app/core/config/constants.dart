@@ -44,8 +44,8 @@ const headingStyle = TextStyle(
 );
 
 const defaultDuration = Duration(milliseconds: 250);
-const apiBaseAddress = "http://5.196.8.55:8080/";
-//const apiBaseAddress = "https://b181-2a01-cb08-b6-8a00-d420-9fa-696b-e8d9.ngrok-free.app/";
+// const apiBaseAddress = "http://192.168.1.101:5022/api";  //office
+const apiBaseAddress = "http://192.168.117.166:5022/api"; //home
 
 const whatSappLink =
     "https://wa.me/23279366751?text=Hello,%20I%20want%20to%20know%20more%20about%20your%20service,%20can%20you%20tell%20me%20more?%20my%20name%20is%20.....";
@@ -131,3 +131,4 @@ final kLightTheme = ThemeData(
         displayColor: kDarkSecondaryColor,
       ), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: kAccentColor).copyWith(background: kLightSecondaryColor),
 );
+

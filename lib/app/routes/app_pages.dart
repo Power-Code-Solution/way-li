@@ -11,6 +11,9 @@ import 'splash_screen_routes.dart';
 import 'forget_password_routes.dart';
 import 'otp_routes.dart';
 import 'profile_routes.dart';
+import 'on_boarding_routes.dart';
+import 'food_detail_routes.dart';
+import 'favourite_food_routes.dart';
 
 
 class AppPages {
@@ -28,5 +31,8 @@ class AppPages {
 		...ForgetPasswordRoutes.routes,
 		...OtpRoutes.routes,
 		...ProfileRoutes.routes,
+		...OnBoardingRoutes.routes,
+		...FoodDetailRoutes.routes,
+		...FavouriteFoodRoutes.routes,
   ];
 }

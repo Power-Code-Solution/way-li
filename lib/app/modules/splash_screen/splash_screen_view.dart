@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
+import 'package:wayli/app/modules/on_boarding/on_boarding_view.dart';
 
 class SplashScreenView extends StatefulWidget {
   static const routeName = '/splash-screen';
@@ -27,7 +28,8 @@ class _SplashScreenViewState extends State<SplashScreenView> with SingleTickerPr
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
     _controller.forward();
     Future.delayed(Duration(seconds: 5), () {
-      Get.to(() => LoginView());
+      Get.to(() => OnBoardingView());
+      // Get.to(() => LoginView());
     });
   }
 

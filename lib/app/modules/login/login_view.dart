@@ -124,31 +124,32 @@ class LoginView extends GetView<LoginController> {
                                         ),
                                         const Gap(10),
                                         Padding(
-                                         padding: const EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 0),
-                                          child: CostumFormField(
-                                            textController: ctl.pass,
-                                            isPassword: true,
-                                            labelText: "Password",
-                                            suffixIcon: IconButton(
-                                              onPressed: () {
-                                                ctl.visiblePassword =
-                                                    !ctl.visiblePassword;
-                                                ctl.update();
+                                          child: Obx(
+                                            () => CostumFormField(
+                                              textController: ctl.pass,
+                                              isPassword: true,
+                                              labelText: "Password",
+                                              hintText: "Enter your password",
+                                              icon: const Icon(Icons.lock),
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return 'User password is required';
+                                                }
+                                                return null;
                                               },
-                                              icon: Icon((ctl.visiblePassword)
-                                                  ? Icons.visibility
-                                                  : Icons.visibility_off),
+                                              obscureText:
+                                                  ctl.visiblePassword.value,
+                                              suffixIcon: IconButton(
+                                                onPressed: () => ctl
+                                                    .togglePasswordVisibility(),
+                                                icon: Icon(
+                                                    ctl.visiblePassword.value
+                                                        ? Icons.visibility_off
+                                                        : Icons.visibility),
+                                              ),
                                             ),
-                                            hintText: "Enter your password",
-                                            icon: const Icon(Icons.lock),
-                                            validator: (value) {
-                                              if (value!.isEmpty) {
-                                                return 'User password is required';
-                                              }
-                                              return null;
-                                            },
-                                            obscureText: ctl.visiblePassword,
                                           ),
                                         ),
                                       ],
@@ -225,17 +226,27 @@ class LoginView extends GetView<LoginController> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     ),
-                                    child: Center(
-                                      child: AutoSizeText(
-                                        "LOGIN",
-                                        style: GoogleFonts.alfaSlabOne(
-                                          fontSize: 18,
-                                          color: primaryColor,
-                                          fontWeight: FontWeight.w900,
-                                          letterSpacing: 1.5,
-                                        ),
-                                      ),
-                                    ),
+                                    child: Obx(() => ctl.isLoading.value
+                                        ? CircularProgressIndicator()
+                                        : ElevatedButton(
+                                            onPressed: ctl.handleLogin,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              shadowColor: Colors.transparent,
+                                            ),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                "LOGIN",
+                                                style: GoogleFonts.alfaSlabOne(
+                                                  fontSize: 18,
+                                                  color: primaryColor,
+                                                  fontWeight: FontWeight.w900,
+                                                  letterSpacing: 1.5,
+                                                ),
+                                              ),
+                                            ),
+                                          )),
                                   ),
                                 ),
 

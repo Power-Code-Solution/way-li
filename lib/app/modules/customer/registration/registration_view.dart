@@ -10,28 +10,6 @@ import 'package:wayli/app/modules/login/login_view.dart';
 
 import 'registration_controller.dart';
 
-// class RegistrationView extends GetView<RegistrationController> {
-//   const RegistrationView({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('RegistrationView'),
-//         centerTitle: true,
-//       ),
-//       body: const Center(
-//         child: Text(
-//           'RegistrationView is working',
-//           style: TextStyle(fontSize: 20),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -144,15 +122,36 @@ class RegistrationView extends GetView<RegistrationController> {
                                           child: CostumFormField(
                                             keyboardType:
                                                 TextInputType.name,
-                                            textController: ctl.name,
+                                            textController: ctl.firstName,
                                             isPassword: false,
-                                            labelText: "Name",
+                                            labelText: "First Name",
                                             hintText:
-                                                "Enter your name",
+                                                "Enter your first name",
                                             icon: const Icon(Icons.person),
                                             validator: (value) {
                                               if (value!.isEmpty) {
-                                                return 'Please provide your name !';
+                                                return 'Please provide your first name !';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                        const Gap(10),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          child: CostumFormField(
+                                            keyboardType:
+                                                TextInputType.name,
+                                            textController: ctl.lastName,
+                                            isPassword: false,
+                                            labelText: "Last Name",
+                                            hintText:
+                                                "Enter your last name",
+                                            icon: const Icon(Icons.person),
+                                            validator: (value) {
+                                              if (value!.isEmpty) {
+                                                return 'Please provide your last name !';
                                               }
                                               return null;
                                             },
@@ -206,8 +205,8 @@ class RegistrationView extends GetView<RegistrationController> {
                                               horizontal: 15),
                                           child: CostumFormField(
                                             keyboardType:
-                                                TextInputType.text,
-                                            textController: ctl.city,
+                                                TextInputType.number,
+                                            textController: ctl.fkCityIdController,
                                             isPassword: false,
                                             labelText: "City",
                                             hintText:
@@ -228,7 +227,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                           child: CostumFormField(
                                             keyboardType:
                                                 TextInputType.text,
-                                            textController: ctl.community,
+                                            textController: ctl.fkCommunityIdController,
                                             isPassword: false,
                                             labelText: "Community",
                                             hintText:
@@ -271,7 +270,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                               top: 15,
                                               bottom: 0),
                                           child: CostumFormField(
-                                            textController: ctl.pass,
+                                            textController: ctl.password,
                                             isPassword: true,
                                             labelText: "Password",
                                             suffixIcon: IconButton(
@@ -303,7 +302,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                               top: 15,
                                               bottom: 0),
                                           child: CostumFormField(
-                                            textController: ctl.confPass,
+                                            textController: ctl.confPassword,
                                             isPassword: true,
                                             labelText: "Confirm Password",
                                             suffixIcon: IconButton(
@@ -372,7 +371,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                     onPressed: () {
                                       Get.to(() => TabsView(
                                             bottomNavigationKey:
-                                                registrationBottomNavigationKey
+                                                registrationBottomNavigationKey,
                                           ));
                                     },
                                     height: 50,
@@ -380,17 +379,27 @@ class RegistrationView extends GetView<RegistrationController> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     ),
-                                    child: Center(
-                                      child: AutoSizeText(
-                                        "REGISTER",
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 18,
-                                          color: primaryColor,
-                                          fontWeight: FontWeight.w900,
-                                          letterSpacing: 1.5,
-                                        ),
-                                      ),
-                                    ),
+                                    child: Obx(() => ctl.isLoading.value
+                                        ? CircularProgressIndicator()
+                                        : ElevatedButton(
+                                            onPressed: ctl.createUser,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              shadowColor: Colors.transparent,
+                                            ),
+                                            child: Center(
+                                              child: AutoSizeText(
+                                                "Register",
+                                                style: GoogleFonts.alfaSlabOne(
+                                                  fontSize: 18,
+                                                  color: primaryColor,
+                                                  fontWeight: FontWeight.w900,
+                                                  letterSpacing: 1.5,
+                                                ),
+                                              ),
+                                            ),
+                                          )),
                                   ),
                                 ),
 
