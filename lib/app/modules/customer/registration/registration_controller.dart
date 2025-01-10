@@ -6,37 +6,44 @@ import 'package:get/get.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:wayli/app/core/model/users.dart';
+import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/otp/otp_view.dart';
-
-
+import 'package:wayli/app/modules/tabs/tabs_view.dart';
 
 class RegistrationController extends GetxController {
   //TODO: Implement RegistrationController.
 
-var firstName = TextEditingController();
+  var firstName = TextEditingController();
   var lastName = TextEditingController();
   var email = TextEditingController();
   var password = TextEditingController();
   var confPassword = TextEditingController();
   var phone = TextEditingController();
   var address = TextEditingController();
- var fkCityIdController = TextEditingController();
+  var fkCityIdController = TextEditingController();
   var fkCommunityIdController = TextEditingController();
 
- var isLoading = false.obs;
+  late final TextEditingController pinController;
+  late final FocusNode focusNode;
+  late final GlobalKey<FormState> otpKey;
+
+
+
+  var isLoading = false.obs;
 
   var registrationViewFormKey = GlobalKey<FormState>();
   bool visiblePassword = true;
   bool isClientConnected = false;
   bool isOuvrierConnected = false;
-get sharePre => null;
-
-
-
+  get sharePre => null;
 
   @override
   void onInit() {
     super.onInit();
+        otpKey = GlobalKey<FormState>();
+    pinController = TextEditingController();
+    focusNode = FocusNode();
   }
 
   @override
@@ -44,7 +51,7 @@ get sharePre => null;
     super.onReady();
   }
 
- @override
+  @override
   void onClose() {
     firstName.dispose();
     lastName.dispose();
@@ -58,9 +65,9 @@ get sharePre => null;
     super.onClose();
   }
 
-Future<void> createUser() async {
+  Future<void> createUser() async {
     try {
-if (password.text != confPassword.text) {
+      if (password.text != confPassword.text) {
         Get.snackbar(
           "Error",
           "Passwords do not match! Please check your password",
@@ -71,21 +78,20 @@ if (password.text != confPassword.text) {
         return;
       }
 
-
       isLoading.value = true;
-      final user = UserModel(
+      final user = CreateUsers(
         firstName: firstName.text,
         lastName: lastName.text,
         email: email.text,
         password: password.text,
         phone: phone.text,
         address: address.text,
-fkCityId: int.tryParse(fkCityIdController.text) ?? 0,
+        fkCityId: int.tryParse(fkCityIdController.text) ?? 0,
         fkCommunityId: int.tryParse(fkCommunityIdController.text) ?? 0,
       );
 
       final response = await http.post(
-        Uri.parse("$apiBaseAddress/users"),
+        Uri.parse("$apiBaseAddress/secure/admin/user/create"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(user.toJson()),
       );
@@ -96,9 +102,10 @@ fkCityId: int.tryParse(fkCityIdController.text) ?? 0,
           "User added successfully.",
           snackPosition: SnackPosition.BOTTOM,
         );
-        Get.offAll(() => OtpView());
+        Get.offAll(() => LoginView());
         clearFields();
       } else {
+        print({response.body});
         Get.snackbar(
           "Error",
           "Failed to add user: ${response.body}",
@@ -106,6 +113,7 @@ fkCityId: int.tryParse(fkCityIdController.text) ?? 0,
         );
       }
     } catch (e) {
+      print(e);
       Get.snackbar(
         "Error",
         "An error occurred: $e",
@@ -116,15 +124,14 @@ fkCityId: int.tryParse(fkCityIdController.text) ?? 0,
     }
   }
 
- void clearFields() {
+  void clearFields() {
     firstName.clear();
     lastName.clear();
     email.clear();
     password.clear();
     phone.clear();
     address.clear();
- fkCityIdController.clear();
+    fkCityIdController.clear();
     fkCommunityIdController.clear();
   }
-
 }

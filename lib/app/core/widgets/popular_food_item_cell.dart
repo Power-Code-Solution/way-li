@@ -13,7 +13,7 @@ class PopularFoodItemCell extends StatelessWidget {
     var media = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      width: media.width * 0.4,
+      width: media.width * 0.2,
       decoration: BoxDecoration(
         color: secondaryColor,
         borderRadius: BorderRadius.circular(5),
@@ -41,9 +41,9 @@ class PopularFoodItemCell extends StatelessWidget {
              
               width: media.width * 0.22,
               height: double.maxFinite,
-              child: Image.asset(
+              child: Image.network(
                 FIL["image"].toString(),
-                fit: BoxFit.fitWidth,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -51,7 +51,7 @@ class PopularFoodItemCell extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 8, right: 8, bottom: 10),
             child:   Text(
-             "${FIL["outlets"].toString()} Outlets",
+             "${FIL["outlets"].toString()}",
               maxLines: 1,
               textAlign: TextAlign.left,
               style: const TextStyle(

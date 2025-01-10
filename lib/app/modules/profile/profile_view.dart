@@ -8,6 +8,7 @@ import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/profile_list_item/profile_list_item_page.dart';
+import 'package:wayli/app/modules/admin/settings/settings_view.dart';
 
 import 'profile_controller.dart';
 
@@ -172,6 +173,9 @@ class ProfileView extends GetView<ProfileController> {
                     ProfileListItemPage(
                       icon: LineAwesomeIcons.power_off_solid,
                       text: 'Settings',
+                      onPressed: () {
+                        Get.to(() => SettingsView());
+                      },
                     ),
                     ProfileListItemPage(
                       onPressed: () {

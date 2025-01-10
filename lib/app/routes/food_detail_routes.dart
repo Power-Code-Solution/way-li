@@ -11,7 +11,7 @@ class FoodDetailRoutes {
   static final routes = [
     GetPage(
       name: foodDetail,
-      page: () => FoodDetailView(FIL: {},),
+      page: () => FoodDetailView(),
       binding: FoodDetailBinding(),
     ),
   ];

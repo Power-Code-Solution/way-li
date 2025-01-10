@@ -1,94 +1,168 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:wayli/app/core/config/constants.dart';
+import 'package:wayli/app/core/model/food_items.dart';
+import 'package:wayli/app/core/model/menu.dart';
+import 'package:wayli/app/core/model/menu_category.dart';
+import 'package:wayli/app/core/model/user_model.dart';
+import 'package:http/http.dart' as http;
 
 class HomeController extends GetxController {
   //TODO: Implement HomeController.
 
   late final TextEditingController searchController;
   late final FocusNode focusNode;
- 
-
+  bool isLoading = false; 
+  RxList<dynamic> foodItems = <dynamic>[].obs;
+  RxList<dynamic> menuItems = <dynamic>[].obs;
+  RxList<dynamic> menuItemCategory = <dynamic>[].obs;
+  
+  
   @override
   void onInit() {
     super.onInit();
+    fetchMenuItems();
+    fetchFoodItems();
+    fetchMenuCategory();
     searchController = TextEditingController();
   }
+
+
+  Future<void> refreshButton() async {
+    fetchMenuItems();
+    fetchFoodItems();
+    fetchMenuCategory();
+  }
+
+
+
 
   @override
   void onReady() {
     super.onReady();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+String get dayOfTheWeek {
+    List<String> days = [
+      "Sunday", "Monday", "Tuesday", "Wednesday", 
+      "Thursday", "Friday", "Saturday"
+    ];
+    return days[DateTime.now().weekday % 7]; 
   }
 
-List legendaryArr = [
-    {
-      "name": "Lombar Pizza",
-      "address": "Rodin Street",
-      "category": "Pizza",
-      "image": "assets/images/food.png"
-    },
-    {
-      "name": "Sushi Bar",
-      "address": "Rodin Street.",
-      "category": "Sushi",
-      "image": "assets/images/l2.png"
-    },
-    {
-      "name": "Steak House",
-      "address": "Rodin Street",
-      "category": "Steak",
-      "image": "assets/images/l3.png"
+  Future<void> fetchFoodItems() async {
+    final response = await http
+        .get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['data'] != null && data['data'] is List) {
+        List<FoodItem> fetchedItems = List<FoodItem>.from(
+          data['data'].map((item) => FoodItem.fromJson(item)),
+        );
+        foodItems.value = fetchedItems;
+        print('Fetched food items: ${foodItems.toList()}');
+      } else {
+        print('Fetched food items_____+++++: ${foodItems.toList()}');
+        throw Exception('Invalid data format');
+      }
+    } else {
+      print('Fetched food items__________: ${foodItems.toList()}');
+      throw Exception('Failed to fetch food items');
     }
-  ];
-  List trendingArr = [
-    {
-      "name": "Seafood Lee",
-      "address": "Rodin Street",
-      "category": "Seafood",
-      "image": "assets/images/t1.png"
-    },
-    {
-      "name": "Egg Tomato",
-      "address": "Rodin Street",
-      "category": "Egg",
-      "image": "assets/images/t2.png"
-    },
-    {
-      "name": "Burger Hot",
-      "address": "Rodin Street",
-      "category": "Pizza",
-      "image": "assets/images/t3.png"
+  }
+
+Future<void> fetchMenuItems() async {
+    if (menuItems.isNotEmpty) return;
+
+    isLoading = true;
+    update();
+
+    try {
+      final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['data'] != null && data['data'] is List) {
+          List<Menu> fetchedItems = List<Menu>.from(
+            data['data'].map((item) => Menu.fromJson(item)),
+          );
+          menuItems.value = fetchedItems;
+          print('Fetched food items: ${menuItems.value}');
+        } else {
+          throw Exception('Invalid Menu format');
+        }
+      } else {
+        throw Exception('Failed to fetch food items');
+      }
+    } catch (e) {
+      print('Error fetching menu items: $e');
+    } finally {
+      isLoading = false;
+      update();
     }
-  ];
-  List collectionsArr = [
-    {"name": "Legendary food", "place": "34", "image": "assets/images/c1.png"},
-    {"name": "Seafood", "place": "28", "image": "assets/images/c2.png"},
-    {"name": "Fizza Meli", "place": "56", "image": "assets/images/c3.png"}
-  ];
+  }
 
-  List favoriteArr = [
-    {"name": "Rodin Street", "image": "assets/images/f1.png"},
-    {"name": "Rodin Street", "image": "assets/images/f2.png"},
-    {"name": "Rodin Street", "image": "assets/images/f3.png"},
-    {"name": "Rodin Street", "image": "assets/images/f4.png"},
-    {"name": "Rodin Street", "image": "assets/images/f1.png"},
-    {"name": "Rodin Street", "image": "assets/images/f2.png"},
-    {"name": "Rodin Street", "image": "assets/images/f3.png"},
-    {"name": "Rodin Street", "image": "assets/images/f4.png"}
-  ];
+  // Future<void> fetchMenuItems() async {
+  //   final response =
+  //       await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     if (data['data'] != null && data['data'] is List) {
+  //       List<Menu> fetchedItems = List<Menu>.from(
+  //         data['data'].map((item) => Menu.fromJson(item)),
+  //       );
+  //       menuItems.value = fetchedItems;
+  //       print('Fetched food items: ${menuItems.value}');
+  //     } else {
+  //       print('Fetched Menu  items_____+++++: ${menuItems.value}');
+  //       throw Exception('Invalid Menu format');
+  //     }
+  //   } else {
+  //     print('Fetched food items__________: ${menuItems.value}');
+  //     throw Exception('Failed to fetch food items');
+  //   }
+  // }
 
-  List popularArr = [
-    {"outlets": "PIZA", "image": "assets/images/way-li_logo.png"},
-    {"outlets": "BURGUR", "image": "assets/images/way-li_logo.png"},
-    {"outlets": "SAWAMA", "image": "assets/images/way-li_logo.png"},
-    {"outlets": "CHICKEN", "image": "assets/images/way-li_logo.png"}
-  ];
+Future<void> fetchMenuCategory() async {
+  final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu-category/all'));
 
+  if (response.statusCode == 200) {
+    if (response.body.isNotEmpty) {
+      final data = jsonDecode(response.body);
 
+      if (data['data'] != null && data['data'] is List) {
+        List<MenuCategory> fetchedItems = [];
+        for (var item in data['data']) {
+          if (item != null && item is Map<String, dynamic>) {
+            try {
+              fetchedItems.add(MenuCategory.fromJson(item));
+            } catch (e) {
+              print('Error parsing item: $e');
+            }
+          } else {
+            print('Invalid or null item encountered: $item');
+          }
+        }
+
+        print('Fetched Menu Category items: $fetchedItems');
+        if (fetchedItems.isNotEmpty) {
+          menuItemCategory.value = fetchedItems;
+        }
+        print('Fetched Menu Category items: ${menuItemCategory.value}');
+      } else {
+        print('Invalid data format: ${data}');
+        throw Exception('Invalid data format');
+      }
+    } else {
+      print('Response body is empty');
+      throw Exception('Response body is empty');
+    }
+  } else {
+    print('Failed to fetch data: ${response.statusCode}');
+    throw Exception('Failed to fetch Menu Category items');
+  }
+}
 
 
 }

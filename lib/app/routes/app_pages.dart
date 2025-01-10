@@ -14,6 +14,9 @@ import 'profile_routes.dart';
 import 'on_boarding_routes.dart';
 import 'food_detail_routes.dart';
 import 'favourite_food_routes.dart';
+import 'sub_menu_food_routes.dart';
+import 'sub_menu_routes.dart';
+import 'history_routes.dart';
 
 
 class AppPages {
@@ -34,5 +37,8 @@ class AppPages {
 		...OnBoardingRoutes.routes,
 		...FoodDetailRoutes.routes,
 		...FavouriteFoodRoutes.routes,
+		...SubMenuFoodRoutes.routes,
+		...SubMenuRoutes.routes,
+		...HistoryRoutes.routes,
   ];
 }

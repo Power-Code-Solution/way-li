@@ -1,4 +1,7 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
 
 
@@ -12,7 +15,7 @@ class CollectionFoodItemCell extends StatelessWidget {
     var media = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      width: isGrid ? double.maxFinite : media.width * 0.4,
+      width: isGrid ? double.maxFinite : media.width * 0.3,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(5),
@@ -29,7 +32,7 @@ class CollectionFoodItemCell extends StatelessWidget {
               color: secondaryColor,
               width: double.maxFinite,
               height: double.maxFinite,
-              child: Image.asset(
+              child: Image.network(
                 FIL["image"].toString(),
                 fit: BoxFit.cover,
               ),
@@ -56,36 +59,24 @@ class CollectionFoodItemCell extends StatelessWidget {
                     width: 40,
                     height: 2,
                     decoration: BoxDecoration(
-                      color: secondaryColor,
+                      color: primaryColor,
                     ),
                   ),
                   const SizedBox(
                     height: 8,
                   ),
-                  Text(
+                  AutoSizeText(
                     FIL["name"].toString(),
                     maxLines: 1,
                     textAlign: TextAlign.left,
-                    style: const TextStyle(
+                    style:  GoogleFonts.montserrat(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w700),
                   ),
-                  const SizedBox(
-                    height: 4,
+                  const Gap(4,
                   ),
-                  Text(
-                    "${FIL["place"].toString()} Place",
-                    maxLines: 1,
-                    textAlign: TextAlign.left,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
+                  
                 ]),
           )
         ],

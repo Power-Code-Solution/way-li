@@ -1,40 +1,41 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 import 'package:get/get.dart';
+import 'package:wayli/app/core/config/constants.dart';
+import 'package:wayli/app/core/model/food_items.dart';
+import 'package:wayli/app/core/model/food_items_dto.dart';
 
 class FoodDetailController extends GetxController {
-  //TODO: Implement FoodDetailController.
+  FoodItem FIL = Get.arguments['FIL'];
 
-late final Map FIL;
+  RxList<dynamic> foodandTagDto = <dynamic>[].obs;
+  RxList<dynamic> foodandAllergensDto = <dynamic>[].obs;
+  RxList<dynamic> foodandIngredientDto= <dynamic>[].obs;
+  var price = 15.0.obs;
+  var qty = 1.obs;
+  var isFav = false.obs;
 
-List trendingArr = [
-    {
-      "name": "Seafood Lee",
-      "address": "210 Salt Pond Rd.",
-      "category": "Seafood, Spain",
-      "image": "assets/images/food.png"
-    },
-    {
-      "name": "Egg Tomato",
-      "address": "East 46th Street",
-      "category": "Egg, Italian",
-      "image": "assets/images/t2.png"
-    },
-    {
-      "name": "Burger Hot",
-      "address": "East 46th Street",
-      "category": "Pizza, Italian",
-      "image": "assets/images/t3.png"
+  void toggleFavorite() {
+    isFav.value = !isFav.value;
+  }
+
+  void incrementQty() {
+    qty.value++;
+  }
+
+  void decrementQty() {
+    if (qty.value > 1) {
+      qty.value--;
     }
-  ];
-  List collectionsArr = [
-    {"name": "Legendary food", "place": "34", "image": "assets/images/c1.png"},
-    {"name": "Seafood", "place": "28", "image": "assets/images/c2.png"},
-    {"name": "Fizza Meli", "place": "56", "image": "assets/images/c3.png"}
-  ];
-
+  }
 
   @override
   void onInit() {
     super.onInit();
+    fetchFoodandTagDto();
+    fetchFoodandAllergensDto();
+    fetchFoodandIngredientDto();
   }
 
   @override
@@ -45,5 +46,136 @@ List trendingArr = [
   @override
   void onClose() {
     super.onClose();
+  }
+
+  Future<void> fetchFoodandTagDto() async {
+    final url =
+        '$apiBaseAddress/secure/admin/food-items/findForTags-byfkFoodItemId?id=${FIL.id}';
+    print('Request URL: $url');
+
+    final response = await http.get(Uri.parse(url));
+    print('Response status code: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        final data = jsonDecode(response.body);
+        if (data['data'] != null && data['data'] is List) {
+          List<FoodandTagDto> fetchedItems = [];
+
+          for (var item in data['data']) {
+            if (item != null && item is Map<String, dynamic>) {
+              try {
+                fetchedItems.add(FoodandTagDto.fromJson(item));
+              } catch (e) {
+                print('Error parsing item: $e');
+              }
+            } else {
+              print('Invalid or null item encountered: $item');
+            }
+          }
+          print('Fetched foodandTagDto items: $fetchedItems');
+          if (fetchedItems.isNotEmpty) {
+            foodandTagDto.value = fetchedItems;
+          }
+          print('Fetched foodandTagDto items: ${foodandTagDto.value}');
+        } else {
+          print('Invalid data format: ${data}');
+          throw Exception('Invalid data format');
+        }
+      } else {
+        print('Response body is empty');
+        throw Exception('Response body is empty');
+      }
+    } else {
+      print('Failed to fetch data: ${response.body}');
+      throw Exception('Failed to fetch foodandTagDto items');
+    }
+  }
+
+  Future<void> fetchFoodandAllergensDto() async {
+    final url =
+        '$apiBaseAddress/secure/admin/food-items/findForAllergens-byfkFoodItemId?id=${FIL.id}';
+    print('Request URL: $url');
+
+    final response = await http.get(Uri.parse(url));
+    print('Response status code: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        final data = jsonDecode(response.body);
+        if (data['data'] != null && data['data'] is List) {
+          List<FoodandAllergensDto> fetchedItems = [];
+
+          for (var item in data['data']) {
+            if (item != null && item is Map<String, dynamic>) {
+              try {
+                fetchedItems.add(FoodandAllergensDto.fromJson(item));
+              } catch (e) {
+                print('Error parsing item: $e');
+              }
+            } else {
+              print('Invalid or null item encountered: $item');
+            }
+          }
+          print('Fetched foodandTagDto items: $fetchedItems');
+          if (fetchedItems.isNotEmpty) {
+            foodandAllergensDto.value = fetchedItems;
+          }
+          print('Fetched foodandTagDto items: ${foodandTagDto.value}');
+        } else {
+          print('Invalid data format: ${data}');
+          throw Exception('Invalid data format');
+        }
+      } else {
+        print('Response body is empty');
+        throw Exception('Response body is empty');
+      }
+    } else {
+      print('Failed to fetch data: ${response.body}');
+      throw Exception('Failed to fetch foodandTagDto items');
+    }
+  }
+  Future<void> fetchFoodandIngredientDto() async {
+    final url =
+        '$apiBaseAddress/secure/admin/food-items/findby-fkingredientId?id=${FIL.id}';
+    print('Request URL: $url');
+
+    final response = await http.get(Uri.parse(url));
+    print('Response status code: ${response.statusCode}');
+
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        final data = jsonDecode(response.body);
+        if (data['data'] != null && data['data'] is List) {
+          List<FoodandIngredIentNameDto> fetchedItems = [];
+
+          for (var item in data['data']) {
+            if (item != null && item is Map<String, dynamic>) {
+              try {
+                fetchedItems.add(FoodandIngredIentNameDto.fromJson(item));
+              } catch (e) {
+                print('Error parsing item: $e');
+              }
+            } else {
+              print('Invalid or null item encountered: $item');
+            }
+          }
+          print('Fetched foodandTagDto items: $fetchedItems');
+          if (fetchedItems.isNotEmpty) {
+            foodandIngredientDto.value = fetchedItems;
+          }
+          print('Fetched foodandTagDto items: ${foodandTagDto.value}');
+        } else {
+          print('Invalid data format: ${data}');
+          throw Exception('Invalid data format');
+        }
+      } else {
+        print('Response body is empty');
+        throw Exception('Response body is empty');
+      }
+    } else {
+      print('Failed to fetch data: ${response.body}');
+      throw Exception('Failed to fetch foodandTagDto items');
+    }
   }
 }

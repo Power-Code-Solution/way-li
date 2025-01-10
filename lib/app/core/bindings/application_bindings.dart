@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
+import 'package:wayli/app/modules/favourite_food/outlet_controller.dart';
 import 'package:wayli/app/modules/login/login_controller.dart';
 
 class ApplicationBindings extends Bindings {
@@ -7,5 +8,6 @@ class ApplicationBindings extends Bindings {
   void dependencies() {
 Get.put(AuthController());
 Get.put(LoginController());
+  // Get.put(OutletController());
   }
 }

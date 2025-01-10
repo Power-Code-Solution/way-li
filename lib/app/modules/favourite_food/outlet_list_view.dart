@@ -3,174 +3,233 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
+import 'package:wayli/app/core/model/menu.dart';
+import 'package:wayli/app/core/model/menu_category.dart';
+import 'package:wayli/app/core/widgets/collection_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/filter_view.dart';
 import 'package:wayli/app/core/widgets/outlet_list_row.dart';
+import 'package:wayli/app/core/widgets/popular_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/popup_layout.dart';
 
-class OutletListView extends StatefulWidget {
-  final Map FIL;
-  const OutletListView({super.key, required this.FIL});
+import 'package:get/get.dart';
+import 'package:wayli/app/modules/favourite_food/outlet_controller.dart';
+import 'package:wayli/app/modules/sub_menu_food/sub_menu_food_view.dart';
 
-  @override
-  State<OutletListView> createState() => _OutletListViewState();
-}
+class OutletListView extends StatelessWidget {
+  final Map? FIL;
 
-class _OutletListViewState extends State<OutletListView> {
-
-  List outletArr = [
-    {
-      "name": "Lombar Pizza",
-      "address": "East 46th Street",
-      "category": "Pizza, Italian",
-      "image": "assets/images/l1.png",
-      "time": "11:30AM to 11:00PM",
-      "rate": 4.8
-    },
-    {
-      "name": "Sushi Bar",
-      "address": "210 Salt Pond Rd.",
-      "category": "Sushi, Japan",
-      "image": "assets/images/l2.png",
-      "time": "11:30AM to 11:00PM",
-      "rate": 3.8
-    },
-    {
-      "name": "Steak House",
-      "address": "East 46th Street",
-      "category": "Steak, American",
-      "image": "assets/images/l3.png",
-      "time": "11:30AM to 11:00PM",
-      "rate": 2.8
-    },
-    {
-      "name": "Seafood Lee",
-      "address": "210 Salt Pond Rd.",
-      "category": "Seafood, Spain",
-      "image": "assets/images/t1.png",
-      "time": "11:30AM to 11:00PM",
-      "rate": 5.0
-    },
-    {
-      "name": "Egg Tomato",
-      "address": "East 46th Street",
-      "category": "Egg, Italian",
-      "image": "assets/images/t2.png",
-      "time": "11:30AM to 11:00PM",
-      "rate": 4.8
-    },
-    {
-      "name": "Burger Hot",
-      "address": "East 46th Street",
-      "category": "Pizza, Italian",
-      "image": "assets/images/t3.png",
-      "time": "11:30AM to 11:00PM",
-      "rate": 4.8
-    }
-  ];
+  const OutletListView({super.key, this.FIL});
 
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
+    final OutletController controller = Get.put(OutletController());
 
     return Scaffold(
-      backgroundColor: kWhiteColor,
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-return [
-  SliverAppBar(
-    backgroundColor: secondaryColor.withOpacity(0.5),
-    elevation: 0,
-    expandedHeight: media.width * 0.660,
-    floating: false,
-    centerTitle: false,
-    pinned: true,
-    automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        body: GetBuilder<OutletController>(
+            init: OutletController(),
+            builder: (ctl) {
+              return NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverAppBar(
+                      elevation: 0,
+                      expandedHeight: media.width * 0.660,
+                      floating: false,
+                      centerTitle: false,
+                      pinned: true,
+                      automaticallyImplyLeading: false,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: Container(
+                          width: media.width,
+                          height: media.width * 0.660,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                controller.menuItem.coverImage ?? 'N/A',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Container(
+                              padding: EdgeInsets.only(top: media.width * 0.25),
+                              height: media.width * 0.8,
+                              alignment: Alignment.center,
+                              child: AutoSizeText('')),
+                        ),
+                      ),
+                      actions: [
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            "assets/svg/back_1.svg",
+                            width: 24,
+                            height: 30,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                      ],
+                    ),
+                  ];
+                },
+                body: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: AutoSizeText(
+                            controller.menuItem.name ?? '',
+                            style: GoogleFonts.montserrat(
+                              color: Colors.blue,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: TextButton(
+                            onPressed: () {
+                              Get.to(() => FilterView());
+                            },
+                            child: AutoSizeText(
+                              "Filter",
+                              style: GoogleFonts.montserrat(
+                                color: Colors.blue,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
-    flexibleSpace: FlexibleSpaceBar(
-      title: Container(
-        width: media.width,
-        height: media.width * 0.667,
-        color: secondaryColor.withOpacity(0.5),
-        child: Container(
-          padding: EdgeInsets.only(top: media.width * 0.25),
-          height: media.width * 0.8,
-          alignment: Alignment.center,
-          child: Image.asset(
-            widget.FIL["image"].toString(),
-            width: media.width * 0.25,
-            fit: BoxFit.fitWidth,
+Obx(() {
+  if (ctl.menuItemCategory == null || ctl.menuItemCategory.isEmpty) {
+    return Center(child: CircularProgressIndicator());
+  }
+  
+  return Container(
+    // Use a Container instead of SizedBox
+    height: MediaQuery.of(context).size.width * 0.42,
+    padding: const EdgeInsets.only(top: 30.0),
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      itemCount: ctl.menuItemCategory.length,
+      itemBuilder: (context, index) {
+        var menuItemCategory = ctl.menuItemCategory[index];
+
+        return GestureDetector(
+          onTap: () {
+            Get.to(
+              () => SubMenuFoodView(),
+              arguments: {
+                "menuItemCategory": menuItemCategory,
+              },
+            );
+          },
+          child: PopularFoodItemCell(
+            FIL: {
+              'outlets': menuItemCategory.name,
+              'image': menuItemCategory.coverImage,
+            },
+            index: index,
           ),
-        ),
-      ),
-    ),
-    actions: [
-      IconButton(
-      icon: SvgPicture.asset(
-        "assets/svg/back_1.svg",
-        width: 24,
-        height: 30,
-        color: primaryColor,
-      ),
-      onPressed: () {
-        Navigator.pop(context);
+        );
       },
     ),
-    ],
-  ),
-];
-        },
+  );
+}),
+
+Obx(() {
+  if (ctl.menuItemCategory == null || ctl.menuItemCategory.isEmpty) {
+    return Center(child: CircularProgressIndicator());
+  }
+  
+  return Container(
+    // Use a Container instead of SizedBox
+    height: MediaQuery.of(context).size.width * 0.42,
+    padding: const EdgeInsets.only(top: 30.0),
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      itemCount: ctl.menuItemCategory.length,
+      itemBuilder: (context, index) {
+        var menuItemCategory = ctl.menuItemCategory[index];
+
+        return GestureDetector(
+          onTap: () {
+            Get.to(
+              () => SubMenuFoodView(),
+              arguments: {
+                "menuItemCategory": menuItemCategory,
+              },
+            );
+          },
+          child: PopularFoodItemCell(
+            FIL: {
+              'outlets': menuItemCategory.name,
+              'image': menuItemCategory.coverImage,
+            },
+            index: index,
+          ),
+        );
+      },
+    ),
+  );
+}),
 
 
-        
-        body: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            
-              ListView.builder(
-                  itemCount: outletArr.length,
-                  itemBuilder: (context, index) {
-                    var FIL = outletArr[index] as Map? ?? {};
-                    return OutletListRow(
-                      FIL: FIL,
-                    );
-                  }),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+                    // Obx(() {
+                    //   if (ctl.menuItemCategory == null ||
+                    //       ctl.menuItemCategory.isEmpty) {
+                    //     return Center(child: CircularProgressIndicator());
+                    //   }
+                    //   return SizedBox(
+                    //     height: MediaQuery.of(context).size.width * 0.42,
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.only(top: 30.0),
+                    //       child: ListView.builder(
+                    //         scrollDirection: Axis.horizontal,
+                    //         padding: const EdgeInsets.symmetric(horizontal: 8),
+                    //         itemCount: ctl.menuItemCategory.length,
+                    //         itemBuilder: (context, index) {
+                    //           var menuItemCategory =
+                    //               ctl.menuItemCategory[index];
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: AutoSizeText(
-                      "${ widget.FIL["outlets"] } Outlets",
-                      style: GoogleFonts.montserrat(
-                          color: secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700),
-                    
-                  ),
+                    //           return GestureDetector(
+                    //             onTap: () {
+                    //               Get.to(
+                    //                 () => SubMenuFoodView(),
+                    //                 arguments: {
+                    //                   "menuItemCategory": menuItemCategory,
+                    //                 },
+                    //               );
+                    //             },
+                    //             child: PopularFoodItemCell(
+                    //               FIL: {
+                    //                 'outlets': menuItemCategory.name,
+                    //                 'image': menuItemCategory.coverImage,
+                    //               },
+                    //               index: index,
+                    //             ),
+                    //           );
+                    //         },
+                    //       ),
+                    //     ),
+                    //   );
+                    // }),
+                  ],
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context, PopupLayout(child: const FilterView()));
-                    },
-                    child: AutoSizeText(
-                      "Filter",
-                      style: GoogleFonts.montserrat(
-                          color: secondaryColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+              );
+            }));
   }
 }

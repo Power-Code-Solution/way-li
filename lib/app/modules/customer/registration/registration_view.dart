@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pinput/pinput.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
@@ -7,9 +8,9 @@ import 'package:wayli/app/modules/customer/registration/registration_controller.
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
+import 'package:wayli/app/modules/otp/otp_view.dart';
 
 import 'registration_controller.dart';
-
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,9 @@ import 'package:wayli/app/modules/tabs/tabs_view.dart';
 
 class RegistrationView extends GetView<RegistrationController> {
   static const String routeName = '/register';
-  const RegistrationView({super.key});
+  RegistrationView({super.key});
   static final GlobalKey registrationBottomNavigationKey = GlobalKey();
+  final RegistrationController ctl = Get.put(RegistrationController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +80,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                 "Welcome Back",
                                 style: GoogleFonts.montserrat(
                                     color: primaryColor, fontSize: 15),
-                                    textAlign: TextAlign.left,
+                                textAlign: TextAlign.left,
                               ),
                             ),
                           ],
@@ -89,7 +91,7 @@ class RegistrationView extends GetView<RegistrationController> {
                 ),
                 // Gap(60),
                 Expanded(
-                  child: Container(                        
+                  child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -120,13 +122,11 @@ class RegistrationView extends GetView<RegistrationController> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 15),
                                           child: CostumFormField(
-                                            keyboardType:
-                                                TextInputType.name,
+                                            keyboardType: TextInputType.name,
                                             textController: ctl.firstName,
                                             isPassword: false,
                                             labelText: "First Name",
-                                            hintText:
-                                                "Enter your first name",
+                                            hintText: "Enter your first name",
                                             icon: const Icon(Icons.person),
                                             validator: (value) {
                                               if (value!.isEmpty) {
@@ -141,13 +141,11 @@ class RegistrationView extends GetView<RegistrationController> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 15),
                                           child: CostumFormField(
-                                            keyboardType:
-                                                TextInputType.name,
+                                            keyboardType: TextInputType.name,
                                             textController: ctl.lastName,
                                             isPassword: false,
                                             labelText: "Last Name",
-                                            hintText:
-                                                "Enter your last name",
+                                            hintText: "Enter your last name",
                                             icon: const Icon(Icons.person),
                                             validator: (value) {
                                               if (value!.isEmpty) {
@@ -183,13 +181,11 @@ class RegistrationView extends GetView<RegistrationController> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 15),
                                           child: CostumFormField(
-                                            keyboardType:
-                                                TextInputType.phone,
+                                            keyboardType: TextInputType.phone,
                                             textController: ctl.phone,
                                             isPassword: false,
                                             labelText: "Phone Number",
-                                            hintText:
-                                                "Enter your Phone Number",
+                                            hintText: "Enter your Phone Number",
                                             icon: const Icon(Icons.phone),
                                             validator: (value) {
                                               if (value!.isEmpty) {
@@ -204,14 +200,15 @@ class RegistrationView extends GetView<RegistrationController> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 15),
                                           child: CostumFormField(
-                                            keyboardType:
-                                                TextInputType.number,
-                                            textController: ctl.fkCityIdController,
+                                            keyboardType: TextInputType.number,
+                                            textController:
+                                                ctl.fkCityIdController,
                                             isPassword: false,
                                             labelText: "City",
                                             hintText:
                                                 "Enter your City of Residence",
-                                            icon: const Icon(Icons.location_city),
+                                            icon:
+                                                const Icon(Icons.location_city),
                                             validator: (value) {
                                               if (value!.isEmpty) {
                                                 return 'Please provide City !';
@@ -225,14 +222,14 @@ class RegistrationView extends GetView<RegistrationController> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 15),
                                           child: CostumFormField(
-                                            keyboardType:
-                                                TextInputType.text,
-                                            textController: ctl.fkCommunityIdController,
+                                            keyboardType: TextInputType.text,
+                                            textController:
+                                                ctl.fkCommunityIdController,
                                             isPassword: false,
                                             labelText: "Community",
-                                            hintText:
-                                                "Enter your Community",
-                                            icon: const Icon(Icons.location_city),
+                                            hintText: "Enter your Community",
+                                            icon:
+                                                const Icon(Icons.location_city),
                                             validator: (value) {
                                               if (value!.isEmpty) {
                                                 return 'Please provide your community !';
@@ -246,13 +243,11 @@ class RegistrationView extends GetView<RegistrationController> {
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 15),
                                           child: CostumFormField(
-                                            keyboardType:
-                                                TextInputType.text,
+                                            keyboardType: TextInputType.text,
                                             textController: ctl.address,
                                             isPassword: false,
                                             labelText: "Address",
-                                            hintText:
-                                                "Enter your address",
+                                            hintText: "Enter your address",
                                             icon: const Icon(Icons.location_on),
                                             validator: (value) {
                                               if (value!.isEmpty) {
@@ -360,7 +355,6 @@ class RegistrationView extends GetView<RegistrationController> {
                                           ),
                                         ),
                                       ),
-                                      
                                     ],
                                   ),
                                 ),
@@ -382,6 +376,8 @@ class RegistrationView extends GetView<RegistrationController> {
                                     child: Obx(() => ctl.isLoading.value
                                         ? CircularProgressIndicator()
                                         : ElevatedButton(
+                                            // onPressed: () =>
+                                            //     showBottomModal(context, ctl),
                                             onPressed: ctl.createUser,
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor:
@@ -419,4 +415,168 @@ class RegistrationView extends GetView<RegistrationController> {
       ),
     );
   }
+
+
+
+    void showBottomModal(BuildContext context, var foodItem) {
+  const fillColor = secondaryColor;
+  const borderColor = kWhiteColor;
+  const focusedBorderColor = primaryColor;
+  final defaultPinTheme = PinTheme(
+    width: 56,
+    height: 40,
+    textStyle: GoogleFonts.montserrat(
+      fontSize: 22,
+      color: kWhiteColor,
+    ),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      border: Border.all(color: borderColor),
+    ),
+  );
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Form(
+                    key: ctl.otpKey,
+                    child: ListView(
+                      physics: const BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            children: <Widget>[
+                              FadeInUp(
+                                duration: Duration(milliseconds: 100),
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: secondaryColor,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Directionality(
+                                              textDirection: TextDirection.ltr,
+                                              child: Pinput(
+                                                controller: controller.pinController,
+                                                focusNode: controller.focusNode,
+                                                defaultPinTheme: defaultPinTheme,
+                                                length: 6,
+                                                separatorBuilder: (index) => const Gap(4),
+                                                validator: (value) {
+                                                  return value == '222299' ? null : 'Pin is incorrect';
+                                                },
+                                                hapticFeedbackType: HapticFeedbackType.lightImpact,
+                                                onCompleted: (pin) {
+                                                  debugPrint('onCompleted: $pin');
+                                                },
+                                                onChanged: (value) {
+                                                  debugPrint('onChanged: $value');
+                                                },
+                                                cursor: Column(
+                                                  mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                      margin: const EdgeInsets.only(bottom: 9),
+                                                      width: 22,
+                                                      height: 1,
+                                                      color: focusedBorderColor,
+                                                    ),
+                                                  ],
+                                                ),
+                                                focusedPinTheme: defaultPinTheme.copyWith(
+                                                  decoration: defaultPinTheme.decoration!.copyWith(
+                                                    borderRadius: BorderRadius.circular(6),
+                                                    border: Border.all(color: focusedBorderColor),
+                                                  ),
+                                                ),
+                                                submittedPinTheme: defaultPinTheme.copyWith(
+                                                  decoration: defaultPinTheme.decoration!.copyWith(
+                                                    color: fillColor,
+                                                    borderRadius: BorderRadius.circular(6),
+                                                    border: Border.all(color: focusedBorderColor),
+                                                  ),
+                                                ),
+                                                errorPinTheme: defaultPinTheme.copyBorderWith(
+                                                  border: Border.all(color: Colors.redAccent),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const Gap(10),
+                              FadeInUp(
+                                  duration: Duration(milliseconds: 100),
+                                  child: MaterialButton(
+                                    onPressed: () {
+                                      Get.to(() => OtpView());
+                                    },
+                                    height: 50,
+                                    color: secondaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: AutoSizeText(
+                                        "VALIDATE",
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 18,
+                                          color: primaryColor,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: 1.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
 }
+
+ 
+ 
+ 
+ 
+ 
+ 
+  }
+
