@@ -42,7 +42,8 @@ dependencies:
   flutter_svg: ^2.0.14
   gap: ^3.0.1
   get: ^4.6.6
-  google_fonts: ^5.0.0
+  google_fonts: ^6.2.1
+  persistent_bottom_nav_bar: ^6.2.1
   http: ^1.2.2
   image_picker: ^1.1.2
   jwt_decoder: ^2.0.1

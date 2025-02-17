@@ -190,66 +190,63 @@ class CollectionListView extends GetView<HomeController> {
                   leftIcon: Icon(Icons.search, color: secondaryColor),
                 ),
               ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(
+                            maxHeight: media.width * 5,
+                          ),
+                          child: ValueListenableBuilder<List<Menu>>(
+                            valueListenable: ValueNotifier<List<Menu>>(
+                                ctl.menuItems.toList().cast<Menu>()),
+                            builder: (context, collectionsArr, child) {
+                              return GridView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 8),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 0,
+                                  childAspectRatio: 0.7,
+                                  mainAxisSpacing: 0,
+                                ),
+                                itemCount: collectionsArr.length,
+                                itemBuilder: (context, index) {
+                                  var menuItem = collectionsArr[index];
 
-SliverToBoxAdapter(
-  child: Padding(
-    padding: const EdgeInsets.all(20),
-    child: SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            constraints: BoxConstraints(
-              maxHeight: media.width * 5,
-            ),
-            child: ValueListenableBuilder<List<Menu>>(
-              valueListenable: ValueNotifier<List<Menu>>(
-                  ctl.menuItems.toList().cast<Menu>()),
-              builder: (context, collectionsArr, child) {
-                return GridView.builder(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 15, horizontal: 8),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 0,
-                    childAspectRatio: 0.7,
-                    mainAxisSpacing: 0,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Get.to(
+                                        () => OutletListView(),
+                                        arguments: {
+                                          "menuItems": menuItem,
+                                        },
+                                      );
+                                    },
+                                    child: CollectionFoodItemCell(
+                                      FIL: {
+                                        'name': menuItem.name,
+                                        'image': menuItem.coverImage,
+                                      },
+                                    ),
+                                  );
+                                },
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  itemCount: collectionsArr.length,
-                  itemBuilder: (context, index) {
-                    var menuItem = collectionsArr[index];
-
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(
-                          () => OutletListView(),
-                          arguments: {
-                            "menuItems": menuItem,
-                          },
-                        );
-                      },
-                      child: CollectionFoodItemCell(
-                        FIL: {
-                          'name': menuItem.name,
-                          'image': menuItem.coverImage,
-                        },
-                      ),
-                    );
-                  },
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    ),
-  ),
-),
-
-
-
+                ),
+              ),
             ],
           );
         },

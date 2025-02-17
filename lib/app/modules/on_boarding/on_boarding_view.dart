@@ -62,7 +62,6 @@ class OnBoardingView extends GetView<OnBoardingController> {
               },
             );
           }),
-          
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -90,7 +89,8 @@ class OnBoardingView extends GetView<OnBoardingController> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: RoundButton(
-                  onPressed: controller.goToNextPage, title: 'Next',
+                  onPressed: controller.goToNextPage,
+                  title: 'Next',
                 ),
               ),
             ],
@@ -100,7 +100,3 @@ class OnBoardingView extends GetView<OnBoardingController> {
     );
   }
 }
-
-
-
-

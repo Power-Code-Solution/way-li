@@ -1,0 +1,2 @@
+C:/Users/PowerMan/Desktop/way-li/android/app/.cxx/Debug/4y294m28/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/PowerMan/Desktop/way-li/android/app/.cxx/Debug/4y294m28/x86_64/CMakeFiles/rebuild_cache.dir
