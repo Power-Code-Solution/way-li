@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:wayli/app/newpages/components/Card.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
+
+import '../../core/config/constants.dart';
+import '../../modules/home/home_controller.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -10,7 +15,7 @@ class Homepage extends StatelessWidget {
     // Get screen dimensions
     final size = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
-
+    final HomeController homeController = Get.put(HomeController());
     // Calculate dynamic grid properties
     final crossAxisCount = orientation == Orientation.portrait
         ? 2 // Two columns in portrait
@@ -36,7 +41,7 @@ class Homepage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Image.asset("assets/wayli.png", width: 30),
+              Image.asset("assets/images/way-li_logo.png", width: 30),
             ],
           ),
           actions: const [
@@ -47,7 +52,28 @@ class Homepage extends StatelessWidget {
           ],
         ),
       ),
-      body: SafeArea(
+      body:
+      RefreshIndicator(
+      onRefresh: () => homeController.refreshButton(),
+      color: kPrimaryColor,
+      triggerMode: RefreshIndicatorTriggerMode.onEdge,
+      displacement: 200.0,
+      strokeWidth: 3,
+      child:
+
+
+
+
+
+
+
+
+
+
+
+
+
+      SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -90,6 +116,7 @@ class Homepage extends StatelessWidget {
                     double aspectRatio = itemWidth /
                         (itemWidth * 1.2); // Adjust 1.2 to change card height
 
+                    // Assuming you have a list of FoodItem objects called foodItemsList
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -99,11 +126,12 @@ class Homepage extends StatelessWidget {
                         mainAxisSpacing: gridSpacing,
                         childAspectRatio: aspectRatio,
                       ),
-                      itemCount: 60,
+                      itemCount: homeController.foodItems.length, // Use the length of your food items list
                       itemBuilder: (context, index) {
-                        return const CardMain();
+                        return CardMain(foodItem: homeController.foodItems[index]); // Pass the food item
                       },
                     );
+
                   },
                 ),
               ),
@@ -112,7 +140,7 @@ class Homepage extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      )),
     );
   }
 }

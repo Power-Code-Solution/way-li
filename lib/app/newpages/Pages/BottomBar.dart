@@ -8,6 +8,7 @@ import 'package:wayli/app/newpages/Pages/HomePage.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
 
 class BottomBarMain extends StatefulWidget {
+
   const BottomBarMain({super.key});
 
   @override

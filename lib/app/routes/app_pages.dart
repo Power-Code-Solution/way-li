@@ -1,3 +1,4 @@
+
 // ignore_for_file: constant_identifier_names
 
 import 'home_routes.dart';
@@ -15,6 +16,7 @@ import 'favourite_food_routes.dart';
 import 'sub_menu_food_routes.dart';
 import 'sub_menu_routes.dart';
 import 'history_routes.dart';
+import 'bottom_nav_routes.dart';
 
 class AppPages {
   AppPages._();
@@ -37,5 +39,6 @@ class AppPages {
     ...SubMenuFoodRoutes.routes,
     ...SubMenuRoutes.routes,
     ...HistoryRoutes.routes,
+    ...BottomNavRoutes.routes,
   ];
 }

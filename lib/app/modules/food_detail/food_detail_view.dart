@@ -20,10 +20,6 @@ import 'food_detail_controller.dart';
 import 'package:wayli/app/core/model/food_items.dart';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-// import 'package:food_delivery/common_widget/round_icon_button.dart';
-
-// import '../../common/color_extension.dart';
-// import '../more/my_order_view.dart';
 
 class FoodDetailView extends StatelessWidget {
   const FoodDetailView({super.key});

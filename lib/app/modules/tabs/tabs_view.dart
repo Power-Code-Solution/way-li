@@ -12,6 +12,8 @@ import 'package:wayli/app/modules/home/home_view.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/profile/profile_view.dart';
 import 'package:wayli/app/modules/splash_screen/splash_screen_view.dart';
+import '../../newpages/Pages/BottomBar.dart';
+import '../../newpages/Pages/HomePage.dart';
 import 'tabs_controller.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
@@ -35,8 +37,9 @@ final List<Widget> screens = [
    const HomeView(),
   const FavouriteFoodView(),
   // const MenuView(),
-  const OrderHistoryView(),
-  const ProfileView()
+  const Homepage(),
+  // const ProfileView()
+  const BottomBarMain()
     ];
    final TabsController tabsController = Get.put(TabsController());
      return Scaffold(

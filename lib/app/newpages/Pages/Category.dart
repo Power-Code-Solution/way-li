@@ -87,32 +87,32 @@ class _CategoryState extends State<Category> {
               ),
               SizedBox(height: size.height * 0.02),
               // Grid View
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    double itemWidth = (constraints.maxWidth -
-                            (gridSpacing * (crossAxisCount - 1))) /
-                        crossAxisCount;
-                    double aspectRatio = itemWidth / (itemWidth * 1.2);
-
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: gridSpacing,
-                        mainAxisSpacing: gridSpacing,
-                        childAspectRatio: aspectRatio,
-                      ),
-                      itemCount: 60,
-                      itemBuilder: (context, index) {
-                        return const CardMain();
-                      },
-                    );
-                  },
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+              //   child: LayoutBuilder(
+              //     builder: (context, constraints) {
+              //       double itemWidth = (constraints.maxWidth -
+              //               (gridSpacing * (crossAxisCount - 1))) /
+              //           crossAxisCount;
+              //       double aspectRatio = itemWidth / (itemWidth * 1.2);
+              //
+              //       return GridView.builder(
+              //         shrinkWrap: true,
+              //         physics: const NeverScrollableScrollPhysics(),
+              //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //           crossAxisCount: crossAxisCount,
+              //           crossAxisSpacing: gridSpacing,
+              //           mainAxisSpacing: gridSpacing,
+              //           childAspectRatio: aspectRatio,
+              //         ),
+              //         itemCount: 60,
+              //         itemBuilder: (context, index) {
+              //           return  CardMain();
+              //         },
+              //       );
+              //     },
+              //   ),
+              // ),
               // Bottom padding
               SizedBox(height: size.height * 0.02),
             ],

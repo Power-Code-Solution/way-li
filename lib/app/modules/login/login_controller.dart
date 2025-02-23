@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/modules/tabs/tabs_view.dart';
 
+import '../bottom_nav/bottom_nav_view.dart';
+
 
 class LoginController extends GetxController {
   static final GlobalKey loginBottomNavigationKey = GlobalKey();
@@ -42,7 +44,7 @@ class LoginController extends GetxController {
 
         Get.snackbar("Login Successful", "Welcome, ${authController.userName.value}",
             snackPosition: SnackPosition.BOTTOM);
-             Get.offAll(() => TabsView(bottomNavigationKey: loginBottomNavigationKey));
+             Get.offAll(() => BottomNavView);
         email.clear();
         pass.clear();
       } else {

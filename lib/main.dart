@@ -5,17 +5,6 @@ import 'package:wayli/app/core/config/auth_controller.dart';
 import 'app/core/bindings/application_bindings.dart';
 import 'app/routes/app_pages.dart';
 
-// void main() {
-//   runApp(
-//     GetMaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'Your App Title',
-//       initialBinding: ApplicationBindings(),
-//       initialRoute: AppPages.INITIAL,
-//       getPages: AppPages.routes,
-//     ),
-//   );
-// }
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Get.put(AuthController());
@@ -28,7 +17,7 @@ void main() async {
       debugShowCheckedModeBanner: false,
       title: 'WAY LI',
       initialBinding: ApplicationBindings(),
-      initialRoute: authController.isLoggedIn.value ? "/tabs" : "/login",
+      initialRoute: authController.isLoggedIn.value ? "/bottom-nav" : "/login",
       getPages: AppPages.routes,
     ),
   );

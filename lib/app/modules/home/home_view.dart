@@ -41,9 +41,7 @@ class HomeView extends GetView<HomeController> {
             init: HomeController(),
             builder: (ctl) {
               return CustomScrollView(
-                scrollBehavior: ScrollBehavior(
-              
-                ),
+                scrollBehavior: ScrollBehavior(),
                 slivers: [
                   SliverAppBar(
                     backgroundColor: secondaryColor,
@@ -178,91 +176,55 @@ class HomeView extends GetView<HomeController> {
                                           const CollectionListView()));
                             },
                           ),
-SizedBox(
-  height: media.width * 0.4,
-  child: GetBuilder<HomeController>(
-    init: HomeController(),
-    builder: (ctl) {
-      if (ctl.isLoading) {
-        return Center(child: CircularProgressIndicator());
-      }
+                          SizedBox(
+                            height: media.width * 0.4,
+                            child: GetBuilder<HomeController>(
+                              init: HomeController(),
+                              builder: (ctl) {
+                                if (ctl.isLoading) {
+                                  return Center(
+                                      child: CircularProgressIndicator());
+                                }
 
-      return ValueListenableBuilder<List<Menu>>(
-        valueListenable: ValueNotifier<List<Menu>>(ctl.menuItems.cast<Menu>().toList()),
-        builder: (context, collectionsArr, child) {
-          if (collectionsArr.isEmpty) {
-            return Center(child: Text('No Menu Items Found'));
-          }
+                                return ValueListenableBuilder<List<Menu>>(
+                                  valueListenable: ValueNotifier<List<Menu>>(
+                                      ctl.menuItems.cast<Menu>().toList()),
+                                  builder: (context, collectionsArr, child) {
+                                    if (collectionsArr.isEmpty) {
+                                      return Center(
+                                          child: Text('No Menu Items Found'));
+                                    }
 
-          return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemCount: collectionsArr.length,
-            itemBuilder: (context, index) {
-              var menuItem = collectionsArr[index];
-              return GestureDetector(
-                onTap: () {
-                  Get.to(
-                    () => OutletListView(),
-                    arguments: {
-                      "menuItems": menuItem,
-                    },
-                  );
-                },
-                child: CollectionFoodItemCell(
-                  FIL: {
-                    'name': menuItem.name,
-                    'image': menuItem.coverImage,
-                  },
-                ),
-              );
-            },
-          );
-        },
-      );
-    },
-  ),
-),
-
-
-                          // SizedBox(
-                          //   height: media.width * 0.6,
-                          //   child: ValueListenableBuilder<List<Menu>>(
-                          //     valueListenable: ValueNotifier<List<Menu>>(
-                          //         ctl.menuItems.toList().cast<Menu>()),
-                          //     builder: (context, collectionsArr, child) {
-                          //       if (ctl.foodItems.isEmpty) {
-                          //         return Center(
-                          //             child: CircularProgressIndicator());
-                          //       }
-                          //       return ListView.builder(
-                          //         scrollDirection: Axis.horizontal,
-                          //         padding:
-                          //             const EdgeInsets.symmetric(horizontal: 8),
-                          //         itemCount: collectionsArr.length,
-                          //         itemBuilder: (context, index) {
-                          //           var menuItem = collectionsArr[index];
-                          //           return GestureDetector(
-                          //             onTap: () {
-                          //               Get.to(
-                          //                 () => OutletListView(),
-                          //                 arguments: {
-                          //                   "menuItems": menuItem,
-                          //                 },
-                          //               );
-                          //             },
-                          //             child: CollectionFoodItemCell(
-                          //               FIL: {
-                          //                 'name': menuItem.name,
-                          //                 'image': menuItem.coverImage,
-                          //               },
-                          //             ),
-                          //           );
-                          //         },
-                          //       );
-                          //     },
-                          //   ),
-                          // ),
+                                    return ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      itemCount: collectionsArr.length,
+                                      itemBuilder: (context, index) {
+                                        var menuItem = collectionsArr[index];
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Get.to(
+                                              () => OutletListView(),
+                                              arguments: {
+                                                "menuItems": menuItem,
+                                              },
+                                            );
+                                          },
+                                          child: CollectionFoodItemCell(
+                                            FIL: {
+                                              'name': menuItem.name,
+                                              'image': menuItem.coverImage,
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ),
 
                           SelectionTextView(
                             title: "Menu Category",
