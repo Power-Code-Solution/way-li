@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
-import 'package:wayli/app/modules/tabs/tabs_view.dart';
 
 import '../bottom_nav/bottom_nav_view.dart';
 
@@ -19,12 +19,12 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
   }
 
   @override
-  void onReady() {
+  Future<void> onReady() async {
     super.onReady();
   }
 
@@ -60,7 +60,9 @@ class LoginController extends GetxController {
   }
 void togglePasswordVisibility() {
     visiblePassword.value = !visiblePassword.value;
-    print("Password visibility toggled: ${visiblePassword.value}");
+    if (kDebugMode) {
+      print("Password visibility toggled: ${visiblePassword.value}");
+    }
   }
 }
 

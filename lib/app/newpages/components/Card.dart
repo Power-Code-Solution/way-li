@@ -178,6 +178,8 @@ import 'package:get/get.dart';
 import 'package:wayli/app/newpages/controllers/cart_controller.dart';
 
 import '../../core/model/food_items.dart';
+import '../../modules/food_detail/food_detail_view.dart';
+import '../../modules/product_details/product_details_view.dart';
 
 class CardMain extends StatelessWidget {
   final FoodItem foodItem; // Required FoodItem
@@ -206,91 +208,94 @@ class CardMain extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProductDetails()));
-            },
-            child: Container(
-              height: containerHeight,
-              width: containerWidth,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: mainYellow,
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(height: containerHeight * 0.02),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      imageUrl.isNotEmpty ? imageUrl : "assets/images/food.png",
-                      width: imageWidth,
-                      height: imageHeight,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Text(
-                    foodItem.name ?? 'N/A',
-                    style: GoogleFonts.poppins(
-                      fontSize: containerWidth * 0.1,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    "LE " + (foodItem.price.toString() ?? 'N/A'),
-                    style: GoogleFonts.poppins(
-                      fontSize: containerWidth * 0.09,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Obx(() => GestureDetector(
-                    onTap: () => cartController.handleAddToCart(),
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: buttonWidth,
-                      height: buttonHeight,
-                      decoration: BoxDecoration(
-                        color: cartController.isSuccess.value ? mainBlack : mainYellow,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: cartController.isLoading.value
-                          ? SizedBox(
-                        width: buttonHeight * 0.5,
-                        height: buttonHeight * 0.5,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            cartController.isSuccess.value ? Colors.white : mainBlack,
-                          ),
-                          strokeWidth: 2,
-                        ),
-                      )
-                          : cartController.isSuccess.value
-                          ? Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: buttonHeight * 0.5,
-                      )
-                          : Text(
-                        "Add to cart",
-                        style: GoogleFonts.poppins(
-                          fontSize: buttonWidth * 0.12,
-                          fontWeight: FontWeight.w500,
-                          color: mainBlack,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  )),
-                  SizedBox(height: containerHeight * 0.02),
-                ],
+          onTap: () {
+    Get.to(
+    () => ProductDetailsView(),
+    arguments: {'FIL': foodItem}, // Passing the arguments
+    );
+    },
+      child: Container(
+        height: containerHeight,
+        width: containerWidth,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: mainYellow,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(height: containerHeight * 0.02),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                imageUrl.isNotEmpty ? imageUrl : "assets/images/food.png",
+                width: imageWidth,
+                height: imageHeight,
+                fit: BoxFit.cover,
               ),
             ),
-          ),
-        ],
+            Text(
+              foodItem.name ?? 'N/A',
+              style: GoogleFonts.poppins(
+                fontSize: containerWidth * 0.1,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Text(
+              "LE " + (foodItem.price.toString() ?? 'N/A'),
+              style: GoogleFonts.poppins(
+                fontSize: containerWidth * 0.09,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Obx(() => GestureDetector(
+              onTap: () => cartController.handleAddToCart(),
+              child: Container(
+                alignment: Alignment.center,
+                width: buttonWidth,
+                height: buttonHeight,
+                decoration: BoxDecoration(
+                  color: cartController.isSuccess.value ? mainBlack : mainYellow,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: cartController.isLoading.value
+                    ? SizedBox(
+                  width: buttonHeight * 0.5,
+                  height: buttonHeight * 0.5,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      cartController.isSuccess.value ? Colors.white : mainBlack,
+                    ),
+                    strokeWidth: 2,
+                  ),
+                )
+                    : cartController.isSuccess.value
+                    ? Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: buttonHeight * 0.5,
+                )
+                    : Text(
+                  "Add to cart",
+                  style: GoogleFonts.poppins(
+                    fontSize: buttonWidth * 0.12,
+                    fontWeight: FontWeight.w500,
+                    color: mainBlack,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )),
+            SizedBox(height: containerHeight * 0.02),
+          ],
+        ),
+      ),
+    )
+
+    ],
       ),
     );
   }

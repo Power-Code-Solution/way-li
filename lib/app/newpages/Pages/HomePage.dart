@@ -18,17 +18,15 @@ class Homepage extends StatelessWidget {
     final HomeController homeController = Get.put(HomeController());
     // Calculate dynamic grid properties
     final crossAxisCount = orientation == Orientation.portrait
-        ? 2 // Two columns in portrait
-        : 3; // Three columns in landscape
-
-    // Calculate dynamic padding and spacing
-    final horizontalPadding = size.width * 0.04; // 4% of screen width
-    final gridSpacing = size.width * 0.02; // 2% of screen width
+        ? 2
+        : 3;
+    final horizontalPadding = size.width * 0.04;
+    final gridSpacing = size.width * 0.02;
 
     return Scaffold(
       appBar: PreferredSize(
         preferredSize:
-            Size.fromHeight(size.height * 0.08), // Responsive app bar height
+            Size.fromHeight(size.height * 0.08),
         child: AppBar(
           leading: const Icon(Icons.menu),
           backgroundColor: mainYellow,
@@ -60,19 +58,6 @@ class Homepage extends StatelessWidget {
       displacement: 200.0,
       strokeWidth: 3,
       child:
-
-
-
-
-
-
-
-
-
-
-
-
-
       SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -83,7 +68,7 @@ class Homepage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: 600, // Maximum width on larger screens
+                    maxWidth: 600,
                   ),
                   child: TextFormField(
                     decoration: InputDecoration(
@@ -109,14 +94,11 @@ class Homepage extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    // Calculate the aspect ratio based on available width
                     double itemWidth = (constraints.maxWidth -
                             (gridSpacing * (crossAxisCount - 1))) /
                         crossAxisCount;
                     double aspectRatio = itemWidth /
                         (itemWidth * 1.2); // Adjust 1.2 to change card height
-
-                    // Assuming you have a list of FoodItem objects called foodItemsList
                     return GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -126,16 +108,15 @@ class Homepage extends StatelessWidget {
                         mainAxisSpacing: gridSpacing,
                         childAspectRatio: aspectRatio,
                       ),
-                      itemCount: homeController.foodItems.length, // Use the length of your food items list
+                      itemCount: homeController.foodItems.length,
                       itemBuilder: (context, index) {
-                        return CardMain(foodItem: homeController.foodItems[index]); // Pass the food item
+                        return CardMain(foodItem: homeController.foodItems[index]);
                       },
                     );
 
                   },
                 ),
               ),
-              // Bottom padding to ensure last row is visible
               SizedBox(height: size.height * 0.02),
             ],
           ),

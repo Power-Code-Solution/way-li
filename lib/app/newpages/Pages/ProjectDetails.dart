@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/newpages/Pages/Cart.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
+
+import '../../core/model/food_items.dart';
 
 class ProductDetails extends StatefulWidget {
   const ProductDetails({super.key});
@@ -30,6 +34,12 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
+
+    FoodItem FIL = Get.arguments['FIL'];
+    String imageUrl =
+    FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
+
+
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
 
@@ -97,7 +107,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset(
-                          "assets/burger.png",
+                          imageUrl.isNotEmpty ? imageUrl : "assets/images/food.png",
                           width: imageWidth,
                           height: imageHeight,
                           fit: BoxFit.cover,

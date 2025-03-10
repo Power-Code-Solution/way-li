@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:wayli/app/modules/home/home_view.dart';
 
 import '../../newpages/Pages/Account.dart';
 import '../../newpages/Pages/Cart.dart';
@@ -8,6 +9,7 @@ import '../../newpages/Pages/Category.dart';
 import '../../newpages/Pages/Explore.dart';
 import '../../newpages/Pages/HomePage.dart';
 import '../../newpages/components/colors.dart';
+import '../food_category/food_category_view.dart';
 import 'bottom_nav_controller.dart';
 
 class BottomNavView extends GetView<BottomNavController> {
@@ -27,10 +29,12 @@ class BottomNavView extends GetView<BottomNavController> {
           controller: PersistentTabController(initialIndex: logic.currentIndex.value),
           screens: [
             Homepage(),
-            Category(),
+            FoodCategoryView(),
+            // Category(),
             ExplorePage(),
             CartScreen(),
-            AccountScreen(),
+            HomeView(),
+            // AccountScreen(),
           ],
           items: _navBarItems(logic),
           confineToSafeArea: true,

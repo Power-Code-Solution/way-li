@@ -86,34 +86,7 @@ class _CategoryState extends State<Category> {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              // Grid View
-              // Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-              //   child: LayoutBuilder(
-              //     builder: (context, constraints) {
-              //       double itemWidth = (constraints.maxWidth -
-              //               (gridSpacing * (crossAxisCount - 1))) /
-              //           crossAxisCount;
-              //       double aspectRatio = itemWidth / (itemWidth * 1.2);
-              //
-              //       return GridView.builder(
-              //         shrinkWrap: true,
-              //         physics: const NeverScrollableScrollPhysics(),
-              //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //           crossAxisCount: crossAxisCount,
-              //           crossAxisSpacing: gridSpacing,
-              //           mainAxisSpacing: gridSpacing,
-              //           childAspectRatio: aspectRatio,
-              //         ),
-              //         itemCount: 60,
-              //         itemBuilder: (context, index) {
-              //           return  CardMain();
-              //         },
-              //       );
-              //     },
-              //   ),
-              // ),
-              // Bottom padding
+
               SizedBox(height: size.height * 0.02),
             ],
           ),
@@ -123,10 +96,9 @@ class _CategoryState extends State<Category> {
   }
 
   Widget CategoryTile(String categoryName, int index, Size size) {
-    // Calculate responsive dimensions for category tiles
-    final tileWidth = size.width * 0.22; // 22% of screen width
-    final tileHeight = size.height * 0.05; // 5% of screen height
-    final fontSize = size.width * 0.035; // Responsive font size
+    final tileWidth = size.width * 0.22;
+    final tileHeight = size.height * 0.05;
+    final fontSize = size.width * 0.035;
 
     return GestureDetector(
       onTap: () {

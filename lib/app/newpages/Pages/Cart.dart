@@ -72,7 +72,7 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                     child: ListTile(
                       leading: Image.asset(
-                        "assets/burger.png",
+                        "assets/images/food.png",
                         width: size.width * 0.15, // Responsive image size
                         height: size.width * 0.15,
                         fit: BoxFit.contain,
@@ -82,7 +82,7 @@ class _CartScreenState extends State<CartScreen> {
                       trailing: Container(
                         constraints: BoxConstraints(
                           maxWidth:
-                              size.width * 0.35, // Limit width on large screens
+                              size.width * 0.35,
                         ),
                         decoration: BoxDecoration(
                           color: mainYellow,
