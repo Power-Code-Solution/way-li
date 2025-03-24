@@ -35,7 +35,7 @@ var kPrimaryGradientColor = const LinearGradient(
 const kTextColor = Colors.black;
 
 const kAnimationDuration = Duration(milliseconds: 200);
-
+const double defaultPadding = 16.0;
 const headingStyle = TextStyle(
   fontSize: 24,
   fontWeight: FontWeight.bold,
@@ -45,7 +45,7 @@ const headingStyle = TextStyle(
 
 const defaultDuration = Duration(milliseconds: 250);
  // const apiBaseAddress = "http://192.168.1.100:5022/api";  //office
- //const apiBaseAddress = "http://192.168.217.166:5022/api"; //home
+ // const apiBaseAddress = "http://192.168.218.90:5022/api"; //home
  const apiBaseAddress = "http://92.112.194.110:2590/api"; //production
 
 const whatSappLink =
