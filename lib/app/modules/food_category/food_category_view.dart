@@ -1,10 +1,15 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wayli/app/core/model/menu_category.dart';
 import 'package:wayli/app/newpages/components/Card.dart';
 
+import '../../core/config/constants.dart';
+import '../../core/widgets/animated_textfield/view.dart';
+import '../../core/widgets/empty_page/view.dart';
 import '../../core/widgets/skelton_loading.dart';
 import '../../newpages/components/colors.dart';
 import 'food_category_controller.dart';
@@ -38,7 +43,19 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
           ],
         ),
       ),
-      body: SafeArea(
+      body:
+
+          RefreshIndicator(
+    onRefresh: controller.refreshButton, // Trigger refresh here
+    color: kPrimaryColor,
+    triggerMode: RefreshIndicatorTriggerMode.onEdge,
+    displacement: 200.0,
+    strokeWidth: 3,
+
+    child:
+
+
+      SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -47,24 +64,30 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 600),
-                  child: TextFormField(
+                  child:
+                  AnimatedHintTextField(
                     controller: categoryController.searchController,
                     onChanged: (value) => categoryController.filterFoodItems(value),
-                    decoration: InputDecoration(
-                      hintText: "Search",
-                      hintStyle: TextStyle(fontSize: size.width * 0.04),
-                      suffixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(width: 2, color: Colors.grey),
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: size.width * 0.04,
-                        vertical: size.height * 0.015,
-                      ),
-                    ),
-                  )
+                    size: MediaQuery.of(context).size,
+                  ),
 
+                  // TextFormField(
+                  //   controller: categoryController.searchController,
+                  //   onChanged: (value) => categoryController.filterFoodItems(value),
+                  //   decoration: InputDecoration(
+                  //     hintText: "Search",
+                  //     hintStyle: TextStyle(fontSize: size.width * 0.04),
+                  //     suffixIcon: const Icon(Icons.search),
+                  //     border: OutlineInputBorder(
+                  //       borderRadius: BorderRadius.circular(10),
+                  //       borderSide: const BorderSide(width: 2, color: Colors.grey),
+                  //     ),
+                  //     contentPadding: EdgeInsets.symmetric(
+                  //       horizontal: size.width * 0.04,
+                  //       vertical: size.height * 0.015,
+                  //     ),
+                  //   ),
+                  // )
                 ),
               ),
               SizedBox(height: size.height * 0.02),
@@ -85,12 +108,63 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
                   return Center(child: Skelton());
                 }
 
+                if (controller.foodItems.isEmpty) {
+                  return Center(
+                    child: SingleChildScrollView( // Wrap with SingleChildScrollView
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min, // Limit the size of the Column
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/way-li_logo.png',
+                            height: 200,
+                            width: 200,
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Sorry',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          AutoSizeText(
+                            'No Food Item available at the moment!',
+                            style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              color: Colors.grey[500],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 30),
+                          ElevatedButton(
+                            onPressed: () {
+                              controller.refreshButton();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                              secondaryColor,
+                              shadowColor: Colors.transparent,
+                            ),
+                            child: AutoSizeText('Refresh', style: GoogleFonts.montserrat(
+                              fontSize: 15,
+                              color: primaryColor,
+                            ),),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       double itemWidth = (constraints.maxWidth - (gridSpacing * (crossAxisCount - 1))) / crossAxisCount;
                       double aspectRatio = itemWidth / (itemWidth * 1.2);
+
                       return GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -109,10 +183,11 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
                   ),
                 );
               }),
+
             ],
           ),
         ),
-      ),
+      ),)
     );
   }
 }

@@ -7,7 +7,7 @@ import '../../core/model/food_items.dart';
 import '../../core/model/food_items_dto.dart';
 
 class ProductDetailsController extends GetxController {
-  var itemCount = 1.obs;
+  var itemCount = 0.obs;
   var liked = false.obs;
 
 

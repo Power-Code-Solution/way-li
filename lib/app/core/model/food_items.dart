@@ -11,7 +11,6 @@ class FoodResponse {
   dynamic pageIndex;
   int status;
   String message;
-
   FoodResponse({
     required this.data,
     this.pages,
@@ -45,7 +44,7 @@ class FoodItem  extends BaseModel{
   bool isActive;
   String? imageUrl;
   String type;
-  dynamic tags;
+  // dynamic tags;
   double servingSize;
   double price;
   double priceDouble;
@@ -53,8 +52,8 @@ class FoodItem  extends BaseModel{
    MenuCategory menuCategory;
   // Menu menu;
   List<FoodItemImage> foodItemsImages;
-  List<FoodItemsTags> foodItemsTags;
-  List<Review> review;
+  // List<FoodItemsTags>? foodItemsTags;
+  // List<Review>? review;
 
 
   FoodItem({
@@ -66,35 +65,25 @@ class FoodItem  extends BaseModel{
     this.imageUrl,
     required this.servingSize,
     required this.type,
-    this.tags,
+    // this.tags,
     required this.price,
     required this.priceDouble,
     required this.taxRate,
       required this.menuCategory,
     // required this.menu,
     required this.foodItemsImages,
-    required this.foodItemsTags,
-    required this.review,
-    required bool active,
-    required bool deleted,
-    String? createdBy,
-    String? updatedBy,
-    String? deletedBy,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    required DateTime deletedAt,
-    String? deletedReason,
-  }) : super(
-          active: active,
-          deleted: deleted,
-          createdBy: createdBy,
-          updatedBy: updatedBy,
-          deletedBy: deletedBy,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          deletedAt: deletedAt,
-          deletedReason: deletedReason,
-        );
+    // this.foodItemsTags,
+    // this.review,
+    required super.active,
+    required super.deleted,
+    super.createdBy,
+    super.updatedBy,
+    super.deletedBy,
+    required super.createdAt,
+    required super.updatedAt,
+    required super.deletedAt,
+    super.deletedReason,
+  });
 
   factory FoodItem.fromJson(Map<String, dynamic> json) => FoodItem(
         id: json["id"],
@@ -105,18 +94,20 @@ class FoodItem  extends BaseModel{
         imageUrl: json["imageUrl"],
         servingSize: json["servingSize"],
         type: json["type"],
-        tags: json["tags"],
+        // tags: json["tags"],
         price: json["price"],
         priceDouble: json["priceDouble"],
         taxRate: json["taxRate"],
           menuCategory: MenuCategory.fromJson(json["menuCategory"]),
-        // menu: Menu.fromJson(json["menu"]), 
+        // menu: Menu.fromJson(json["menu"]),
         foodItemsImages: List<FoodItemImage>.from(
             json["foodItemsImages"].map((x) => FoodItemImage.fromJson(x))),
-        foodItemsTags: List<FoodItemsTags>.from(
-            json["foodItemsTags"].map((x) => FoodItemsTags.fromJson(x))),
-        review: List<Review>.from(json["review"].map((x) => Review.fromJson(x))),
-        active: json["active"],
+        // foodItemsTags: List<FoodItemsTags>.from(
+        //     json["foodItemsTags"].map((x) => FoodItemsTags.fromJson(x))),
+        // review: List<Review>.from(json["review"].map((x) => Review.fromJson(x))),
+
+
+    active: json["active"],
         deleted: json["deleted"],
         createdBy: json["createdBy"],
         updatedBy: json["updatedBy"],
@@ -128,6 +119,9 @@ class FoodItem  extends BaseModel{
       );
 
   Map<String, dynamic> toJson() => {
+    // "tags": tags,
+    // "foodItemsTags": foodItemsTags != null ? List<dynamic>.from(foodItemsTags!.map((x) => x.toJson())) : [], // Default to empty list
+    // "review": review != null ? List<dynamic>.from(review!.map((x) => x.toJson())) : [],
         "id": id,
         "fkMenuCategoryId": fkMenuCategoryId,
         "name": name,
@@ -136,17 +130,15 @@ class FoodItem  extends BaseModel{
         "imageUrl": imageUrl,
         "servingSize": servingSize,
         "type": type,
-        "tags": tags,
         "price": price,
         "priceDouble": priceDouble,
         "taxRate": taxRate,
          "menuCategory": menuCategory.toJson(),
         // "menu": menu.toJson(), 
-        "foodItemsImages":
-            List<dynamic>.from(foodItemsImages.map((x) => x.toJson())),
-        "foodItemsTags": List<dynamic>.from(foodItemsTags.map((x) => x.toJson())),
-        "review": List<dynamic>.from(review.map((x) => x.toJson())),
-        "active": active,
+        "foodItemsImages": List<dynamic>.from(foodItemsImages.map((x) => x.toJson())),
+        // "foodItemsTags": List<dynamic>.from(foodItemsTags.map((x) => x.toJson())),
+        // "review": List<dynamic>.from(review.map((x) => x.toJson())),
+    "active": active,
         "deleted": deleted,
         "createdBy": createdBy,
         "updatedBy": updatedBy,
@@ -175,8 +167,6 @@ String toString() {
     taxRate: $taxRate,
  menuCategory: $menuCategory, 
     foodItemsImages: ${foodItemsImages.map((e) => e.toString()).join(', ')},
-    foodItemsTags: ${foodItemsTags.map((e) => e.toString()).join(', ')},
-    review: ${review.map((e) => e.toString()).join(', ')},
     createdAt: $createdAt,
     updatedAt: $updatedAt,
     deletedAt: $deletedAt,
@@ -188,3 +178,5 @@ String toString() {
 
 }
 
+// foodItemsTags: ${foodItemsTags.map((e) => e.toString()).join(', ')},
+// review: ${review.map((e) => e.toString()).join(', ')},

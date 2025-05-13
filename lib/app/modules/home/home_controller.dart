@@ -19,6 +19,7 @@ class HomeController extends GetxController {
   RxList<dynamic> foodItems = <dynamic>[].obs;
   RxList<dynamic> menuItems = <dynamic>[].obs;
   RxList<dynamic> menuItemCategory = <dynamic>[].obs;
+  final List<FoodItem> _originalFoodItems = [];
   
   
   @override
@@ -29,7 +30,6 @@ class HomeController extends GetxController {
     fetchMenuCategory();
     searchController = TextEditingController();
   }
-
 
   Future<void> refreshButton() async {
     loading.value = true;
@@ -54,31 +54,51 @@ String get dayOfTheWeek {
   }
 
 
+  void filterFoodItems(String query) {
+    if (query.isEmpty) {
+      foodItems.value = List.from(_originalFoodItems);
+    } else {
+      foodItems.value = _originalFoodItems
+          .where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    }
+  }
+
+
   Future<void> fetchFoodItems() async {
-  try {
-    loading.value = true;
-  final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
-  if (response.statusCode == 200) {
-    loading.value = true;
-  final data = jsonDecode(response.body);
-  if (data['data'] != null && data['data'] is List) {
-  List<FoodItem> fetchedItems = List<FoodItem>.from(
-  data['data'].map((item) => FoodItem.fromJson(item)),
-  );
-  foodItems.value = fetchedItems;  // Update food items
-  loading.value = false;
-  update();  // Trigger GetX rebuild
-  } else {
-  throw Exception('Invalid data format');
+    try {
+      loading.value = true;
+      final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print('Response data: $data'); // Debugging line
+
+        if (data['data'] != null && data['data'] is List) {
+          List<FoodItem>? fetchedItems = List<FoodItem>.from(
+            data['data'].map((item) {
+              print('Item: $item'); // Debugging line
+              return FoodItem.fromJson(item);
+            }),
+          );
+
+          foodItems.assignAll(fetchedItems);
+          _originalFoodItems.assignAll(fetchedItems);
+          foodItems.value = List.from(_originalFoodItems);
+          loading.value = false;
+          update();
+        } else {
+          throw Exception('Invalid data format');
+        }
+      } else {
+        throw Exception('Failed to fetch food items');
+      }
+    } catch (e) {
+      loading.value = false;
+      print('Error fetching food items For All Items: $e');
+    }
   }
-  } else {
-  throw Exception('Failed to fetch food items');
-  }
-  } catch (e) {
-  loading.value = false;
-  print('Error fetching food items: $e');
-  }
-  }
+
 
 
 

@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/button/button_page.dart';
 import 'package:wayli/app/core/widgets/custom_input.dart';
+import 'package:wayli/app/modules/bottom_nav/bottom_nav_view.dart';
 import 'package:wayli/app/modules/customer/registration/registration_view.dart';
 import 'package:wayli/app/modules/forget_password/forget_password_view.dart';
 import 'package:wayli/app/modules/home/home_view.dart';
@@ -215,19 +216,24 @@ class LoginView extends GetView<LoginController> {
                                 FadeInUp(
                                   duration: Duration(milliseconds: 1600),
                                   child: MaterialButton(
-                                    onPressed: () {
-                                      Get.to(() => TabsView(
-                                            bottomNavigationKey:
-                                                loginBottomNavigationKey,
-                                          ));
-                                    },
+                                    onPressed: () {},
                                     height: 50,
                                     color: secondaryColor,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Obx(() => ctl.isLoading.value
-                                        ? CircularProgressIndicator()
+                                        ? ElevatedButton(
+                                      onPressed: ctl.handleLogin,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor:
+                                        Colors.transparent,
+                                        shadowColor: Colors.transparent,
+                                      ),
+                                      child: Center(
+                                        child:  CircularProgressIndicator()
+                                        ),
+                                )
                                         : ElevatedButton(
                                             onPressed: ctl.handleLogin,
                                             style: ElevatedButton.styleFrom(

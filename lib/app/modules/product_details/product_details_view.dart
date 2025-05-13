@@ -1,18 +1,23 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wayli/app/modules/cart/cart_page.dart';
 import 'package:wayli/app/modules/product_details/product_details_controller.dart';
 
 import '../../core/model/food_items.dart';
 import '../../newpages/Pages/Cart.dart';
 import '../../newpages/components/colors.dart';
+import '../cart/cart_controller.dart';
 
 class ProductDetailsView extends GetView<ProductDetailsController> {
   const ProductDetailsView({super.key});
   @override
   Widget build(BuildContext context) {
     FoodItem FIL = Get.arguments['FIL'];
+
     String imageUrl = FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
+    final CartController cartController = Get.find<CartController>();
 
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
@@ -153,21 +158,24 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         IconButton(
-                          onPressed: controller.decreaseCount,
-                          icon: Icon(
-                            Icons.remove,
-                            size: size.width * 0.05,
-                          ),
-                          color: Colors.black,
+                          onPressed: () {
+                            print('Decreasing quantity of item: ${FIL.name}, current quantity: ${cartController.itemQuantities[FIL.id]?.value ?? 1}');
+                            cartController.decreaseQuantity(FIL.id);
+                          },
+                          icon: const Icon(Icons.remove),
+                          color: mainBlack,
                         ),
                         SizedBox(width: size.width * 0.02),
                         Obx(() => Text(
-                          '${controller.itemCount.value}',
+                          '${cartController.itemQuantities[FIL.id]?.value ?? 1}',
                           style: TextStyle(fontSize: size.width * 0.06),
                         )),
                         SizedBox(width: size.width * 0.02),
                         IconButton(
-                          onPressed: controller.increaseCount,
+                          onPressed: () {
+                            print('Increasing quantity of item: ${FIL.name}, current quantity: ${cartController.itemQuantities[FIL.id]?.value ?? 1}');
+                            cartController.increaseQuantity(FIL.id);
+                          },
                           icon: Icon(
                             Icons.add,
                             size: size.width * 0.05,
@@ -205,10 +213,12 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   height: size.height * 0.06,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CartScreen()));
+                      cartController.addItem(FIL);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartPage()));
+                      Get.snackbar('Added to Cart', '${FIL.name} has been added to your cart.');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: mainYellow,

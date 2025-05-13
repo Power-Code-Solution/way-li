@@ -8,7 +8,7 @@ class MenuCategory extends BaseModel{
   final String? name;
   final String? description;
   final String? coverImage;
-Menu? menu;
+// Menu? menu;
 
 
 MenuCategory({
@@ -17,7 +17,7 @@ MenuCategory({
     required this.name,
     required this.description,
     required this.coverImage,
-     this.menu,
+     // this.menu,
     required super.active,
     required super.deleted,
     super.createdBy,
@@ -36,7 +36,7 @@ MenuCategory({
       name: json['name'],
       description: json['description'],
       coverImage: json['coverImage'],
-      menu: json["menu"] != null ? Menu.fromJson(json["menu"]) : null,
+      // menu: json["menu"] != null ? Menu.fromJson(json["menu"]) : null,
       active: json['active'],
       deleted: json['deleted'],
       createdBy: json['createdBy'],
@@ -57,7 +57,7 @@ MenuCategory({
       "name": name,
       "description": description,
       "coverImage": coverImage,
-"menu": menu!.toJson(),
+// "menu": menu!.toJson(),
       "active": active,
       "deleted": deleted,
       "createdBy": createdBy,
@@ -79,7 +79,7 @@ String toString() {
     name: $name,
     description: $description,
     coverImage: $coverImage,
-    menu: $menu,
+   
   }
   ''';
 }

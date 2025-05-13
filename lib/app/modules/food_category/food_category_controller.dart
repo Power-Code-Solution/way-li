@@ -30,6 +30,8 @@ class FoodCategoryController extends GetxController {
 
 
   Future<void> refreshButton() async {
+    fetchMenuCategory();
+    fetchAllFoodItems();
     fetchMenuItems();
     fetchMenuCategory();
   }

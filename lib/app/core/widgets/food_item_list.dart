@@ -65,6 +65,7 @@ class FoodItemList extends StatelessWidget {
                 ),
                 AutoSizeText(
                   foodItem.menuCategory.name ?? '',
+
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(

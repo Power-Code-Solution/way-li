@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
+import 'package:wayli/app/modules/bottom_nav/bottom_nav_view.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
@@ -363,9 +364,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                   duration: Duration(milliseconds: 1600),
                                   child: MaterialButton(
                                     onPressed: () {
-                                      Get.to(() => TabsView(
-                                            bottomNavigationKey:
-                                                registrationBottomNavigationKey,
+                                      Get.to(() => BottomNavView(
                                           ));
                                     },
                                     height: 50,

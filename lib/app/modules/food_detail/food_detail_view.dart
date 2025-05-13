@@ -835,7 +835,8 @@ class FoodDetailViews extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         AutoSizeText(
-                                          FIL.tags.toString(),
+                                          "",
+                                          // FIL.tags.toString(),
                                           textAlign: TextAlign.left,
                                           style: GoogleFonts.montserrat(
                                               color: secondaryColor,

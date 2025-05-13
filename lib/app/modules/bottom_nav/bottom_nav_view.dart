@@ -10,22 +10,19 @@ import '../../newpages/Pages/Category.dart';
 import '../../newpages/Pages/Explore.dart';
 import '../../newpages/Pages/HomePage.dart';
 import '../../newpages/components/colors.dart';
+import '../cart/cart_page.dart';
 import '../food_category/food_category_view.dart';
 import '../profile/profile_view.dart';
 import 'bottom_nav_controller.dart';
 
 class BottomNavView extends GetView<BottomNavController> {
   static const String routeName = '/bottom-nav';
-
   BottomNavView({super.key});
-
   final BottomNavController logic = Get.put(BottomNavController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        // Remove IndexedStack, let PersistentTabView handle the screens
         return PersistentTabView(
           context,
           controller: PersistentTabController(initialIndex: logic.currentIndex.value),
@@ -33,12 +30,14 @@ class BottomNavView extends GetView<BottomNavController> {
             Homepage(),
             FoodCategoryView(),
             // Category(),
-            ExplorePage(),
-            CartScreen(),
+            // ExplorePage(),
+            CartPage(),
+            // CartScreen(),
             ProfileView()
             // HomeView(),
             // AccountScreen(),
           ],
+
           items: _navBarItems(logic),
           confineToSafeArea: true,
           backgroundColor: Colors.white,
@@ -75,12 +74,12 @@ class BottomNavView extends GetView<BottomNavController> {
         activeColorPrimary: mainYellow,
         inactiveColorPrimary: mainBlack,
       ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.explore),
-        title: ("Explore"),
-        activeColorPrimary: mainYellow,
-        inactiveColorPrimary: mainBlack,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: Icon(Icons.explore),
+      //   title: ("Explore"),
+      //   activeColorPrimary: mainYellow,
+      //   inactiveColorPrimary: mainBlack,
+      // ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.shopping_cart_checkout_outlined),
         title: ("Cart"),

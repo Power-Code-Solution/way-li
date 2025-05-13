@@ -41,10 +41,10 @@ class LoginController extends GetxController {
       final result = await authController.login(email.text, pass.text);
 
       if (result) {
-
+        isLoading.value = false;
         Get.snackbar("Login Successful", "Welcome, ${authController.userName.value}",
             snackPosition: SnackPosition.BOTTOM);
-             Get.offAll(() => BottomNavView);
+        Get.offAll(() => BottomNavView());
         email.clear();
         pass.clear();
       } else {

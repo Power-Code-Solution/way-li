@@ -1,11 +1,17 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/newpages/components/Card.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
 
 import '../../core/config/constants.dart';
+import '../../core/widgets/animated_textfield/view.dart';
 import '../../core/widgets/skelton_loading.dart';
+import '../../modules/app_bar/app_bar_page.dart';
 import '../../modules/home/home_controller.dart';
 
 class Homepage extends GetView<HomeController> {
@@ -20,22 +26,24 @@ class Homepage extends GetView<HomeController> {
     final gridSpacing = size.width * 0.02;
 
     return Scaffold(
+        drawer: const AppBarPage(),
         resizeToAvoidBottomInset: false,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(size.height * 0.08),
           child: AppBar(
-            leading: const Icon(Icons.menu),
+            leading: Builder(
+              builder: (context) => IconButton(
+        icon: const Icon(Icons.menu),
+      onPressed: () {
+        Scaffold.of(context).openDrawer();
+      },
+    ),
+    ),
             backgroundColor: mainYellow,
             title: Row(
               children: [
-                const Text(
-                  "Way Li",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Image.asset("assets/images/way-li_logo.png", width: 30),
+                
+                Image.asset("assets/images/way-li_logo.png", width: 75),
               ],
             ),
             actions: const [
@@ -47,7 +55,7 @@ class Homepage extends GetView<HomeController> {
           ),
         ),
         body: RefreshIndicator(
-          onRefresh: homeController.refreshButton, // Trigger refresh here
+          onRefresh: homeController.refreshButton,
           color: kPrimaryColor,
           triggerMode: RefreshIndicatorTriggerMode.onEdge,
           displacement: 200.0,
@@ -60,42 +68,72 @@ class Homepage extends GetView<HomeController> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        SizedBox(height: size.height * 0.02),
-                        // Search Field
+                        Gap(4),
                         Padding(
                           padding: EdgeInsets.symmetric(
                               horizontal: horizontalPadding),
                           child: ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 600),
-                            child: TextFormField(
-                              decoration: InputDecoration(
-                                hintText: "Search",
-                                hintStyle:
-                                    TextStyle(fontSize: size.width * 0.04),
-                                suffixIcon: const Icon(Icons.search),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(
-                                      width: 2, color: Colors.grey),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(
-                                  horizontal: size.width * 0.04,
-                                  vertical: size.height * 0.015,
-                                ),
-                              ),
+                            child: AnimatedHintTextField(
+                              controller: homeController.searchController,
+                              onChanged: (value) => homeController.filterFoodItems(value),
+                              size: MediaQuery.of(context).size,
                             ),
                           ),
                         ),
-                        SizedBox(height: size.height * 0.02),
-
-                        Obx(
-                          () {
-                            if (ctl.loading.value) {
+                        Gap(4),
+                        Obx(() {
+                            if (ctl.loading.value) {return Center(child: Skelton());}
+                            if (controller.foodItems.isEmpty) {
                               return Center(
-                                  child:
-                                      Skelton()); // Show loader while fetching
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/way-li_logo.png',
+                                        height: 200,
+                                        width: 200,
+                                      ),
+                                      SizedBox(height: 20),
+                                      AutoSizeText(
+                                        'Sorry',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                      SizedBox(height: 10),
+                                      AutoSizeText(
+                                        'No Food Item available at the moment!',
+                                        style: GoogleFonts.montserrat(
+                                          fontSize: 16,
+                                          color: Colors.grey[500],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      SizedBox(height: 30),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          controller.refreshButton();
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                          secondaryColor,
+                                          shadowColor: Colors.transparent,
+                                        ),
+                                        child: AutoSizeText('Refresh', style: GoogleFonts.montserrat(
+                                          fontSize: 15,
+                                          color: primaryColor,
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
                             }
-
                             return Padding(
                               padding: EdgeInsets.symmetric(
                                   horizontal: horizontalPadding),
@@ -130,7 +168,6 @@ class Homepage extends GetView<HomeController> {
                             );
                           },
                         ),
-
                         SizedBox(height: size.height * 0.02),
                       ],
                     ),
@@ -140,3 +177,9 @@ class Homepage extends GetView<HomeController> {
         ));
   }
 }
+
+
+
+
+
+

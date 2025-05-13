@@ -1,12 +1,13 @@
 
 
 
+
 // ignore_for_file: constant_identifier_names
 
 import 'home_routes.dart';
 import 'customer_routes.dart';
 import 'login_routes.dart';
-import 'tabs_routes.dart';
+// import 'tabs_routes.dart';
 import 'admin_routes.dart';
 import 'splash_screen_routes.dart';
 import 'forget_password_routes.dart';
@@ -21,6 +22,7 @@ import 'history_routes.dart';
 import 'bottom_nav_routes.dart';
 import 'product_details_routes.dart';
 import 'food_category_routes.dart';
+import 'app_bar_routes.dart';
 
 class AppPages {
   AppPages._();
@@ -32,7 +34,7 @@ class AppPages {
     ...HomeRoutes.routes,
     ...CustomerRoutes.routes,
     ...LoginRoutes.routes,
-    ...TabsRoutes.routes,
+    // ...TabsRoutes.routes,
     ...AdminRoutes.routes,
     ...ForgetPasswordRoutes.routes,
     ...OtpRoutes.routes,
@@ -46,5 +48,6 @@ class AppPages {
     ...BottomNavRoutes.routes,
     ...ProductDetailsRoutes.routes,
     ...FoodCategoryRoutes.routes,
+    ...AppBarRoutes.routes,
   ];
 }
