@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wayli/app/newpages/components/Card.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
 
 class Category extends StatefulWidget {

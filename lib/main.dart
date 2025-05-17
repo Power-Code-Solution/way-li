@@ -10,20 +10,29 @@ import 'app/routes/app_pages.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(AuthController());
-  Get.put(FoodCategoryController());
-  Get.put(HomeController());
-  Get.put(CartController());
 
-  final authController = Get.find<AuthController>();
-  await authController.checkLoginStatus();
-  runApp(
-    GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'WAY LI',
-      initialBinding: ApplicationBindings(),
-      initialRoute: authController.isLoggedIn.value ? "/bottom-nav" : "/login",
-      getPages: AppPages.routes,
-    ),
-  );
+  try {
+    Get.put(AuthController());
+    Get.put(FoodCategoryController());
+    Get.put(HomeController());
+    Get.put(CartController());
+
+    final authController = Get.find<AuthController>();
+    await authController.checkLoginStatus();
+
+    runApp(
+      GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'WAY LI',
+        initialBinding: ApplicationBindings(),
+        initialRoute: authController.isLoggedIn.value ? "/bottom-nav" : "/login",
+        getPages: AppPages.routes,
+      ),
+    );
+  } catch (e, stackTrace) {
+    print("Error in main(): $e");
+    print("This is the stack trace ${stackTrace}" );
+  }
 }
+
+

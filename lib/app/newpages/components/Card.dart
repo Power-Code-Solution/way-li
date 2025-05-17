@@ -29,7 +29,7 @@ class CardMain extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final containerWidth = size.width * 0.4;
     final containerHeight = containerWidth * 1.2;
-    final imageWidth = containerWidth * 0.8;
+    final imageWidth = containerWidth * 0.7;
     final imageHeight = imageWidth * 0.7;
     final buttonWidth = containerWidth * 0.7;
     final buttonHeight = containerHeight * 0.15;
@@ -62,6 +62,7 @@ class CardMain extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
+                // imageUrl,
                 imageUrl.isNotEmpty ? imageUrl : "assets/images/food.png",
                 width: imageWidth,
                 height: imageHeight,
@@ -78,7 +79,9 @@ class CardMain extends StatelessWidget {
                   }
                 },
                 errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                  return Image.asset("assets/images/food.png", fit: BoxFit.cover);
+                  return Image.asset("assets/images/food.png", fit: BoxFit.cover, width: imageWidth,
+                    height: imageHeight,
+                    );
                 },
               ),
             ),

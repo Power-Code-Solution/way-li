@@ -21,10 +21,10 @@ class FoodCategoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    fetchMenuCategory();
     fetchFoodItems(-1);
     fetchAllFoodItems();
     fetchMenuItems();
-    fetchMenuCategory();
     searchController = TextEditingController();
   }
 
