@@ -1,15 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:wayli/app/core/model/menu_category.dart';
 import 'package:wayli/app/newpages/components/Card.dart';
 
 import '../../core/config/constants.dart';
 import '../../core/widgets/animated_textfield/view.dart';
-import '../../core/widgets/empty_page/view.dart';
 import '../../core/widgets/skelton_loading.dart';
 import '../../newpages/components/colors.dart';
 import 'food_category_controller.dart';
@@ -33,7 +30,9 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
         child: AppBar(
           leading: const Icon(Icons.chevron_left),
           backgroundColor: mainYellow,
-          title: const Text("Category"),
+          title:  AutoSizeText("Category", style: GoogleFonts.montserrat(
+
+          ),),
           centerTitle: true,
           actions: const [
             Padding(
@@ -70,30 +69,41 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
                     onChanged: (value) => categoryController.filterFoodItems(value),
                     size: MediaQuery.of(context).size,
                   ),
-
-                  // TextFormField(
-                  //   controller: categoryController.searchController,
-                  //   onChanged: (value) => categoryController.filterFoodItems(value),
-                  //   decoration: InputDecoration(
-                  //     hintText: "Search",
-                  //     hintStyle: TextStyle(fontSize: size.width * 0.04),
-                  //     suffixIcon: const Icon(Icons.search),
-                  //     border: OutlineInputBorder(
-                  //       borderRadius: BorderRadius.circular(10),
-                  //       borderSide: const BorderSide(width: 2, color: Colors.grey),
-                  //     ),
-                  //     contentPadding: EdgeInsets.symmetric(
-                  //       horizontal: size.width * 0.04,
-                  //       vertical: size.height * 0.015,
-                  //     ),
-                  //   ),
-                  // )
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              SizedBox(
+            Obx(() {
+              return SizedBox(
                 height: size.height * 0.07,
-                child: ListView.builder(
+                child: controller.menuItemCategory.isEmpty
+                    ? Center(
+                  child: GestureDetector(
+                    onTap: () => controller.fetchMenuCategory(),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: secondaryColor,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.refresh, size: 16, color: primaryColor),
+                          SizedBox(width: 6),
+                          Text(
+                            "Load Menu",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: primaryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+                    : ListView.builder(
                   scrollDirection: Axis.horizontal,
                   padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                   itemCount: controller.menuItemCategory.length,
@@ -101,7 +111,9 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
                     return CategoryTile(controller.menuItemCategory[index], size);
                   },
                 ),
-              ),
+              );
+            }),
+
               SizedBox(height: size.height * 0.02),
               Obx(() {
                 if (controller.isLoading.value) {

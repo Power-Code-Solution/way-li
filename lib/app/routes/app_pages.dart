@@ -27,7 +27,7 @@ import 'app_bar_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = '/splash-screen';
+  static const INITIAL = '/login';
 
   static final routes = [
     ...SplashScreenRoutes.routes,

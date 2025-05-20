@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
 
 class OnBoardingController extends GetxController {
@@ -25,21 +26,21 @@ List<Map<String, String>> pageArr = [
     {
       "title": "Find Food You Love",
       "subtitle":
-          "Discover the best foods from over 1,000\nrestaurants and fast delivery to your\ndoorstep",
-      "image": "assets/images/way-li_logo.png",
+          "Discover the best foods  and fast delivery to your\ndoorstep",
+      "image": "assets/images/c2.png",
       // "image": "assets/images/on_boarding_1.png",
     },
     {
       "title": "Fast Delivery",
       "subtitle": "Fast food delivery to your home, office\n wherever you are",
-      "image": "assets/images/way-li_logo.png",
+      "image": "assets/images/f4.png",
       // "image": "assets/images/on_boarding_2.png",
     },
     {
       "title": "Live Tracking",
       "subtitle":
           "Real time tracking of your food on the app\nonce you placed the order",
-      "image": "assets/images/way-li_logo.png",
+      "image": "assets/images/f1.png",
       // "image": "assets/images/on_boarding_3.png",
     },
   ];
@@ -58,5 +59,13 @@ void updatePage(int index) {
       );
     }
   }
+
+Future<void> completeOnboarding() async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('hasOnboarded', true);
+  Get.offAllNamed('/login'); // Or wherever you want to go next
+}
+
+
 
 }

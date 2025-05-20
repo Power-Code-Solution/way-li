@@ -15,8 +15,10 @@ class FoodCategoryController extends GetxController {
   RxBool isLoading = false.obs;
   RxList<dynamic> foodItems = <dynamic>[].obs;
   RxList<dynamic> allFoodItems = <dynamic>[].obs;
-  RxList<dynamic> menuItems = <dynamic>[].obs;
-  RxList<dynamic> menuItemCategory = <dynamic>[].obs;
+  // RxList<dynamic> menuItems = <dynamic>[].obs;
+  RxList<Menu> menuItems = <Menu>[].obs;
+  // RxList<dynamic> menuItemCategory = <dynamic>[].obs;
+  RxList<MenuCategory> menuItemCategory = <MenuCategory>[].obs;
 
   @override
   void onInit() {
@@ -33,7 +35,6 @@ class FoodCategoryController extends GetxController {
     fetchMenuCategory();
     fetchAllFoodItems();
     fetchMenuItems();
-    fetchMenuCategory();
   }
 
   Future<void> fetchFoodItems(int categoryId) async {
@@ -111,14 +112,20 @@ class FoodCategoryController extends GetxController {
     }
   }
 
+
   Future<void> fetchMenuCategory() async {
     var url = ('$apiBaseAddress/secure/admin/menu-category/all');
     final response = await http.get(Uri.parse(url));
+
     if (response.statusCode == 200) {
+      print("I was pressed to return data and I returned the data: ${response.body}");
+
       if (response.body.isNotEmpty) {
         final data = jsonDecode(response.body);
+
         if (data['data'] != null && data['data'] is List) {
           List<MenuCategory> fetchedItems = [];
+
           for (var item in data['data']) {
             if (item != null && item is Map<String, dynamic>) {
               try {
@@ -128,7 +135,11 @@ class FoodCategoryController extends GetxController {
               }
             }
           }
-          fetchedItems.insert(0, MenuCategory(
+
+          // Insert "All" category manually
+          fetchedItems.insert(
+            0,
+            MenuCategory(
               id: -1,
               name: 'All',
               fkMenuId: 0,
@@ -138,14 +149,16 @@ class FoodCategoryController extends GetxController {
               deleted: false,
               createdAt: DateTime.now(),
               updatedAt: DateTime.now(),
-              deletedAt: DateTime.now()
-          ));
-          menuItems.assignAll(fetchedItems);
+              deletedAt: DateTime.now(),
+            ),
+          );
+
+          // Only update menuItemCategory (correctly typed)
           menuItemCategory.assignAll(fetchedItems);
 
-          update();
+          update(); // If using GetxController
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {

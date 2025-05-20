@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
@@ -64,12 +65,12 @@ class RoundButton extends StatelessWidget {
         decoration: BoxDecoration(
           border: type == RoundButtonType.bgPrimary ? null : Border.all(color: primaryColor, width: 1),
           color: type == RoundButtonType.bgPrimary ? primaryColor : kWhiteColor,
-          borderRadius: BorderRadius.circular(28),
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Text(
+        child: AutoSizeText(
           title,
-          style: TextStyle(
-              color: type == RoundButtonType.bgPrimary ? kWhiteColor :  primaryColor, fontSize: fontSize, fontWeight: FontWeight.w600),
+          style: GoogleFonts.montserrat(
+              color: type == RoundButtonType.bgPrimary ? secondaryColor :  primaryColor, fontSize: fontSize, fontWeight: FontWeight.w900),
         ),
       ),
     );
@@ -103,9 +104,9 @@ class RoundedButton extends StatelessWidget {
             type == RoundedButtonType.white ? Colors.white : primaryColor,
         textColor: type == RoundedButtonType.white ? primaryColor : Colors.white ,
         height: 55,
-        child: Text(
+        child: AutoSizeText(
           title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          style: GoogleFonts.montserrat(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
     );

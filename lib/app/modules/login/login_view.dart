@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:animate_do/animate_do.dart';
@@ -94,9 +95,7 @@ class LoginView extends GetView<LoginController> {
                             child: Column(
                               children: <Widget>[
                                 // Gap(60),
-                                FadeInUp(
-                                  duration: Duration(milliseconds: 1400),
-                                  child: Container(
+                               Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
@@ -156,7 +155,7 @@ class LoginView extends GetView<LoginController> {
                                       ],
                                     ),
                                   ),
-                                ),
+
                                 Gap(20),
                                 Padding(
                                   padding:
@@ -165,9 +164,7 @@ class LoginView extends GetView<LoginController> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      FadeInUp(
-                                        duration: Duration(milliseconds: 1500),
-                                        child: GestureDetector(
+                                     GestureDetector(
                                           onTap: () {
                                             Get.to(() => ForgetPasswordView());
                                           },
@@ -185,11 +182,9 @@ class LoginView extends GetView<LoginController> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                        ),
+
                                       ),
-                                      FadeInUp(
-                                        duration: Duration(milliseconds: 1500),
-                                        child: GestureDetector(
+                                     GestureDetector(
                                           onTap: () {
                                             Get.to(() => RegistrationView());
                                           },
@@ -207,38 +202,28 @@ class LoginView extends GetView<LoginController> {
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
-                                        ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Gap(40),
-                                FadeInUp(
-                                  duration: Duration(milliseconds: 1600),
-                                  child: MaterialButton(
-                                    onPressed: () {},
-                                    height: 50,
-                                    color: secondaryColor,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Obx(() => ctl.isLoading.value
-                                        ? ElevatedButton(
-                                      onPressed: ctl.handleLogin,
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                        Colors.transparent,
-                                        shadowColor: Colors.transparent,
-                                      ),
-                                      child: Center(
-                                        child:  CircularProgressIndicator()
-                                        ),
-                                )
-                                        : ElevatedButton(
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: MaterialButton(
+                                          onPressed: () {},
+                                          height: 50,
+                                          color: secondaryColor,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Obx(() => ctl.isLoading.value
+                                              ? CircularProgressIndicator()
+                                              : ElevatedButton(
                                             onPressed: ctl.handleLogin,
                                             style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                                  Colors.transparent,
+                                              backgroundColor: Colors.transparent,
                                               shadowColor: Colors.transparent,
                                             ),
                                             child: Center(
@@ -253,8 +238,33 @@ class LoginView extends GetView<LoginController> {
                                               ),
                                             ),
                                           )),
-                                  ),
+                                        ),
+                                      ),
+
+                                    const Gap(5),
+                                    Obx(() => ctl.showFingerprint.value
+                                        ? Expanded(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          ctl.authenticate();
+                                        },
+                                        child: SvgPicture.asset(
+                                          'assets/svg/fingerprint.svg',
+                                          color: primaryColor,
+                                          height: 40,
+                                          width: 40,
+                                        ),
+                                      ),
+                                    )
+                                        : SizedBox()),
+                                  ],
                                 ),
+
+
+
+
+
+
 
                                 // Gap(50),
                               ],

@@ -2,9 +2,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/core/config/constants.dart';
 
+import '../login/login_controller.dart';
 import 'app_bar_controller.dart';
 
 
@@ -15,6 +18,7 @@ class AppBarPage extends GetView<AppBarController> {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.put(AuthController());
+    final LoginController loginController = Get.put(LoginController());
 
     return Drawer(
       child: Column(
@@ -106,6 +110,94 @@ class AppBarPage extends GetView<AppBarController> {
                 title: const Text('Settings'),
                 onTap: () => Navigator.pop(context),
               ),
+
+              Obx(() => SwitchListTile(
+                secondary: const Icon(Icons.fingerprint),
+                title: const Text('Fingerprint Login'),
+                value: loginController.showFingerprint.value,
+                activeColor: primaryColor,
+                activeTrackColor: secondaryColor,
+                onChanged: (bool newValue) async {
+                  final prefs = await SharedPreferences.getInstance();
+
+                  if (newValue) {
+                    // 👉 User is enabling fingerprint
+                    final localAuth = LocalAuthentication();
+                    try {
+                      bool didAuthenticate = await localAuth.authenticate(
+                        localizedReason:
+                        'Confirm your identity to enable fingerprint login',
+                        options: const AuthenticationOptions(biometricOnly: false),
+                      );
+
+                      if (didAuthenticate) {
+                        await prefs.setBool('is_fingerprint_enabled', true);
+                        loginController.showFingerprint.value = true;
+                        Get.snackbar('Enabled', 'Fingerprint login enabled');
+                      } else {
+                        Get.snackbar('Cancelled', 'Authentication cancelled');
+                      }
+                    } catch (e) {
+                      Get.snackbar('Error', 'Failed to authenticate: $e');
+                    }
+                  } else {
+                    // ⚠️ User is disabling fingerprint
+                    bool confirm = await Get.dialog(
+                      AlertDialog(
+                        title: Text("Disable Fingerprint Login?"),
+                        content:
+                        AutoSizeText("Are you sure you want to turn off fingerprint login?", style: GoogleFonts.montserrat(fontWeight: FontWeight.w500),),
+                        actions: [
+                          TextButton(
+                              onPressed: () => Get.back(result: false),
+                              child:  Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: AutoSizeText(
+                  "Cancel",
+                  style: GoogleFonts.montserrat(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  ),
+                  ),
+                  ),),
+                          TextButton(
+                              onPressed: () => Get.back(result: true),
+                              child:Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: AutoSizeText(
+                  "Yes",
+                  style: GoogleFonts.montserrat(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                  ),
+                  ),
+                  )),
+                        ],
+                      ),
+                    );
+
+                    if (confirm == true) {
+                      await prefs.setBool('is_fingerprint_enabled', false);
+                      loginController.showFingerprint.value = false;
+                      Get.snackbar('Disabled', 'Fingerprint login disabled');
+                    }
+                  }
+                },
+              )),
+
+
+
+
               ListTile(
                 leading: const Icon(Icons.logout),
                 title: const Text('Logout'),

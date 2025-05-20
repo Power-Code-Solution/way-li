@@ -87,32 +87,21 @@ class AuthController extends GetxController {
   Future<void> checkLoginStatus() async {
     try {
       final token = await _storage.read(key: 'auth_token');
-
       if (token != null && token.isNotEmpty) {
         isLoggedIn.value = true;
-
         final prefs = await SharedPreferences.getInstance();
         userName.value = prefs.getString('user_name') ?? '';
         userEmail.value = prefs.getString('user_email') ?? '';
-
         print("User is logged in.");
       } else {
         isLoggedIn.value = false;
-        print("User is not logged in.");
       }
-
     } catch (e) {
-      // Log the decryption failure and clear secure storage
       print("Failed to read token from secure storage: $e");
-
-      // Optional: clear corrupted data
       try {
-        await _storage.deleteAll(); // Wipe all secure keys
-        print("Secure storage cleared due to corruption.");
+        await _storage.deleteAll();
       } catch (cleanupError) {
-        print("Failed to clear secure storage: $cleanupError");
       }
-
       isLoggedIn.value = false;
     }
   }

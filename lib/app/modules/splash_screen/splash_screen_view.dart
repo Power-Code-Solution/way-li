@@ -29,7 +29,6 @@ class _SplashScreenViewState extends State<SplashScreenView> with SingleTickerPr
     _controller.forward();
     Future.delayed(Duration(seconds: 5), () {
       Get.to(() => OnBoardingView());
-      // Get.to(() => LoginView());
     });
   }
 
@@ -43,12 +42,7 @@ class _SplashScreenViewState extends State<SplashScreenView> with SingleTickerPr
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // decoration: BoxDecoration(
-        //   image: DecorationImage(
-        //     image: AssetImage('assets/images/way-li_logo.png'),
-        //     fit: BoxFit.cover,
-        //   ),
-        // ),
+
             decoration: BoxDecoration(
           color: primaryColor,
         ),
@@ -64,14 +58,6 @@ class _SplashScreenViewState extends State<SplashScreenView> with SingleTickerPr
                   color: secondaryColor,
                   width: 5,
                 ),
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.black.withOpacity(0.1),
-                //     spreadRadius: 2,
-                //     blurRadius: 2,
-                //     offset: Offset(0, 1),
-                //   ),
-                // ],
               ),
               child: ClipOval(
                 child: Image.asset(
