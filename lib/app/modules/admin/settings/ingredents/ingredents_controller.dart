@@ -10,74 +10,64 @@ import 'package:wayli/app/core/model/tag.dart';
 class IngredentsController extends GetxController {
   var isLoading = false.obs;
   var responseMessage = ''.obs;
-RxList<dynamic> ingredents = <dynamic>[].obs;
+  RxList<dynamic> ingredents = <dynamic>[].obs;
   @override
   void onInit() {
     super.onInit();
     fetchIngredents();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   Future<void> createIngredents(String name) async {
-  isLoading.value = true;
+    isLoading.value = true;
 
-  if (name.isEmpty) {
-    responseMessage.value = 'All fields are required.';
-    Get.snackbar('Error', 'Please provide a tag name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white);
-    isLoading.value = false;
-    return;
-  }
-  try {
-    var uri = Uri.parse('$apiBaseAddress/secure/admin/ingredients/create');
-    var body = json.encode({
-      'name': name,
-    });
-    var response = await http.post(
-      uri,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: body,
-    );
-    if (response.statusCode == 200) {
-      fetchIngredents();
-      responseMessage.value = 'Ingredents created successfully!';
-      Get.snackbar('Success', 'Ingredents created successfully!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white);
-    } else {
-      responseMessage.value =
-          'Failed to create menu. Status: ${response.statusCode}';
-      Get.snackbar('Error', 'Failed to create Ingredentss. Please try again. $responseMessage',
+    if (name.isEmpty) {
+      responseMessage.value = 'All fields are required.';
+      Get.snackbar('Error', 'Please provide a tag name',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white);
+      isLoading.value = false;
+      return;
     }
-  } catch (e) {
-    responseMessage.value = 'Error: $e';
-    Get.snackbar('Error', 'An error occurred. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white);
-  } finally {
-    isLoading.value = false;
+    try {
+      var uri = Uri.parse('$apiBaseAddress/secure/admin/ingredients/create');
+      var body = json.encode({
+        'name': name,
+      });
+      var response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      );
+      if (response.statusCode == 200) {
+        fetchIngredents();
+        responseMessage.value = 'Ingredents created successfully!';
+        Get.snackbar('Success', 'Ingredents created successfully!',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white);
+      } else {
+        responseMessage.value =
+            'Failed to create menu. Status: ${response.statusCode}';
+        Get.snackbar('Error',
+            'Failed to create Ingredentss. Please try again. $responseMessage',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white);
+      }
+    } catch (e) {
+      responseMessage.value = 'Error: $e';
+      Get.snackbar('Error', 'An error occurred. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
+    } finally {
+      isLoading.value = false;
+    }
   }
-}
 
-  
   Future<void> fetchIngredents() async {
     final response =
         await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
@@ -106,7 +96,7 @@ RxList<dynamic> ingredents = <dynamic>[].obs;
           }
           print('Fetched Ingredents Category items: ${ingredents.value}');
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {

@@ -1,23 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
-import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/modules/admin/admin_users/admin_users_view.dart';
-import 'package:wayli/app/modules/admin/settings/menu/menu_view.dart';
-import 'package:wayli/app/modules/customer/order_history/order_history_view.dart';
-import 'package:wayli/app/modules/customer/registration/registration_view.dart';
-import 'package:wayli/app/modules/favourite_food/favourite_food_view.dart';
-import 'package:wayli/app/modules/history/history_view.dart';
-import 'package:wayli/app/modules/home/home_view.dart';
-import 'package:wayli/app/modules/login/login_view.dart';
-import 'package:wayli/app/modules/profile/profile_view.dart';
-import 'package:wayli/app/modules/splash_screen/splash_screen_view.dart';
-import '../../newpages/Pages/BottomBar.dart';
-import '../../newpages/Pages/HomePage.dart';
-import 'tabs_controller.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
-
 //
 // class TabsView extends GetView<TabsController> {
 //   static String routeName = "/tabs";

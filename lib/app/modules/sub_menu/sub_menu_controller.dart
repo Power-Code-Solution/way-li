@@ -9,22 +9,12 @@ import 'package:wayli/app/core/model/menu_category.dart';
 
 class SubMenuController extends GetxController {
   RxList<dynamic> menuItemCategory = <dynamic>[].obs;
-late final TextEditingController searchController;
+  late final TextEditingController searchController;
   @override
   void onInit() {
     super.onInit();
     fetchMenuCategory();
     searchController = TextEditingController();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> fetchMenuCategory() async {
@@ -55,7 +45,7 @@ late final TextEditingController searchController;
           }
           print('Fetched Menu Category items: ${menuItemCategory.value}');
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {

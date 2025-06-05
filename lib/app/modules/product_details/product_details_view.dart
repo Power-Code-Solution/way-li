@@ -122,7 +122,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                         style: GoogleFonts.montserrat(
                           fontSize: size.width * 0.035,
                           fontWeight: FontWeight.w400,
-                          color: const Color(0XFF13B7419),
+                          color: const Color(0Xff13b7419),
                         ),
                       ),
                       SizedBox(height: size.height * 0.005),

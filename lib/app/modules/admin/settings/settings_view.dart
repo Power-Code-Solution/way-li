@@ -23,9 +23,6 @@
 // //   }
 // // }
 
-
-
-
 // import 'package:flutter/material.dart';
 // import 'package:get/get.dart';
 // import 'package:auto_size_text/auto_size_text.dart';
@@ -40,7 +37,6 @@
 // import 'package:wayli/app/modules/admin/settings/settings_controller.dart';
 // import 'package:wayli/app/modules/admin/settings/tags/tags_view.dart';
 // import 'package:wayli/app/modules/admin/settings/users/users_view.dart';
-
 
 // class SettingsView extends GetView<SettingsController> {
 //   const SettingsView({super.key});
@@ -117,8 +113,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -130,7 +124,6 @@ import 'package:wayli/app/modules/admin/settings/allergens/allergens_view.dart';
 import 'package:wayli/app/modules/admin/settings/ingredents/ingredents_view.dart';
 import 'package:wayli/app/modules/admin/settings/menu/menu_view.dart';
 import 'package:wayli/app/modules/admin/settings/menu_category/menu_category_view.dart';
-import 'package:wayli/app/modules/admin/settings/settings_controller.dart';
 import 'package:wayli/app/modules/admin/settings/tags/tags_view.dart';
 
 class SettingsView extends StatefulWidget {
@@ -140,7 +133,8 @@ class SettingsView extends StatefulWidget {
   _SettingsViewState createState() => _SettingsViewState();
 }
 
-class _SettingsViewState extends State<SettingsView> with SingleTickerProviderStateMixin {
+class _SettingsViewState extends State<SettingsView>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -240,6 +234,3 @@ class _SettingsViewState extends State<SettingsView> with SingleTickerProviderSt
     };
   }
 }
-
-
-

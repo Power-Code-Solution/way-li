@@ -49,16 +49,6 @@ class AddFoodItemsController extends GetxController {
     fetchTags();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   Future<void> createMenu(
     String name,
     String description,
@@ -134,7 +124,7 @@ class AddFoodItemsController extends GetxController {
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white);
-            resetForm();
+        resetForm();
       } else {
         responseMessage.value =
             'Failed to create menu. Status: ${response.statusCode}';
@@ -149,22 +139,21 @@ class AddFoodItemsController extends GetxController {
     }
   }
 
-
   void resetForm() {
-  nameController.clear();
-  descriptionController.clear();
-  typeController.clear();
-  fkMenuCategoryIdController.clear();
-  servingSize.clear();
-  priceController.clear();
-  fkTagIds.clear(); 
-  fkAllergensId.clear();
-  fkIngredientsId.clear(); 
-}
+    nameController.clear();
+    descriptionController.clear();
+    typeController.clear();
+    fkMenuCategoryIdController.clear();
+    servingSize.clear();
+    priceController.clear();
+    fkTagIds.clear();
+    fkAllergensId.clear();
+    fkIngredientsId.clear();
+  }
 
   Future<void> pickImages() async {
     final ImagePicker picker = ImagePicker();
-    final List<XFile>? pickedFiles = await picker.pickMultiImage();
+    final List<XFile> pickedFiles = await picker.pickMultiImage();
 
     if (pickedFiles != null) {
       selectedImages.addAll(pickedFiles.map((file) => File(file.path)));
@@ -205,7 +194,7 @@ class AddFoodItemsController extends GetxController {
           }
           print('Fetched Menu Category items: ${menuItemCategory.value}');
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {

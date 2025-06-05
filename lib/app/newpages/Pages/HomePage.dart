@@ -1,9 +1,7 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/newpages/components/Card.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
@@ -33,16 +31,15 @@ class Homepage extends GetView<HomeController> {
           child: AppBar(
             leading: Builder(
               builder: (context) => IconButton(
-        icon: const Icon(Icons.menu),
-      onPressed: () {
-        Scaffold.of(context).openDrawer();
-      },
-    ),
-    ),
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              ),
+            ),
             backgroundColor: mainYellow,
             title: Row(
               children: [
-                
                 Image.asset("assets/images/way-li_logo.png", width: 75),
               ],
             ),
@@ -60,7 +57,6 @@ class Homepage extends GetView<HomeController> {
           triggerMode: RefreshIndicatorTriggerMode.onEdge,
           displacement: 200.0,
           strokeWidth: 3,
-
           child: GetBuilder<HomeController>(
               init: HomeController(),
               builder: (ctl) {
@@ -76,14 +72,18 @@ class Homepage extends GetView<HomeController> {
                             constraints: BoxConstraints(maxWidth: 600),
                             child: AnimatedHintTextField(
                               controller: homeController.searchController,
-                              onChanged: (value) => homeController.filterFoodItems(value),
+                              onChanged: (value) =>
+                                  homeController.filterFoodItems(value),
                               size: MediaQuery.of(context).size,
                             ),
                           ),
                         ),
                         Gap(4),
-                        Obx(() {
-                            if (ctl.loading.value) {return Center(child: Skelton());}
+                        Obx(
+                          () {
+                            if (ctl.loading.value) {
+                              return Center(child: Skelton());
+                            }
                             if (controller.foodItems.isEmpty) {
                               return Center(
                                 child: SingleChildScrollView(
@@ -120,14 +120,16 @@ class Homepage extends GetView<HomeController> {
                                           controller.refreshButton();
                                         },
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                          secondaryColor,
+                                          backgroundColor: secondaryColor,
                                           shadowColor: Colors.transparent,
                                         ),
-                                        child: AutoSizeText('Refresh', style: GoogleFonts.montserrat(
-                                          fontSize: 15,
-                                          color: primaryColor,
-                                        ),),
+                                        child: AutoSizeText(
+                                          'Refresh',
+                                          style: GoogleFonts.montserrat(
+                                            fontSize: 15,
+                                            color: primaryColor,
+                                          ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -177,9 +179,3 @@ class Homepage extends GetView<HomeController> {
         ));
   }
 }
-
-
-
-
-
-

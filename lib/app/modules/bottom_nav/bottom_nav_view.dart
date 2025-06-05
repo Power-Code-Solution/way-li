@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-import 'package:wayli/app/modules/admin/settings/settings_view.dart';
-import 'package:wayli/app/modules/home/home_view.dart';
 
-import '../../newpages/Pages/Account.dart';
-import '../../newpages/Pages/Cart.dart';
-import '../../newpages/Pages/Category.dart';
-import '../../newpages/Pages/Explore.dart';
 import '../../newpages/Pages/HomePage.dart';
 import '../../newpages/components/colors.dart';
 import '../cart/cart_page.dart';
@@ -25,7 +19,8 @@ class BottomNavView extends GetView<BottomNavController> {
       body: Obx(() {
         return PersistentTabView(
           context,
-          controller: PersistentTabController(initialIndex: logic.currentIndex.value),
+          controller:
+              PersistentTabController(initialIndex: logic.currentIndex.value),
           screens: [
             Homepage(),
             FoodCategoryView(),
@@ -37,7 +32,6 @@ class BottomNavView extends GetView<BottomNavController> {
             // HomeView(),
             // AccountScreen(),
           ],
-
           items: _navBarItems(logic),
           confineToSafeArea: true,
           backgroundColor: Colors.white,
@@ -53,14 +47,16 @@ class BottomNavView extends GetView<BottomNavController> {
             colorBehindNavBar: Colors.white,
           ),
           onItemSelected: (index) {
-            logic.changeIndex(index); // Update current index when a tab is selected
+            logic.changeIndex(
+                index); // Update current index when a tab is selected
           },
         );
       }),
     );
   }
 
-  List<PersistentBottomNavBarItem> _navBarItems(BottomNavController navController) {
+  List<PersistentBottomNavBarItem> _navBarItems(
+      BottomNavController navController) {
     return [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home_outlined),

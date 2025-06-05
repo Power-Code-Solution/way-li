@@ -1,7 +1,7 @@
 import 'package:wayli/app/core/model/base_model.dart';
 import 'package:wayli/app/core/model/users.dart';
 
-class Review extends BaseModel{
+class Review extends BaseModel {
   final int id;
   final int fkFoodItemId;
   final int fkUserId;
@@ -9,8 +9,7 @@ class Review extends BaseModel{
   final double rating;
   final String comment;
 
-
-Review({
+  Review({
     required this.id,
     required this.fkFoodItemId,
     required this.fkUserId,
@@ -48,6 +47,7 @@ Review({
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -68,9 +68,9 @@ Review({
     };
   }
 
-@override
-String toString() {
-  return '''
+  @override
+  String toString() {
+    return '''
   Review {
     id: $id,
     fkFoodItemId: $fkFoodItemId,
@@ -80,7 +80,5 @@ String toString() {
     comment: $comment,
   }
   ''';
-}
-
-
+  }
 }

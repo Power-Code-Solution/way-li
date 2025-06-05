@@ -1,8 +1,6 @@
 import 'package:wayli/app/core/model/base_model.dart';
-import 'package:wayli/app/core/model/menu.dart';
-import 'package:wayli/app/core/model/users.dart';
 
-class MenuCategory extends BaseModel{
+class MenuCategory extends BaseModel {
   final int id;
   final int fkMenuId;
   final String? name;
@@ -10,14 +8,13 @@ class MenuCategory extends BaseModel{
   final String? coverImage;
 // Menu? menu;
 
-
-MenuCategory({
+  MenuCategory({
     required this.id,
     required this.fkMenuId,
     required this.name,
     required this.description,
     required this.coverImage,
-     // this.menu,
+    // this.menu,
     required super.active,
     required super.deleted,
     super.createdBy,
@@ -70,9 +67,9 @@ MenuCategory({
     };
   }
 
-@override
-String toString() {
-  return '''
+  @override
+  String toString() {
+    return '''
   Menu {
     id: $id,
     fkMenuId: $fkMenuId,
@@ -82,7 +79,5 @@ String toString() {
    
   }
   ''';
-}
-
-
+  }
 }

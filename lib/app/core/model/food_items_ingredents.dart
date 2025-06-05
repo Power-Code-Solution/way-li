@@ -7,7 +7,6 @@ class FoodItemsIngredents extends BaseModel {
   final int fkFoodItemId;
   final int fkIngredientsId;
 
-
   FoodItemsIngredents({
     required this.id,
     required this.fkIngredientsId,
@@ -28,8 +27,6 @@ class FoodItemsIngredents extends BaseModel {
       id: json['id'],
       fkIngredientsId: json['fkIngredientsId'],
       fkFoodItemId: json['fkFoodItemId'],
-
-    
       active: json['active'],
       deleted: json['deleted'],
       createdBy: json['createdBy'],
@@ -42,6 +39,7 @@ class FoodItemsIngredents extends BaseModel {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,

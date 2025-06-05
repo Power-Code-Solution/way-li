@@ -6,13 +6,9 @@ import 'package:get/get.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/core/widgets/button/button_page.dart';
 import 'package:wayli/app/core/widgets/custom_input.dart';
-import 'package:wayli/app/modules/bottom_nav/bottom_nav_view.dart';
 import 'package:wayli/app/modules/customer/registration/registration_view.dart';
 import 'package:wayli/app/modules/forget_password/forget_password_view.dart';
-import 'package:wayli/app/modules/home/home_view.dart';
-import 'package:wayli/app/modules/tabs/tabs_view.dart';
 import 'login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -95,66 +91,65 @@ class LoginView extends GetView<LoginController> {
                             child: Column(
                               children: <Widget>[
                                 // Gap(60),
-                               Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 0),
-                                          child: CostumFormField(
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            textController: ctl.email,
-                                            isPassword: false,
-                                            labelText: "Email",
-                                            hintText:
-                                                "Enter your email address",
-                                            icon: const Icon(Icons.email),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 0),
+                                        child: CostumFormField(
+                                          keyboardType:
+                                              TextInputType.emailAddress,
+                                          textController: ctl.email,
+                                          isPassword: false,
+                                          labelText: "Email",
+                                          hintText: "Enter your email address",
+                                          icon: const Icon(Icons.email),
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return 'Please provide email address !';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ),
+                                      const Gap(10),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 0),
+                                        child: Obx(
+                                          () => CostumFormField(
+                                            textController: ctl.pass,
+                                            isPassword: true,
+                                            labelText: "Password",
+                                            hintText: "Enter your password",
+                                            icon: const Icon(Icons.lock),
                                             validator: (value) {
                                               if (value!.isEmpty) {
-                                                return 'Please provide email address !';
+                                                return 'User password is required';
                                               }
                                               return null;
                                             },
-                                          ),
-                                        ),
-                                        const Gap(10),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 0),
-                                          child: Obx(
-                                            () => CostumFormField(
-                                              textController: ctl.pass,
-                                              isPassword: true,
-                                              labelText: "Password",
-                                              hintText: "Enter your password",
-                                              icon: const Icon(Icons.lock),
-                                              validator: (value) {
-                                                if (value!.isEmpty) {
-                                                  return 'User password is required';
-                                                }
-                                                return null;
-                                              },
-                                              obscureText:
-                                                  ctl.visiblePassword.value,
-                                              suffixIcon: IconButton(
-                                                onPressed: () => ctl
-                                                    .togglePasswordVisibility(),
-                                                icon: Icon(
-                                                    ctl.visiblePassword.value
-                                                        ? Icons.visibility_off
-                                                        : Icons.visibility),
-                                              ),
+                                            obscureText:
+                                                ctl.visiblePassword.value,
+                                            suffixIcon: IconButton(
+                                              onPressed: () => ctl
+                                                  .togglePasswordVisibility(),
+                                              icon: Icon(
+                                                  ctl.visiblePassword.value
+                                                      ? Icons.visibility_off
+                                                      : Icons.visibility),
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
+                                ),
 
                                 Gap(20),
                                 Padding(
@@ -164,44 +159,43 @@ class LoginView extends GetView<LoginController> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                     GestureDetector(
-                                          onTap: () {
-                                            Get.to(() => ForgetPasswordView());
-                                          },
-                                          child: Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: AutoSizeText(
-                                              "Forgot Password?",
-                                              style: GoogleFonts.montserrat(
-                                                  color: kRedColor,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                              minFontSize: 12,
-                                              maxFontSize: 15,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Get.to(() => ForgetPasswordView());
+                                        },
+                                        child: Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: AutoSizeText(
+                                            "Forgot Password?",
+                                            style: GoogleFonts.montserrat(
+                                                color: kRedColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15),
+                                            minFontSize: 12,
+                                            maxFontSize: 15,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-
+                                        ),
                                       ),
-                                     GestureDetector(
-                                          onTap: () {
-                                            Get.to(() => RegistrationView());
-                                          },
-                                          child: Container(
-                                            alignment: Alignment.centerRight,
-                                            child: AutoSizeText(
-                                              "Sign Up",
-                                              style: GoogleFonts.montserrat(
-                                                  color: secondaryColor,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                              minFontSize: 12,
-                                              maxFontSize: 15,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          Get.to(() => RegistrationView());
+                                        },
+                                        child: Container(
+                                          alignment: Alignment.centerRight,
+                                          child: AutoSizeText(
+                                            "Sign Up",
+                                            style: GoogleFonts.montserrat(
+                                                color: secondaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15),
+                                            minFontSize: 12,
+                                            maxFontSize: 15,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -212,59 +206,57 @@ class LoginView extends GetView<LoginController> {
                                   children: [
                                     Expanded(
                                       child: MaterialButton(
-                                          onPressed: () {},
-                                          height: 50,
-                                          color: secondaryColor,
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(5),
-                                          ),
-                                          child: Obx(() => ctl.isLoading.value
-                                              ? CircularProgressIndicator()
-                                              : ElevatedButton(
-                                            onPressed: ctl.handleLogin,
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.transparent,
-                                              shadowColor: Colors.transparent,
-                                            ),
-                                            child: Center(
-                                              child: AutoSizeText(
-                                                "LOGIN",
-                                                style: GoogleFonts.alfaSlabOne(
-                                                  fontSize: 18,
-                                                  color: primaryColor,
-                                                  fontWeight: FontWeight.w900,
-                                                  letterSpacing: 1.5,
-                                                ),
-                                              ),
-                                            ),
-                                          )),
+                                        onPressed: () {},
+                                        height: 50,
+                                        color: secondaryColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                         ),
+                                        child: Obx(() => ctl.isLoading.value
+                                            ? CircularProgressIndicator()
+                                            : ElevatedButton(
+                                                onPressed: ctl.handleLogin,
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  shadowColor:
+                                                      Colors.transparent,
+                                                ),
+                                                child: Center(
+                                                  child: AutoSizeText(
+                                                    "LOGIN",
+                                                    style:
+                                                        GoogleFonts.alfaSlabOne(
+                                                      fontSize: 18,
+                                                      color: primaryColor,
+                                                      fontWeight:
+                                                          FontWeight.w900,
+                                                      letterSpacing: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )),
                                       ),
-
+                                    ),
                                     const Gap(5),
                                     Obx(() => ctl.showFingerprint.value
                                         ? Expanded(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          ctl.authenticate();
-                                        },
-                                        child: SvgPicture.asset(
-                                          'assets/svg/fingerprint.svg',
-                                          color: primaryColor,
-                                          height: 40,
-                                          width: 40,
-                                        ),
-                                      ),
-                                    )
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                ctl.authenticate();
+                                              },
+                                              child: SvgPicture.asset(
+                                                'assets/svg/fingerprint.svg',
+                                                color: primaryColor,
+                                                height: 40,
+                                                width: 40,
+                                              ),
+                                            ),
+                                          )
                                         : SizedBox()),
                                   ],
                                 ),
-
-
-
-
-
-
 
                                 // Gap(50),
                               ],

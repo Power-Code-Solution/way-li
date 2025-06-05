@@ -1,6 +1,6 @@
 import 'package:wayli/app/core/model/base_model.dart';
 
-class Users extends BaseModel{
+class Users extends BaseModel {
   final int id;
   final String firstName;
   final String lastName;
@@ -15,8 +15,7 @@ class Users extends BaseModel{
   final dynamic community;
   final dynamic userPermissions;
 
-
-Users({
+  Users({
     required this.id,
     required this.firstName,
     required this.lastName,
@@ -68,6 +67,7 @@ Users({
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -113,8 +113,7 @@ Users({
   }
 }
 
-
-class CreateUsers{
+class CreateUsers {
   final String firstName;
   final String lastName;
   final String email;
@@ -124,9 +123,7 @@ class CreateUsers{
   final int fkCityId;
   final int fkCommunityId;
 
-
-
-CreateUsers({
+  CreateUsers({
     required this.firstName,
     required this.lastName,
     required this.email,

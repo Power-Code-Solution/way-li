@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/custom_input.dart';
 import 'package:wayli/app/modules/admin/settings/ingredents/ingredents_controller.dart';
-import 'package:wayli/app/modules/admin/settings/tags/tags_controller.dart';
 
 class IngredentsView extends GetView<IngredentsController> {
   const IngredentsView({super.key});

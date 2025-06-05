@@ -34,11 +34,9 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-
     FoodItem FIL = Get.arguments['FIL'];
     String imageUrl =
-    FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
-
+        FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
 
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
@@ -107,7 +105,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset(
-                          imageUrl.isNotEmpty ? imageUrl : "assets/images/food.png",
+                          imageUrl.isNotEmpty
+                              ? imageUrl
+                              : "assets/images/food.png",
                           width: imageWidth,
                           height: imageHeight,
                           fit: BoxFit.cover,
@@ -139,7 +139,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         style: GoogleFonts.poppins(
                           fontSize: size.width * 0.035,
                           fontWeight: FontWeight.w400,
-                          color: const Color(0XFF13B7419),
+                          color: const Color(0Xff13b7419),
                         ),
                       ),
                       SizedBox(height: size.height * 0.005),

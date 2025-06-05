@@ -1,4 +1,3 @@
-
 import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/otp/otp_view.dart';
 
@@ -12,9 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/custom_input.dart';
 import 'package:wayli/app/modules/customer/registration/registration_view.dart';
-import 'package:wayli/app/modules/home/home_view.dart';
-import 'package:wayli/app/modules/tabs/tabs_view.dart';
-
 
 class ForgetPasswordView extends GetView<ForgetPasswordController> {
   static const String routeName = '/forget-password';
@@ -125,7 +121,6 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                                           ),
                                         ),
                                         const Gap(10),
-                                        
                                       ],
                                     ),
                                   ),
@@ -210,11 +205,6 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                                     ],
                                   ),
                                 ),
-
-
-
-
-
 
                                 // Gap(50),
                               ],

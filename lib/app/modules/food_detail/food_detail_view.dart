@@ -151,7 +151,7 @@ class FoodDetailView extends StatelessWidget {
                                                   CrossAxisAlignment.end,
                                               children: [
                                                 AutoSizeText(
-                                                  "\LE ${FIL.price.toStringAsFixed(2)}",
+                                                  "LE ${FIL.price.toStringAsFixed(2)}",
                                                   style: GoogleFonts.montserrat(
                                                       color: secondaryColor,
                                                       fontSize: 31,
@@ -228,35 +228,37 @@ class FoodDetailView extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 25),
                                         child: SizedBox(
-                                        height: media.width * 0.11,
-                                        child: Obx(() {
-                                          if (ctl.foodandTagDto.isEmpty) {
-                                            return Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          }
+                                          height: media.width * 0.11,
+                                          child: Obx(() {
+                                            if (ctl.foodandTagDto.isEmpty) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
 
-                                          return ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 0),
-                                            itemCount: ctl.foodandTagDto.length,
-                                            itemBuilder: (context, index) {
-                                              var foodItem =
-                                                  ctl.foodandTagDto[index];
+                                            return ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 0),
+                                              itemCount:
+                                                  ctl.foodandTagDto.length,
+                                              itemBuilder: (context, index) {
+                                                var foodItem =
+                                                    ctl.foodandTagDto[index];
 
-                                              return GestureDetector(
-                                                onTap: () {},
-                                                child: FoodTagsItemList(
-                                                  foodandTagDto: foodItem,
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        }),
+                                                return GestureDetector(
+                                                  onTap: () {},
+                                                  child: FoodTagsItemList(
+                                                    foodandTagDto: foodItem,
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }),
+                                        ),
                                       ),
-                                      ),
-                                     Padding(
+                                      Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 25),
                                           child: Divider(
@@ -279,35 +281,39 @@ class FoodDetailView extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 25),
                                         child: SizedBox(
-                                        height: media.width * 0.11,
-                                        child: Obx(() {
-                                          if (ctl.foodandAllergensDto.isEmpty) {
-                                            return Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          }
+                                          height: media.width * 0.11,
+                                          child: Obx(() {
+                                            if (ctl
+                                                .foodandAllergensDto.isEmpty) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
 
-                                          return ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 0),
-                                            itemCount: ctl.foodandAllergensDto.length,
-                                            itemBuilder: (context, index) {
-                                              var foodItem =
-                                                  ctl.foodandAllergensDto[index];
+                                            return ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 0),
+                                              itemCount: ctl
+                                                  .foodandAllergensDto.length,
+                                              itemBuilder: (context, index) {
+                                                var foodItem = ctl
+                                                    .foodandAllergensDto[index];
 
-                                              return GestureDetector(
-                                                onTap: () {},
-                                                child: FoodandAllergensItemList(
-                                                  foodandTagDto: foodItem,
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        }),
+                                                return GestureDetector(
+                                                  onTap: () {},
+                                                  child:
+                                                      FoodandAllergensItemList(
+                                                    foodandTagDto: foodItem,
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }),
+                                        ),
                                       ),
-                                      ),
-                                    Padding(
+                                      Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 25),
                                           child: Divider(
@@ -330,35 +336,40 @@ class FoodDetailView extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 25),
                                         child: SizedBox(
-                                        height: media.width * 0.11,
-                                        child: Obx(() {
-                                          if (ctl.foodandIngredientDto.isEmpty) {
-                                            return Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          }
+                                          height: media.width * 0.11,
+                                          child: Obx(() {
+                                            if (ctl
+                                                .foodandIngredientDto.isEmpty) {
+                                              return Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            }
 
-                                          return ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 0),
-                                            itemCount: ctl.foodandIngredientDto.length,
-                                            itemBuilder: (context, index) {
-                                              var foodItem =
-                                                  ctl.foodandIngredientDto[index];
+                                            return ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 0),
+                                              itemCount: ctl
+                                                  .foodandIngredientDto.length,
+                                              itemBuilder: (context, index) {
+                                                var foodItem =
+                                                    ctl.foodandIngredientDto[
+                                                        index];
 
-                                              return GestureDetector(
-                                                onTap: () {},
-                                                child: FoodandIngredIentItemList(
-                                                  foodandTagDto: foodItem,
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        }),
+                                                return GestureDetector(
+                                                  onTap: () {},
+                                                  child:
+                                                      FoodandIngredIentItemList(
+                                                    foodandTagDto: foodItem,
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }),
+                                        ),
                                       ),
-                                      ),
-                                       Padding(
+                                      Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 25),
                                           child: Divider(
@@ -366,9 +377,7 @@ class FoodDetailView extends StatelessWidget {
                                                 secondaryColor.withOpacity(0.4),
                                             height: 1,
                                           )),
-                                     
-                                      const Gap(25
-                                      ),
+                                      const Gap(25),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 25),
@@ -537,7 +546,7 @@ class FoodDetailView extends StatelessWidget {
                                                           ),
                                                           Obx(() {
                                                             return AutoSizeText(
-                                                              "\LE ${(FIL.price * ctl.qty.value).toString()}",
+                                                              "LE ${(FIL.price * ctl.qty.value).toString()}",
                                                               style: GoogleFonts.montserrat(
                                                                   color:
                                                                       secondaryColor,
@@ -691,6 +700,8 @@ class FoodDetailView extends StatelessWidget {
 }
 
 class FoodDetailViews extends StatelessWidget {
+  const FoodDetailViews({super.key});
+
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
@@ -756,7 +767,7 @@ class FoodDetailViews extends StatelessWidget {
                                 color: secondaryColor,
                                 borderRadius: BorderRadius.circular(10)),
                             child: AutoSizeText(
-                              "NLE " + FIL.price.toString(),
+                              "NLE ${FIL.price}",
                               textAlign: TextAlign.left,
                               style: GoogleFonts.montserrat(
                                   color: Colors.white,
@@ -771,7 +782,7 @@ class FoodDetailViews extends StatelessWidget {
                                 color: secondaryColor,
                                 borderRadius: BorderRadius.circular(10)),
                             child: AutoSizeText(
-                              "NLE " + FIL.priceDouble.toString(),
+                              "NLE ${FIL.priceDouble}",
                               textAlign: TextAlign.left,
                               style: GoogleFonts.montserrat(
                                   color: Colors.white,
@@ -888,28 +899,6 @@ class FoodDetailViews extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // class FoodDetailView extends GetView<FoodDetailController> {
 //   final Map FIL;

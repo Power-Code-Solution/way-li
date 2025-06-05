@@ -1,13 +1,9 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:wayli/app/modules/login/login_controller.dart';
 
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:local_auth/local_auth.dart';
 
 class AppLifecycleHandler extends WidgetsBindingObserver {
   final Future<void> Function() onResumeCallback;

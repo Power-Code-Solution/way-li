@@ -11,7 +11,8 @@ class EmptyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SingleChildScrollView( // Wrap with SingleChildScrollView
+        child: SingleChildScrollView(
+          // Wrap with SingleChildScrollView
           child: Column(
             mainAxisSize: MainAxisSize.min, // Limit the size of the Column
             mainAxisAlignment: MainAxisAlignment.center,
@@ -44,11 +45,11 @@ class EmptyPage extends StatelessWidget {
                 onPressed: () {
                   // Action to add items or navigate
                 },
-                child: Text('Add Items'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.blue,
                 ),
+                child: Text('Add Items'),
               ),
             ],
           ),

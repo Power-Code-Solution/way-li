@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/on_boarding/on_boarding_view.dart';
 
 class SplashScreenView extends StatefulWidget {
@@ -14,7 +12,8 @@ class SplashScreenView extends StatefulWidget {
   _SplashScreenViewState createState() => _SplashScreenViewState();
 }
 
-class _SplashScreenViewState extends State<SplashScreenView> with SingleTickerProviderStateMixin {
+class _SplashScreenViewState extends State<SplashScreenView>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -42,8 +41,7 @@ class _SplashScreenViewState extends State<SplashScreenView> with SingleTickerPr
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-
-            decoration: BoxDecoration(
+        decoration: BoxDecoration(
           color: primaryColor,
         ),
         child: Center(

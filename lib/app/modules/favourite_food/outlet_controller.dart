@@ -54,7 +54,7 @@ class OutletController extends GetxController {
           }
           print('Fetched Menu Category items: ${menuItemCategory.value}');
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {

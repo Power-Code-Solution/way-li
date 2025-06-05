@@ -5,23 +5,18 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/food_items.dart';
-import 'package:wayli/app/core/model/menu.dart';
 import 'package:wayli/app/core/model/menu_category.dart';
 
 class SubMenuFoodController extends GetxController {
-
-
   MenuCategory menuItemCategory = Get.arguments["menuItemCategory"];
   RxList<dynamic> foodItems = <dynamic>[].obs;
-late final TextEditingController searchController;
-
-
+  late final TextEditingController searchController;
 
   @override
   void onInit() {
     super.onInit();
     fetchFoodItems();
-     
+
     if (kDebugMode) {
       print(
           "OutletController onInit() has been called. ${menuItemCategory.coverImage}");
@@ -33,9 +28,8 @@ late final TextEditingController searchController;
     searchController = TextEditingController();
   }
 
-
   Future<void> fetchFoodItems() async {
-  final response = await http.get(Uri.parse(
+    final response = await http.get(Uri.parse(
         '$apiBaseAddress/secure/admin/food-items/findby-fkMenuCategoryId?FkMenuCategoryId=${menuItemCategory.id}'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

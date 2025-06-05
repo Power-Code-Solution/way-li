@@ -21,7 +21,7 @@ class CostumFormField extends StatelessWidget {
       required this.isPassword});
   final Widget? icon;
   final Widget? suffixIcon;
-  final dynamic? keyboardType;
+  final dynamic keyboardType;
   final bool? obscureText;
   final String? hintText;
   final String? labelText;
@@ -52,15 +52,14 @@ class CostumFormField extends StatelessWidget {
         prefixIcon: icon,
         filled: filled,
         fillColor: fillColor,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         focusedBorder: OutlineInputBorder(
-          borderSide:
-              const BorderSide(color: secondaryColor, width: 2),
+          borderSide: const BorderSide(color: secondaryColor, width: 2),
           borderRadius: BorderRadius.circular(8),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide:
-              const BorderSide(color: primaryColor, width: 1.5),
+          borderSide: const BorderSide(color: primaryColor, width: 1.5),
           borderRadius: BorderRadius.circular(8),
         ),
         border: const OutlineInputBorder(

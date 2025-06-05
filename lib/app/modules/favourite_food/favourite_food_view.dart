@@ -2,18 +2,14 @@ import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
-import 'package:wayli/app/core/widgets/popular_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/selection_text_view.dart';
 import 'package:wayli/app/modules/favourite_food/favorite_food_item_cell.dart';
-import 'package:wayli/app/modules/favourite_food/outlet_list_view.dart';
 
 import 'favourite_food_controller.dart';
-
 
 class FavouriteFoodView extends GetView<FavouriteFoodController> {
   const FavouriteFoodView({super.key});
@@ -30,7 +26,6 @@ class FavouriteFoodView extends GetView<FavouriteFoodController> {
         builder: (ctl) {
           return CustomScrollView(
             slivers: [
-
               SliverAppBar(
                 backgroundColor: secondaryColor,
                 elevation: 0,
@@ -63,27 +58,25 @@ class FavouriteFoodView extends GetView<FavouriteFoodController> {
                 ),
                 actions: [
                   IconButton(
-  icon: SvgPicture.asset(
-    "assets/svg/notification.svg",
-    width: 24,
-    height: 30,
-    color: primaryColor,
-  ),
-  onPressed: () {},
-),
-IconButton(
-  icon: SvgPicture.asset(
-    "assets/svg/cart.svg",
-    width: 24,
-    height: 30,
-    color: primaryColor,
-  ),
-  onPressed: () {},
-),
+                    icon: SvgPicture.asset(
+                      "assets/svg/notification.svg",
+                      width: 24,
+                      height: 30,
+                      color: primaryColor,
+                    ),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: SvgPicture.asset(
+                      "assets/svg/cart.svg",
+                      width: 24,
+                      height: 30,
+                      color: primaryColor,
+                    ),
+                    onPressed: () {},
+                  ),
                 ],
               ),
-
-
               SliverAppBar(
                 backgroundColor: Colors.white,
                 elevation: 1,
@@ -97,8 +90,6 @@ IconButton(
                   leftIcon: Icon(Icons.search, color: secondaryColor),
                 ),
               ),
-
-
               SliverToBoxAdapter(
                 child: Container(
                   width: double.infinity,
@@ -111,59 +102,54 @@ IconButton(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-           
-                       Container(
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                color: secondaryColor.withOpacity(0.5),
-                                borderRadius: BorderRadius.all(Radius.circular(10)),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                 FadeInUp(
-  duration: Duration(milliseconds: 1000),
-  child: AutoSizeText(
-    "My Favourite",
-    textAlign: TextAlign.left,
-    style: GoogleFonts.montserrat(
-      color: primaryColor,
-      fontSize: 25,
-      fontWeight: FontWeight.w900,
-    ),
-  ),
-),
-FadeInUp(
-  duration: Duration(milliseconds: 1300),
-  child: AutoSizeText(
-    "Dishes",
-    textAlign: TextAlign.left,
-    style: GoogleFonts.montserrat(
-      color: primaryColor,
-      fontSize: 25,
-    ),
-  ),
-),
-
-                                ],
+                      Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: secondaryColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FadeInUp(
+                              duration: Duration(milliseconds: 1000),
+                              child: AutoSizeText(
+                                "My Favourite",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.montserrat(
+                                  color: primaryColor,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w900,
+                                ),
                               ),
                             ),
+                            FadeInUp(
+                              duration: Duration(milliseconds: 1300),
+                              child: AutoSizeText(
+                                "Dishes",
+                                textAlign: TextAlign.left,
+                                style: GoogleFonts.montserrat(
+                                  color: primaryColor,
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-
-
-SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Container(
                   width: double.infinity,
-                decoration: BoxDecoration(
-                     
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -179,9 +165,11 @@ SliverToBoxAdapter(
                             SizedBox(
                               height: media.width * 0.47,
                               child: GridView.builder(
-                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
                                 scrollDirection: Axis.horizontal,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                   childAspectRatio: 0.55,
                                   crossAxisSpacing: 15,
@@ -189,7 +177,8 @@ SliverToBoxAdapter(
                                 ),
                                 itemCount: ctl.favoriteArr.length,
                                 itemBuilder: (context, index) {
-                                  var FIL = ctl.favoriteArr[index] as Map? ?? {};
+                                  var FIL =
+                                      ctl.favoriteArr[index] as Map? ?? {};
                                   return FavoriteFoodItemCell(
                                     FIL: FIL,
                                     index: index,
@@ -204,9 +193,6 @@ SliverToBoxAdapter(
                   ),
                 ),
               ),
-
-
-
             ],
           );
         },

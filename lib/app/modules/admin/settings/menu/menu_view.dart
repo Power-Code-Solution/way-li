@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -96,108 +95,96 @@ class MenuView extends GetView<AddMenuController> {
                       },
                     ),
                   ),
-                   const Gap(10),
+                  const Gap(10),
                   Obx(() {
                     return addMenuController.selectedImage.value == null
                         ? const Text('No image selected.')
                         : Image.file(
-                          width: 50,
-                          addMenuController.selectedImage.value!
-                          );
+                            width: 50, addMenuController.selectedImage.value!);
                   }),
                   const Gap(10),
-         FadeInUp(
-  duration: Duration(milliseconds: 500),
-  child: Column(
-    children: [
-      Obx(() {
-        return ctl.selectedImage.value == null
-            ? MaterialButton(
-                onPressed: () {},
-                height: 50,
-                color: secondaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Obx(() => ctl.isLoading.value
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () async {
-                          await addMenuController.pickImage();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                        ),
-                        child: Center(
-                          child: AutoSizeText(
-                            "SELECT COVER IMAGE",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 15,
-                              color: primaryColor,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                      )),
-              )
-            : Column(
-                children: [
-                  Image.file(
-                    ctl.selectedImage.value!,
-                    height: 200,
-                    width: 200,
-                    fit: BoxFit.cover,
+                  FadeInUp(
+                    duration: Duration(milliseconds: 500),
+                    child: Column(
+                      children: [
+                        Obx(() {
+                          return ctl.selectedImage.value == null
+                              ? MaterialButton(
+                                  onPressed: () {},
+                                  height: 50,
+                                  color: secondaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Obx(() => ctl.isLoading.value
+                                      ? const CircularProgressIndicator()
+                                      : ElevatedButton(
+                                          onPressed: () async {
+                                            await addMenuController.pickImage();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                          ),
+                                          child: Center(
+                                            child: AutoSizeText(
+                                              "SELECT COVER IMAGE",
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 15,
+                                                color: primaryColor,
+                                                fontWeight: FontWeight.w900,
+                                                letterSpacing: 1.5,
+                                              ),
+                                            ),
+                                          ),
+                                        )),
+                                )
+                              : Column(
+                                  children: [
+                                    Image.file(
+                                      ctl.selectedImage.value!,
+                                      height: 200,
+                                      width: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    MaterialButton(
+                                      onPressed: () {},
+                                      height: 50,
+                                      color: secondaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Obx(() => ctl.isLoading.value
+                                          ? const CircularProgressIndicator()
+                                          : ElevatedButton(
+                                              onPressed: () {
+                                                ctl.selectedImage.value = null;
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                shadowColor: Colors.transparent,
+                                              ),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  "CHANGE/REMOVE IMAGE",
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 15,
+                                                    color: primaryColor,
+                                                    fontWeight: FontWeight.w900,
+                                                    letterSpacing: 1.5,
+                                                  ),
+                                                ),
+                                              ),
+                                            )),
+                                    )
+                                  ],
+                                );
+                        }),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-
-MaterialButton(
-                onPressed: () {},
-                height: 50,
-                color: secondaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Obx(() => ctl.isLoading.value
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () {
-                      ctl.selectedImage.value = null;
-                    },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                        ),
-                        child: Center(
-                          child: AutoSizeText(
-                            "CHANGE/REMOVE IMAGE",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 15,
-                              color: primaryColor,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                      )),
-              )
-
-
-
-
-
-                  
-                ],
-              );
-      }),
-    ],
-  ),
-),
-
-
-
-
                   const Gap(30),
                   FadeInUp(
                     duration: Duration(milliseconds: 500),
@@ -246,8 +233,7 @@ MaterialButton(
                                   ),
                                 ),
                               ),
-                            )
-                            ),
+                            )),
                     ),
                   ),
                   Obx(() {

@@ -8,7 +8,6 @@ import 'package:wayli/app/newpages/Pages/HomePage.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
 
 class BottomBarMain extends StatefulWidget {
-
   const BottomBarMain({super.key});
 
   @override
@@ -16,7 +15,7 @@ class BottomBarMain extends StatefulWidget {
 }
 
 class _BottomBarMainState extends State<BottomBarMain> {
-  PersistentTabController _controller =
+  final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
 
   @override

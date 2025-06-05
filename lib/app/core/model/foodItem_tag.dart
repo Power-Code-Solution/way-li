@@ -1,13 +1,13 @@
 import 'package:wayli/app/core/model/base_model.dart';
 import 'package:wayli/app/core/model/tag.dart';
 
-class FoodItemsTags extends BaseModel{
+class FoodItemsTags extends BaseModel {
   final int id;
   final int fkFoodItemId;
   final int fkTagId;
   final Tag tag;
 
-FoodItemsTags({
+  FoodItemsTags({
     required this.id,
     required this.fkFoodItemId,
     required this.fkTagId,
@@ -22,7 +22,6 @@ FoodItemsTags({
     required super.deletedAt,
     super.deletedReason,
   });
-
 
   factory FoodItemsTags.fromJson(Map<String, dynamic> json) {
     return FoodItemsTags(
@@ -42,6 +41,7 @@ FoodItemsTags({
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -60,9 +60,9 @@ FoodItemsTags({
     };
   }
 
-@override
-String toString() {
-  return '''
+  @override
+  String toString() {
+    return '''
   FoodItemsTags {
     id: $id,
     fkFoodItemId: $fkFoodItemId,
@@ -70,6 +70,5 @@ String toString() {
     tag: $tag,
   }
   ''';
-}
-
+  }
 }

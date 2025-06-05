@@ -1,13 +1,11 @@
 import 'package:wayli/app/core/model/base_model.dart';
 import 'package:wayli/app/core/model/users.dart';
 
-class Allergens extends BaseModel{
+class Allergens extends BaseModel {
   final int id;
   final String name;
 
-
-
-Allergens({
+  Allergens({
     required this.id,
     required this.name,
     required super.active,
@@ -37,6 +35,7 @@ Allergens({
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -53,15 +52,13 @@ Allergens({
     };
   }
 
-@override
-String toString() {
-  return '''
+  @override
+  String toString() {
+    return '''
   Menu {
     id: $id,
     name: $name
   }
   ''';
-}
-
-
+  }
 }

@@ -18,6 +18,7 @@ import 'add_food_items_controller.dart';
 class AddFoodItemsView extends GetView<AddFoodItemsController> {
   const AddFoodItemsView({super.key});
 
+  @override
   Widget build(BuildContext context) {
     final AddFoodItemsController ctl = Get.put(AddFoodItemsController());
     return Scaffold(
@@ -126,7 +127,8 @@ class AddFoodItemsView extends GetView<AddFoodItemsController> {
                     ),
                     fieldDecoration: FieldDecoration(
                       hintText: 'Tags',
-                      hintStyle:  GoogleFonts.montserrat(color: secondaryColor, fontWeight: FontWeight.w500),
+                      hintStyle: GoogleFonts.montserrat(
+                          color: secondaryColor, fontWeight: FontWeight.w500),
                       prefixIcon: const Icon(CupertinoIcons.flag),
                       showClearIcon: false,
                       border: OutlineInputBorder(
@@ -176,7 +178,7 @@ class AddFoodItemsView extends GetView<AddFoodItemsController> {
               }),
               const Gap(20),
 
-Obx(() {
+              Obx(() {
                 if (ctl.allergensItemsList.isEmpty) {
                   return CircularProgressIndicator();
                 } else {
@@ -192,7 +194,8 @@ Obx(() {
                     ),
                     fieldDecoration: FieldDecoration(
                       hintText: 'Allergens',
-                      hintStyle:  GoogleFonts.montserrat(color: secondaryColor, fontWeight: FontWeight.w500),
+                      hintStyle: GoogleFonts.montserrat(
+                          color: secondaryColor, fontWeight: FontWeight.w500),
                       prefixIcon: const Icon(CupertinoIcons.flag),
                       showClearIcon: false,
                       border: OutlineInputBorder(
@@ -242,12 +245,7 @@ Obx(() {
               }),
               const Gap(20),
 
-
-
-
-
-
-Obx(() {
+              Obx(() {
                 if (ctl.ingredientsItemsList.isEmpty) {
                   return CircularProgressIndicator();
                 } else {
@@ -263,7 +261,8 @@ Obx(() {
                     ),
                     fieldDecoration: FieldDecoration(
                       hintText: 'Ingredents',
-                      hintStyle:  GoogleFonts.montserrat(color: secondaryColor, fontWeight: FontWeight.w500),
+                      hintStyle: GoogleFonts.montserrat(
+                          color: secondaryColor, fontWeight: FontWeight.w500),
                       prefixIcon: const Icon(CupertinoIcons.flag),
                       showClearIcon: false,
                       border: OutlineInputBorder(
@@ -312,13 +311,6 @@ Obx(() {
                 }
               }),
               const Gap(20),
-
-
-
-
-
-
-
 
               Obx(
                 () => DropdownSelect(

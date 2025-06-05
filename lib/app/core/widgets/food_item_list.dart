@@ -65,7 +65,6 @@ class FoodItemList extends StatelessWidget {
                 ),
                 AutoSizeText(
                   foodItem.menuCategory.name ?? '',
-
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
@@ -73,12 +72,12 @@ class FoodItemList extends StatelessWidget {
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
- maxFontSize: 12,
+                  maxFontSize: 12,
                   overflow: TextOverflow.ellipsis,
                   minFontSize: 11,
                 ),
                 AutoSizeText(
-                  "LE " + foodItem.price.toString() ?? '',
+                  "LE ${foodItem.price}" ?? '',
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
@@ -87,7 +86,7 @@ class FoodItemList extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w900,
                   ),
-                   maxFontSize: 14,
+                  maxFontSize: 14,
                   overflow: TextOverflow.ellipsis,
                   minFontSize: 13,
                 ),
@@ -106,7 +105,6 @@ class FoodTagsItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       decoration: BoxDecoration(
         color: secondaryColor,
@@ -142,15 +140,12 @@ class FoodTagsItemList extends StatelessWidget {
   }
 }
 
-
-
 class FoodandAllergensItemList extends StatelessWidget {
   final FoodandAllergensDto foodandTagDto;
   const FoodandAllergensItemList({super.key, required this.foodandTagDto});
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       decoration: BoxDecoration(
         color: kWhiteColor,
@@ -186,14 +181,12 @@ class FoodandAllergensItemList extends StatelessWidget {
   }
 }
 
-
 class FoodandIngredIentItemList extends StatelessWidget {
   final FoodandIngredIentNameDto foodandTagDto;
   const FoodandIngredIentItemList({super.key, required this.foodandTagDto});
   @override
   Widget build(BuildContext context) {
     return Container(
-      
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       decoration: BoxDecoration(
         color: primaryColor,

@@ -4,16 +4,6 @@ import 'package:get/get.dart';
 class OtpController extends GetxController {
   //TODO: Implement OtpController.
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   late final TextEditingController pinController;
   late final FocusNode focusNode;
   late final GlobalKey<FormState> otpKey;

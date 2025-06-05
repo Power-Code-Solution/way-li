@@ -93,22 +93,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/menu.dart';
-import 'package:wayli/app/core/model/menu_category.dart';
 import 'package:wayli/app/core/widgets/collection_food_item_cell.dart';
-import 'package:wayli/app/core/widgets/food_item_list.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
-import 'package:wayli/app/core/widgets/popular_food_item_cell.dart';
-import 'package:wayli/app/core/widgets/selection_text_view.dart';
 import 'package:wayli/app/modules/favourite_food/outlet_list_view.dart';
-import 'package:wayli/app/modules/food_detail/food_detail_view.dart';
-import 'package:wayli/app/modules/home/collection_list_view.dart';
-import 'package:wayli/app/modules/home/trending_list_view.dart';
 
 import 'home_controller.dart';
 

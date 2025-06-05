@@ -3,10 +3,8 @@ import 'package:shimmer/shimmer.dart';
 
 import '../config/constants.dart';
 
-
-
 class Skeleton extends StatelessWidget {
-  const Skeleton({Key? key, this.height, this.width}) : super(key: key);
+  const Skeleton({super.key, this.height, this.width});
 
   final double? height, width;
 
@@ -19,13 +17,13 @@ class Skeleton extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.04),
           borderRadius:
-          const BorderRadius.all(Radius.circular(defaultPadding))),
+              const BorderRadius.all(Radius.circular(defaultPadding))),
     );
   }
 }
 
 class CircleSkeleton extends StatelessWidget {
-  const CircleSkeleton({Key? key, this.size = 24}) : super(key: key);
+  const CircleSkeleton({super.key, this.size = 24});
 
   final double? size;
 
@@ -42,13 +40,10 @@ class CircleSkeleton extends StatelessWidget {
   }
 }
 
-
-
-
 class NewsCardSkelton extends StatelessWidget {
   const NewsCardSkelton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,50 +80,43 @@ class NewsCardSkelton extends StatelessWidget {
   }
 }
 
-
-
-
 class Skelton extends StatelessWidget {
   const Skelton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-
     final size = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
     final horizontalPadding = size.width * 0.04;
     final crossAxisCount = orientation == Orientation.portrait ? 2 : 3;
     final gridSpacing = size.width * 0.02;
 
-
-    return Center(child:
-    Padding(
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
-        child: Shimmer.fromColors(
-          baseColor: Colors.white!,
-          // baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossAxisCount,
-              crossAxisSpacing: gridSpacing,
-              mainAxisSpacing: gridSpacing,
-              childAspectRatio: 1,
-            ),
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: EdgeInsets.only(bottom: size.height * 0.02),
-                color: Colors.white,
-              );
-            },
-          ),
-        )
-    )
-    ) ;
+    return Center(
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+            child: Shimmer.fromColors(
+              baseColor: Colors.white,
+              // baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: gridSpacing,
+                  mainAxisSpacing: gridSpacing,
+                  childAspectRatio: 1,
+                ),
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.only(bottom: size.height * 0.02),
+                    color: Colors.white,
+                  );
+                },
+              ),
+            )));
   }
 }

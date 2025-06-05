@@ -12,7 +12,7 @@ import './cart_controller.dart';
 class CartPage extends GetView<CartController> {
   static const String routeName = '/cart';
 
-  const CartPage({Key? key}) : super(key: key);
+  const CartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -112,17 +112,27 @@ class CartPage extends GetView<CartController> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
-                                  image: NetworkImage(item.foodItemsImages.isNotEmpty ? item.foodItemsImages[0].image: ''),
+                                  image: NetworkImage(
+                                      item.foodItemsImages.isNotEmpty
+                                          ? item.foodItemsImages[0].image
+                                          : ''),
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
-                            title: AutoSizeText(item.name, style: GoogleFonts.montserrat(fontWeight: FontWeight.bold),),
+                            title: AutoSizeText(
+                              item.name,
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.bold),
+                            ),
                             subtitle: Obx(() {
                               final price =
                                   cartController.itemPrices[item.id]?.value ??
                                       0.0;
-                              return AutoSizeText("Le ${price * 85 / 100 }", style: GoogleFonts.montserrat(),);
+                              return AutoSizeText(
+                                "Le ${price * 85 / 100}",
+                                style: GoogleFonts.montserrat(),
+                              );
                             }),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -135,7 +145,8 @@ class CartPage extends GetView<CartController> {
                                 ),
                                 AutoSizeText(
                                   '${cartController.itemQuantities[item.id]?.value}',
-                                  style: GoogleFonts.montserrat(fontSize: size.width * 0.06),
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: size.width * 0.06),
                                 ),
                                 IconButton(
                                   onPressed: () =>
@@ -185,7 +196,10 @@ class CartPage extends GetView<CartController> {
                               size),
                           SizedBox(height: size.height * 0.01),
                           _buildPriceRow("Discount", "Le 0.00", size),
-                          _buildPriceRow("Tax (15%)", "Le ${cartController.getTotalTax().toStringAsFixed(2)}", size),
+                          _buildPriceRow(
+                              "Tax (15%)",
+                              "Le ${cartController.getTotalTax().toStringAsFixed(2)}",
+                              size),
                           Divider(
                             color: Colors.grey,
                             height: 10,

@@ -237,8 +237,7 @@ class HomeView extends GetView<HomeController> {
                             },
                           ),
                           Obx(() {
-                            if (ctl.menuItemCategory == null ||
-                                ctl.menuItemCategory.isEmpty) {
+                            if (ctl.menuItemCategory.isEmpty) {
                               return Center(child: CircularProgressIndicator());
                             }
                             return SizedBox(

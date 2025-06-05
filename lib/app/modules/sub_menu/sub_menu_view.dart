@@ -108,45 +108,43 @@ class SubMenuView extends GetView<SubMenuController> {
                           ],
                         ),
                       ),
-          
-Obx(() {
-  if (ctl.menuItemCategory == null || ctl.menuItemCategory.isEmpty) {
-    return Center(child: CircularProgressIndicator());
-  }
 
-  return Container(
-    height: MediaQuery.of(context).size.width * 0.42,
-    padding: const EdgeInsets.only(top: 30.0),
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      itemCount: ctl.menuItemCategory.length,
-      itemBuilder: (context, index) {
-        var menuCategory = ctl.menuItemCategory[index];
+                      Obx(() {
+                        if (ctl.menuItemCategory.isEmpty) {
+                          return Center(child: CircularProgressIndicator());
+                        }
 
-        return GestureDetector(
-          onTap: () {
-            Get.to(
-              () => SubMenuFoodView(),
-              arguments: {
-                "menuItemCategory": menuCategory,
-              },
-            );
-          },
-          child: PopularFoodItemCell(
-            FIL: {
-              'outlets': menuCategory.name,
-              'image': menuCategory.coverImage,
-            },
-            index: index,
-          ),
-        );
-      },
-    ),
-  );
-}),
+                        return Container(
+                          height: MediaQuery.of(context).size.width * 0.42,
+                          padding: const EdgeInsets.only(top: 30.0),
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            itemCount: ctl.menuItemCategory.length,
+                            itemBuilder: (context, index) {
+                              var menuCategory = ctl.menuItemCategory[index];
 
-
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(
+                                    () => SubMenuFoodView(),
+                                    arguments: {
+                                      "menuItemCategory": menuCategory,
+                                    },
+                                  );
+                                },
+                                child: PopularFoodItemCell(
+                                  FIL: {
+                                    'outlets': menuCategory.name,
+                                    'image': menuCategory.coverImage,
+                                  },
+                                  index: index,
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      }),
 
                       // Obx(() {
                       //   if (ctl.menuItemCategory == null ||

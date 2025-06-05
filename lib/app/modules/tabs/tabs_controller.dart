@@ -13,32 +13,12 @@ import 'package:wayli/app/modules/profile/profile_view.dart';
 class TabsController extends GetxController {
   //TODO: Implement TabsController.
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-
-
- var selectedIndex = 0.obs;
+  var selectedIndex = 0.obs;
   var tabs = <Widget>[
-   const HomeView(),
-  const FavouriteFoodView(),
-  //  const MenuView(),
-  const OrderHistoryView(),
-  const ProfileView() 
+    const HomeView(),
+    const FavouriteFoodView(),
+    //  const MenuView(),
+    const OrderHistoryView(),
+    const ProfileView()
   ].obs;
-
-
-
 }

@@ -1,6 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import 'package:flutter/material.dart';
@@ -12,12 +11,11 @@ import 'package:wayli/app/core/config/auth_controller.dart';
 import '../../core/config/constants.dart';
 import '../bottom_nav/bottom_nav_view.dart';
 
-
 class LoginController extends GetxController {
   final LocalAuthentication auth = LocalAuthentication();
 
   static final GlobalKey loginBottomNavigationKey = GlobalKey();
- final AuthController authController = Get.put(AuthController());
+  final AuthController authController = Get.put(AuthController());
   RxBool showFingerprint = false.obs;
   var email = TextEditingController();
   var pass = TextEditingController();
@@ -36,9 +34,6 @@ class LoginController extends GetxController {
     }
   }
 
-
-
-
   @override
   Future<void> onReady() async {
     super.onReady();
@@ -51,8 +46,6 @@ class LoginController extends GetxController {
     pass.dispose();
   }
 
-
-
   Future<void> enableFingerprintLogin() async {
     final localAuth = LocalAuthentication();
 
@@ -61,7 +54,8 @@ class LoginController extends GetxController {
       bool canCheckBiometrics = await localAuth.canCheckBiometrics;
 
       if (!isDeviceSupported || !canCheckBiometrics) {
-        Get.snackbar('Not Supported', 'This device does not support biometrics.');
+        Get.snackbar(
+            'Not Supported', 'This device does not support biometrics.');
         return;
       }
 
@@ -87,8 +81,6 @@ class LoginController extends GetxController {
     }
   }
 
-
-
   Future<void> authenticate() async {
     try {
       bool isAuthenticated = await auth.authenticate(
@@ -102,17 +94,14 @@ class LoginController extends GetxController {
       if (isAuthenticated) {
         Get.offAll(() => BottomNavView());
         Get.snackbar('Success', 'Authenticated!');
-
       } else {
         Get.snackbar('Failed', 'Authentication failed');
       }
     } catch (e) {
       Get.snackbar('Error', 'Error using biometric auth: $e');
       print('Error using biometric auth: $e');
-
     }
   }
-
 
   Future<void> checkFingerprintStatus() async {
     final prefs = await SharedPreferences.getInstance();
@@ -130,39 +119,53 @@ class LoginController extends GetxController {
         // Ask if user wants to enable fingerprint
         bool enable = await Get.dialog(
           AlertDialog(
-            title: AutoSizeText("Enable Fingerprint?", style: GoogleFonts.montserrat(),),
-            content: AutoSizeText("Would you like to enable fingerprint login for next time?", style: GoogleFonts.montserrat(),),
+            title: AutoSizeText(
+              "Enable Fingerprint?",
+              style: GoogleFonts.montserrat(),
+            ),
+            content: AutoSizeText(
+              "Would you like to enable fingerprint login for next time?",
+              style: GoogleFonts.montserrat(),
+            ),
             actions: [
-              TextButton(onPressed: () => Get.back(result: false), child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: AutoSizeText(
-                  "No",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+              TextButton(
+                onPressed: () => Get.back(result: false),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: AutoSizeText(
+                    "No",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),),
-              TextButton(onPressed: () => Get.back(result: true), child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: AutoSizeText(
-                  "Yes",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+              ),
+              TextButton(
+                onPressed: () => Get.back(result: true),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: secondaryColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: AutoSizeText(
+                    "Yes",
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),),
+              ),
             ],
           ),
         );
@@ -173,10 +176,10 @@ class LoginController extends GetxController {
             await prefs.setBool('is_fingerprint_enabled', true);
             showFingerprint.value = true;
           }
-
         }
 
-        Get.snackbar("Login Successful", "Welcome, ${authController.userName.value}",
+        Get.snackbar(
+            "Login Successful", "Welcome, ${authController.userName.value}",
             snackPosition: SnackPosition.BOTTOM);
         Get.offAll(() => BottomNavView());
         email.clear();
@@ -193,10 +196,6 @@ class LoginController extends GetxController {
     }
   }
 
-
-
-
-
   void togglePasswordVisibility() {
     visiblePassword.value = !visiblePassword.value;
     if (kDebugMode) {
@@ -204,4 +203,3 @@ class LoginController extends GetxController {
     }
   }
 }
-

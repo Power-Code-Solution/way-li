@@ -10,20 +10,5 @@ class ForgetPasswordController extends GetxController {
   bool visiblePassword = true;
   bool isClientConnected = false;
   bool isOuvrierConnected = false;
-get sharePre => null;
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
+  get sharePre => null;
 }

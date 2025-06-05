@@ -25,7 +25,6 @@ class CartController extends GetxController {
     updateTotalPrice();
   }
 
-
   void addItem(FoodItem item) {
     if (!cartItems.any((i) => i.id == item.id)) {
       cartItems.add(item);
@@ -42,8 +41,6 @@ class CartController extends GetxController {
     updateTotalPrice();
   }
 
-
-
   void increaseQuantity(int itemId) {
     if (!itemQuantities.containsKey(itemId)) {
       itemQuantities[itemId] = 1.obs;
@@ -54,13 +51,13 @@ class CartController extends GetxController {
   }
 
   void decreaseQuantity(int itemId) {
-    if (itemQuantities.containsKey(itemId) && itemQuantities[itemId]!.value > 1) {
+    if (itemQuantities.containsKey(itemId) &&
+        itemQuantities[itemId]!.value > 1) {
       itemQuantities[itemId]!.value--;
       updateItemPrice(itemId);
     }
     updateTotalPrice();
   }
-
 
   void updateItemPrice(int itemId) {
     final item = cartItems.firstWhere((item) => item.id == itemId);
@@ -70,14 +67,14 @@ class CartController extends GetxController {
     updateTotalPrice();
   }
 
-
   void updateTotalPrice() {
     double newTotalPrice = 0.0;
-    cartItems.forEach((item) {
+    for (var item in cartItems) {
       newTotalPrice += itemPrices[item.id]?.value ?? 0.0;
-    });
+    }
     totalPrice.value = newTotalPrice;
   }
+
   void removeItem(int itemId) {
     cartItems.removeWhere((item) => item.id == itemId);
     itemQuantities.remove(itemId);
@@ -88,12 +85,15 @@ class CartController extends GetxController {
   double getTotalPrice() {
     return totalPrice.value;
   }
+
   double getTotalPriceWithoutTax() {
     return totalPrice.value * 85 / 100;
   }
+
   double getTotalTax() {
     return totalPrice.value * 15 / 100;
   }
+
   FoodItem getItemById(int itemId) {
     return cartItems.firstWhere((item) => item.id == itemId);
   }

@@ -1,7 +1,5 @@
 import 'package:pinput/pinput.dart';
-import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/otp/otp_controller.dart';
-import 'package:wayli/app/modules/otp/otp_view.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +8,6 @@ import 'package:get/get.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/core/widgets/custom_input.dart';
-import 'package:wayli/app/modules/customer/registration/registration_view.dart';
-import 'package:wayli/app/modules/home/home_view.dart';
-import 'package:wayli/app/modules/tabs/tabs_view.dart';
 
 class OtpView extends GetView<OtpController> {
   const OtpView({super.key});
@@ -31,7 +25,7 @@ class OtpView extends GetView<OtpController> {
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 56,
-      textStyle:  GoogleFonts.montserrat(
+      textStyle: GoogleFonts.montserrat(
         fontSize: 22,
         color: kWhiteColor,
       ),
@@ -248,9 +242,6 @@ class OtpView extends GetView<OtpController> {
                     ),
                   ),
                 ),
-
-
-                
               ],
             ),
           );

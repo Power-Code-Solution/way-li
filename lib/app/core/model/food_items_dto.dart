@@ -1,5 +1,3 @@
-import 'package:wayli/app/core/model/base_model.dart';
-
 class FoodandTagDto {
   final int foodItemId;
   final String tagName;

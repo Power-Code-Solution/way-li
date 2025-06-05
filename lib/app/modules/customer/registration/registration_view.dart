@@ -3,28 +3,15 @@ import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 import 'package:wayli/app/modules/bottom_nav/bottom_nav_view.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
-import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
-import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
-import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
-import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
-import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/otp/otp_view.dart';
 
-import 'registration_controller.dart';
-
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/core/widgets/button/button_page.dart';
 import 'package:wayli/app/core/widgets/custom_input.dart';
-import 'package:wayli/app/modules/customer/registration/registration_view.dart';
-import 'package:wayli/app/modules/home/home_view.dart';
-import 'package:wayli/app/modules/tabs/tabs_view.dart';
 
 class RegistrationView extends GetView<RegistrationController> {
   static const String routeName = '/register';
@@ -364,8 +351,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                   duration: Duration(milliseconds: 1600),
                                   child: MaterialButton(
                                     onPressed: () {
-                                      Get.to(() => BottomNavView(
-                                          ));
+                                      Get.to(() => BottomNavView());
                                     },
                                     height: 50,
                                     color: secondaryColor,
@@ -415,123 +401,153 @@ class RegistrationView extends GetView<RegistrationController> {
     );
   }
 
+  void showBottomModal(BuildContext context, var foodItem) {
+    const fillColor = secondaryColor;
+    const borderColor = kWhiteColor;
+    const focusedBorderColor = primaryColor;
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 40,
+      textStyle: GoogleFonts.montserrat(
+        fontSize: 22,
+        color: kWhiteColor,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: borderColor),
+      ),
+    );
 
-
-    void showBottomModal(BuildContext context, var foodItem) {
-  const fillColor = secondaryColor;
-  const borderColor = kWhiteColor;
-  const focusedBorderColor = primaryColor;
-  final defaultPinTheme = PinTheme(
-    width: 56,
-    height: 40,
-    textStyle: GoogleFonts.montserrat(
-      fontSize: 22,
-      color: kWhiteColor,
-    ),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(15),
-      border: Border.all(color: borderColor),
-    ),
-  );
-
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Form(
-                    key: ctl.otpKey,
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            children: <Widget>[
-                              FadeInUp(
-                                duration: Duration(milliseconds: 100),
-                                child: Container(
-                                  padding: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: secondaryColor,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Directionality(
-                                              textDirection: TextDirection.ltr,
-                                              child: Pinput(
-                                                controller: controller.pinController,
-                                                focusNode: controller.focusNode,
-                                                defaultPinTheme: defaultPinTheme,
-                                                length: 6,
-                                                separatorBuilder: (index) => const Gap(4),
-                                                validator: (value) {
-                                                  return value == '222299' ? null : 'Pin is incorrect';
-                                                },
-                                                hapticFeedbackType: HapticFeedbackType.lightImpact,
-                                                onCompleted: (pin) {
-                                                  debugPrint('onCompleted: $pin');
-                                                },
-                                                onChanged: (value) {
-                                                  debugPrint('onChanged: $value');
-                                                },
-                                                cursor: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.end,
-                                                  children: [
-                                                    Container(
-                                                      margin: const EdgeInsets.only(bottom: 9),
-                                                      width: 22,
-                                                      height: 1,
-                                                      color: focusedBorderColor,
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Form(
+                      key: ctl.otpKey,
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              children: <Widget>[
+                                FadeInUp(
+                                  duration: Duration(milliseconds: 100),
+                                  child: Container(
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: secondaryColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Directionality(
+                                                textDirection:
+                                                    TextDirection.ltr,
+                                                child: Pinput(
+                                                  controller:
+                                                      controller.pinController,
+                                                  focusNode:
+                                                      controller.focusNode,
+                                                  defaultPinTheme:
+                                                      defaultPinTheme,
+                                                  length: 6,
+                                                  separatorBuilder: (index) =>
+                                                      const Gap(4),
+                                                  validator: (value) {
+                                                    return value == '222299'
+                                                        ? null
+                                                        : 'Pin is incorrect';
+                                                  },
+                                                  hapticFeedbackType:
+                                                      HapticFeedbackType
+                                                          .lightImpact,
+                                                  onCompleted: (pin) {
+                                                    debugPrint(
+                                                        'onCompleted: $pin');
+                                                  },
+                                                  onChanged: (value) {
+                                                    debugPrint(
+                                                        'onChanged: $value');
+                                                  },
+                                                  cursor: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                            .only(bottom: 9),
+                                                        width: 22,
+                                                        height: 1,
+                                                        color:
+                                                            focusedBorderColor,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  focusedPinTheme:
+                                                      defaultPinTheme.copyWith(
+                                                    decoration: defaultPinTheme
+                                                        .decoration!
+                                                        .copyWith(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                      border: Border.all(
+                                                          color:
+                                                              focusedBorderColor),
                                                     ),
-                                                  ],
-                                                ),
-                                                focusedPinTheme: defaultPinTheme.copyWith(
-                                                  decoration: defaultPinTheme.decoration!.copyWith(
-                                                    borderRadius: BorderRadius.circular(6),
-                                                    border: Border.all(color: focusedBorderColor),
                                                   ),
-                                                ),
-                                                submittedPinTheme: defaultPinTheme.copyWith(
-                                                  decoration: defaultPinTheme.decoration!.copyWith(
-                                                    color: fillColor,
-                                                    borderRadius: BorderRadius.circular(6),
-                                                    border: Border.all(color: focusedBorderColor),
+                                                  submittedPinTheme:
+                                                      defaultPinTheme.copyWith(
+                                                    decoration: defaultPinTheme
+                                                        .decoration!
+                                                        .copyWith(
+                                                      color: fillColor,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              6),
+                                                      border: Border.all(
+                                                          color:
+                                                              focusedBorderColor),
+                                                    ),
                                                   ),
-                                                ),
-                                                errorPinTheme: defaultPinTheme.copyBorderWith(
-                                                  border: Border.all(color: Colors.redAccent),
+                                                  errorPinTheme: defaultPinTheme
+                                                      .copyBorderWith(
+                                                    border: Border.all(
+                                                        color:
+                                                            Colors.redAccent),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const Gap(10),
-                              FadeInUp(
+                                const Gap(10),
+                                FadeInUp(
                                   duration: Duration(milliseconds: 100),
                                   child: MaterialButton(
                                     onPressed: () {
@@ -555,27 +571,19 @@ class RegistrationView extends GetView<RegistrationController> {
                                     ),
                                   ),
                                 ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
-
- 
- 
- 
- 
- 
- 
+        );
+      },
+    );
   }
-
+}

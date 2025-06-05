@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayli/app/core/widgets/food_item_list.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
@@ -8,20 +7,10 @@ import 'package:wayli/app/modules/food_detail/food_detail_view.dart';
 import 'sub_menu_food_controller.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/core/model/menu.dart';
-import 'package:wayli/app/core/model/menu_category.dart';
-import 'package:wayli/app/core/widgets/collection_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/filter_view.dart';
-import 'package:wayli/app/core/widgets/outlet_list_row.dart';
-import 'package:wayli/app/core/widgets/popular_food_item_cell.dart';
-import 'package:wayli/app/core/widgets/popup_layout.dart';
-
-import 'package:get/get.dart';
-import 'package:wayli/app/modules/favourite_food/outlet_controller.dart';
 
 class SubMenuFoodView extends GetView<SubMenuFoodController> {
   const SubMenuFoodView({super.key});
@@ -60,20 +49,19 @@ class SubMenuFoodView extends GetView<SubMenuFoodController> {
                               ),
                             ),
                             child: Container(
-                              decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  controller.menuItemCategory.coverImage ??
-                                      'N/A',
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      controller.menuItemCategory.coverImage ??
+                                          'N/A',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                              padding: EdgeInsets.only(top: 0),
-                              height: media.width * 0.0,
-                              alignment: Alignment.center,
-                              child: AutoSizeText('')
-                            ),
+                                padding: EdgeInsets.only(top: 0),
+                                height: media.width * 0.0,
+                                alignment: Alignment.center,
+                                child: AutoSizeText('')),
                           ),
                         ),
                         actions: [

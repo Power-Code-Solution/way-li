@@ -5,24 +5,10 @@ import 'package:wayli/app/modules/login/login_view.dart';
 
 class OnBoardingController extends GetxController {
   //TODO: Implement OnBoardingController.
-var selectPage = 0.obs; 
-var controller = PageController().obs; 
+  var selectPage = 0.obs;
+  var controller = PageController().obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-List<Map<String, String>> pageArr = [
+  List<Map<String, String>> pageArr = [
     {
       "title": "Find Food You Love",
       "subtitle":
@@ -44,12 +30,13 @@ List<Map<String, String>> pageArr = [
       // "image": "assets/images/on_boarding_3.png",
     },
   ];
-void updatePage(int index) {
+  void updatePage(int index) {
     selectPage.value = index;
   }
 
- void goToNextPage() {
-    if (selectPage.value >= pageArr.length - 1) {      Get.to(() => LoginView());
+  void goToNextPage() {
+    if (selectPage.value >= pageArr.length - 1) {
+      Get.to(() => LoginView());
     } else {
       selectPage.value++;
       controller.value.animateToPage(
@@ -60,12 +47,9 @@ void updatePage(int index) {
     }
   }
 
-Future<void> completeOnboarding() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('hasOnboarded', true);
-  Get.offAllNamed('/login'); // Or wherever you want to go next
-}
-
-
-
+  Future<void> completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasOnboarded', true);
+    Get.offAllNamed('/login'); // Or wherever you want to go next
+  }
 }

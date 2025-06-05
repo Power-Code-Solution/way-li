@@ -11,7 +11,7 @@ class FoodDetailController extends GetxController {
 
   RxList<dynamic> foodandTagDto = <dynamic>[].obs;
   RxList<dynamic> foodandAllergensDto = <dynamic>[].obs;
-  RxList<dynamic> foodandIngredientDto= <dynamic>[].obs;
+  RxList<dynamic> foodandIngredientDto = <dynamic>[].obs;
   var price = 15.0.obs;
   var qty = 1.obs;
   var isFav = false.obs;
@@ -36,16 +36,6 @@ class FoodDetailController extends GetxController {
     fetchFoodandTagDto();
     fetchFoodandAllergensDto();
     fetchFoodandIngredientDto();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 
   Future<void> fetchFoodandTagDto() async {
@@ -79,7 +69,7 @@ class FoodDetailController extends GetxController {
           }
           print('Fetched foodandTagDto items: ${foodandTagDto.value}');
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {
@@ -123,7 +113,7 @@ class FoodDetailController extends GetxController {
           }
           print('Fetched foodandTagDto items: ${foodandTagDto.value}');
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {
@@ -135,6 +125,7 @@ class FoodDetailController extends GetxController {
       throw Exception('Failed to fetch foodandTagDto items');
     }
   }
+
   Future<void> fetchFoodandIngredientDto() async {
     final url =
         '$apiBaseAddress/secure/admin/food-items/findby-fkingredientId?id=${FIL.id}';
@@ -166,7 +157,7 @@ class FoodDetailController extends GetxController {
           }
           print('Fetched foodandTagDto items: ${foodandTagDto.value}');
         } else {
-          print('Invalid data format: ${data}');
+          print('Invalid data format: $data');
           throw Exception('Invalid data format');
         }
       } else {

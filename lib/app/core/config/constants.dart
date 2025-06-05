@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 // const kPrimaryColor = Color.fromARGB(255, 90, 176, 87);
 const kPrimaryColor = Color.fromARGB(255, 72, 95, 30);
 const primaryColor = Color(0xFFFDED01);
@@ -44,9 +43,9 @@ const headingStyle = TextStyle(
 );
 
 const defaultDuration = Duration(milliseconds: 250);
- // const apiBaseAddress = "http://192.168.1.100:5022/api";  //office
- // const apiBaseAddress = "http://192.168.218.90:5022/api"; //home
- const apiBaseAddress = "http://92.112.194.110:2590/api"; //production
+// const apiBaseAddress = "http://192.168.1.100:5022/api";  //office
+// const apiBaseAddress = "http://192.168.218.90:5022/api"; //home
+const apiBaseAddress = "http://92.112.194.110:2590/api"; //production
 
 const whatSappLink =
     "https://wa.me/23279366751?text=Hello,%20I%20want%20to%20know%20more%20about%20your%20service,%20can%20you%20tell%20me%20more?%20my%20name%20is%20.....";
@@ -62,7 +61,6 @@ const String kNamelNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
 
-
 final otpInputDecoration = InputDecoration(
   contentPadding: const EdgeInsets.symmetric(vertical: 16),
   border: outlineInputBorder(),
@@ -76,8 +74,6 @@ OutlineInputBorder outlineInputBorder() {
     borderSide: const BorderSide(color: kTextColor),
   );
 }
-
-
 
 const kSpacingUnit = 10;
 
@@ -115,7 +111,10 @@ final kDarkTheme = ThemeData(
         fontFamily: 'SFProText',
         bodyColor: kLightSecondaryColor,
         displayColor: kLightSecondaryColor,
-      ), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: kAccentColor).copyWith(background: kDarkSecondaryColor),
+      ),
+  colorScheme: ColorScheme.fromSwatch()
+      .copyWith(secondary: kAccentColor)
+      .copyWith(surface: kDarkSecondaryColor),
 );
 
 final kLightTheme = ThemeData(
@@ -130,6 +129,8 @@ final kLightTheme = ThemeData(
         fontFamily: 'SFProText',
         bodyColor: kDarkSecondaryColor,
         displayColor: kDarkSecondaryColor,
-      ), colorScheme: ColorScheme.fromSwatch().copyWith(secondary: kAccentColor).copyWith(background: kLightSecondaryColor),
+      ),
+  colorScheme: ColorScheme.fromSwatch()
+      .copyWith(secondary: kAccentColor)
+      .copyWith(surface: kLightSecondaryColor),
 );
-

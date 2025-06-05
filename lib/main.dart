@@ -62,8 +62,8 @@ void main() async {
         initialRoute: !hasOnboarded
             ? "/on-boarding"
             : authController.isLoggedIn.value
-            ? "/login"
-            : "/login",
+                ? "/login"
+                : "/login",
         getPages: AppPages.routes,
       ),
     );
@@ -72,7 +72,7 @@ void main() async {
       print("Error in main(): $e");
     }
     if (kDebugMode) {
-      print("This is the stack trace ${stackTrace}");
+      print("This is the stack trace $stackTrace");
     }
   }
 }

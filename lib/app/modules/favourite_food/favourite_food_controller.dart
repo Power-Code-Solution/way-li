@@ -6,7 +6,6 @@ class FavouriteFoodController extends GetxController {
 
   late final TextEditingController searchController;
 
-
   List popularArr = [
     {"outlets": "23", "image": "assets/images/logo1.png"},
     {"outlets": "16", "image": "assets/images/logo2.png"},
@@ -29,15 +28,5 @@ class FavouriteFoodController extends GetxController {
   void onInit() {
     super.onInit();
     searchController = TextEditingController();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

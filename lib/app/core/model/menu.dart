@@ -1,14 +1,13 @@
 import 'package:wayli/app/core/model/base_model.dart';
 import 'package:wayli/app/core/model/users.dart';
 
-class Menu extends BaseModel{
+class Menu extends BaseModel {
   final int id;
   final String name;
   final String description;
   final String coverImage;
 
-
-Menu({
+  Menu({
     required this.id,
     required this.name,
     required this.description,
@@ -42,6 +41,7 @@ Menu({
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -60,9 +60,9 @@ Menu({
     };
   }
 
-@override
-String toString() {
-  return '''
+  @override
+  String toString() {
+    return '''
   Menu {
     id: $id,
     name: $name,
@@ -70,7 +70,5 @@ String toString() {
     coverImage: $coverImage
   }
   ''';
-}
-
-
+  }
 }

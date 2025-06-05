@@ -1,35 +1,24 @@
 import 'package:wayli/app/core/model/base_model.dart';
 
-class FoodItemImage extends BaseModel{
+class FoodItemImage extends BaseModel {
   int id;
   int fkFoodItemId;
   String image;
 
-
-FoodItemImage({
+  FoodItemImage({
     required this.id,
     required this.fkFoodItemId,
     required this.image,
-    required bool active,
-    required bool deleted,
-    String? createdBy,
-    String? updatedBy,
-    String? deletedBy,
-    required DateTime createdAt,
-    required DateTime updatedAt,
-    required DateTime deletedAt,
-    String? deletedReason,
-  }) : super(
-          active: active,
-          deleted: deleted,
-          createdBy: createdBy,
-          updatedBy: updatedBy,
-          deletedBy: deletedBy,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          deletedAt: deletedAt,
-          deletedReason: deletedReason,
-        );
+    required super.active,
+    required super.deleted,
+    super.createdBy,
+    super.updatedBy,
+    super.deletedBy,
+    required super.createdAt,
+    required super.updatedAt,
+    required super.deletedAt,
+    super.deletedReason,
+  });
 
   factory FoodItemImage.fromJson(Map<String, dynamic> json) => FoodItemImage(
         id: json["id"],
@@ -46,6 +35,7 @@ FoodItemImage({
         deletedReason: json["deletedreason"],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         "id": id,
         "fkFoodItemId": fkFoodItemId,
@@ -61,10 +51,9 @@ FoodItemImage({
         "deletedreason": deletedReason,
       };
 
-
-@override
-String toString() {
-  return '''
+  @override
+  String toString() {
+    return '''
   FoodItemImage {
     id: $id,
     fkFoodItemId: $fkFoodItemId,
@@ -74,7 +63,5 @@ String toString() {
     deletedAt: $deletedAt,
   }
   ''';
-}
-
-
+  }
 }

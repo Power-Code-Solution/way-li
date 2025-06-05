@@ -28,8 +28,6 @@ class RegistrationController extends GetxController {
   late final FocusNode focusNode;
   late final GlobalKey<FormState> otpKey;
 
-
-
   var isLoading = false.obs;
 
   var registrationViewFormKey = GlobalKey<FormState>();
@@ -41,14 +39,9 @@ class RegistrationController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-        otpKey = GlobalKey<FormState>();
+    otpKey = GlobalKey<FormState>();
     pinController = TextEditingController();
     focusNode = FocusNode();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
   }
 
   @override

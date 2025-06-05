@@ -2,14 +2,12 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/custom_input.dart';
 import 'package:wayli/app/core/widgets/dropdown_select/dropdown_select_page.dart';
-import 'package:wayli/app/modules/admin/settings/menu/menu_controller.dart';
 import 'package:wayli/app/modules/admin/settings/menu_category/menu_category_controller.dart';
 
 class MenuCategoryView extends GetView<MenuCategoryController> {
@@ -19,7 +17,8 @@ class MenuCategoryView extends GetView<MenuCategoryController> {
   Widget build(BuildContext context) {
     final MenuCategoryController ctl = Get.put(MenuCategoryController());
     final TextEditingController nameController = TextEditingController();
-    final TextEditingController fkMenuCategoryIdController = TextEditingController();
+    final TextEditingController fkMenuCategoryIdController =
+        TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
 
     return Scaffold(
@@ -79,21 +78,18 @@ class MenuCategoryView extends GetView<MenuCategoryController> {
                       },
                     ),
                   ),
-
-
-const Gap(16),
-                      Obx(
-                        () => DropdownSelect(
-                          hintText: 'Select Menu',
-                          list: ctl.menuItemCategory.value
-                              .map((c) => c.name)
-                              .toList(),
-                          onChange: (val) {
-                            ctl.selectedMenuCategory(val);
-                          },
-                        ),
-                      ),
-
+                  const Gap(16),
+                  Obx(
+                    () => DropdownSelect(
+                      hintText: 'Select Menu',
+                      list: ctl.menuItemCategory.value
+                          .map((c) => c.name)
+                          .toList(),
+                      onChange: (val) {
+                        ctl.selectedMenuCategory(val);
+                      },
+                    ),
+                  ),
                   const Gap(20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 0),
@@ -114,108 +110,95 @@ const Gap(16),
                       },
                     ),
                   ),
-                   const Gap(10),
+                  const Gap(10),
                   Obx(() {
                     return ctl.selectedImage.value == null
                         ? const Text('No image selected.')
-                        : Image.file(
-                          width: 50,
-                          ctl.selectedImage.value!
-                          );
+                        : Image.file(width: 50, ctl.selectedImage.value!);
                   }),
                   const Gap(10),
-         FadeInUp(
-  duration: Duration(milliseconds: 500),
-  child: Column(
-    children: [
-      Obx(() {
-        return ctl.selectedImage.value == null
-            ? MaterialButton(
-                onPressed: () {},
-                height: 50,
-                color: secondaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Obx(() => ctl.isLoading.value
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () async {
-                          await ctl.pickImage();
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                        ),
-                        child: Center(
-                          child: AutoSizeText(
-                            "SELECT COVER IMAGE",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 15,
-                              color: primaryColor,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                      )),
-              )
-            : Column(
-                children: [
-                  Image.file(
-                    ctl.selectedImage.value!,
-                    height: 200,
-                    width: 200,
-                    fit: BoxFit.cover,
+                  FadeInUp(
+                    duration: Duration(milliseconds: 500),
+                    child: Column(
+                      children: [
+                        Obx(() {
+                          return ctl.selectedImage.value == null
+                              ? MaterialButton(
+                                  onPressed: () {},
+                                  height: 50,
+                                  color: secondaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Obx(() => ctl.isLoading.value
+                                      ? const CircularProgressIndicator()
+                                      : ElevatedButton(
+                                          onPressed: () async {
+                                            await ctl.pickImage();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                          ),
+                                          child: Center(
+                                            child: AutoSizeText(
+                                              "SELECT COVER IMAGE",
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 15,
+                                                color: primaryColor,
+                                                fontWeight: FontWeight.w900,
+                                                letterSpacing: 1.5,
+                                              ),
+                                            ),
+                                          ),
+                                        )),
+                                )
+                              : Column(
+                                  children: [
+                                    Image.file(
+                                      ctl.selectedImage.value!,
+                                      height: 200,
+                                      width: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    MaterialButton(
+                                      onPressed: () {},
+                                      height: 50,
+                                      color: secondaryColor,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Obx(() => ctl.isLoading.value
+                                          ? const CircularProgressIndicator()
+                                          : ElevatedButton(
+                                              onPressed: () {
+                                                ctl.selectedImage.value = null;
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                shadowColor: Colors.transparent,
+                                              ),
+                                              child: Center(
+                                                child: AutoSizeText(
+                                                  "CHANGE/REMOVE IMAGE",
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 15,
+                                                    color: primaryColor,
+                                                    fontWeight: FontWeight.w900,
+                                                    letterSpacing: 1.5,
+                                                  ),
+                                                ),
+                                              ),
+                                            )),
+                                    )
+                                  ],
+                                );
+                        }),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-
-MaterialButton(
-                onPressed: () {},
-                height: 50,
-                color: secondaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Obx(() => ctl.isLoading.value
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: () {
-                      ctl.selectedImage.value = null;
-                    },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                        ),
-                        child: Center(
-                          child: AutoSizeText(
-                            "CHANGE/REMOVE IMAGE",
-                            style: GoogleFonts.montserrat(
-                              fontSize: 15,
-                              color: primaryColor,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1.5,
-                            ),
-                          ),
-                        ),
-                      )),
-              )
-
-
-
-
-
-                  
-                ],
-              );
-      }),
-    ],
-  ),
-),
-
-
-
-
                   const Gap(30),
                   FadeInUp(
                     duration: Duration(milliseconds: 500),
@@ -230,10 +213,8 @@ MaterialButton(
                           ? CircularProgressIndicator()
                           : ElevatedButton(
                               onPressed: () async {
-                                if (ctl.selectedImage.value !=
-                                    null) {
-                                  File menuFile =
-                                      ctl.selectedImage.value!;
+                                if (ctl.selectedImage.value != null) {
+                                  File menuFile = ctl.selectedImage.value!;
                                   await ctl.createMenuCategory(
                                     nameController.text,
                                     ctl.menuCategoryId?.toString() ?? '0',

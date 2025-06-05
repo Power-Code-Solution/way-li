@@ -30,7 +30,6 @@ class FoodCategoryController extends GetxController {
     searchController = TextEditingController();
   }
 
-
   Future<void> refreshButton() async {
     fetchMenuCategory();
     fetchAllFoodItems();
@@ -41,13 +40,16 @@ class FoodCategoryController extends GetxController {
     isLoading.value = true;
     try {
       final response = await http.get(
-        Uri.parse('$apiBaseAddress/secure/admin/food-items/findby-fkMenuCategoryId?FkMenuCategoryId=$categoryId'),
+        Uri.parse(
+            '$apiBaseAddress/secure/admin/food-items/findby-fkMenuCategoryId?FkMenuCategoryId=$categoryId'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['data'] != null && data['data'] is List) {
-          List<FoodItem> fetchedItems = List<FoodItem>.from(data['data'].map((item) => FoodItem.fromJson(item)));
-          foodItems.assignAll(fetchedItems); // Use assignAll for reactive updates
+          List<FoodItem> fetchedItems = List<FoodItem>.from(
+              data['data'].map((item) => FoodItem.fromJson(item)));
+          foodItems
+              .assignAll(fetchedItems); // Use assignAll for reactive updates
         } else {
           throw Exception('Invalid data format');
         }
@@ -61,15 +63,16 @@ class FoodCategoryController extends GetxController {
     }
   }
 
-
   Future<void> fetchAllFoodItems() async {
     isLoading.value = true;
     try {
-      final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
+      final response = await http
+          .get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['data'] != null && data['data'] is List) {
-          List<FoodItem> fetchedItems = List<FoodItem>.from(data['data'].map((item) => FoodItem.fromJson(item)));
+          List<FoodItem> fetchedItems = List<FoodItem>.from(
+              data['data'].map((item) => FoodItem.fromJson(item)));
           allFoodItems.value = fetchedItems;
           foodItems.assignAll(fetchedItems);
         } else {
@@ -90,7 +93,8 @@ class FoodCategoryController extends GetxController {
 
     isLoading.value = true;
     try {
-      final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
+      final response =
+          await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['data'] != null && data['data'] is List) {
@@ -98,7 +102,7 @@ class FoodCategoryController extends GetxController {
             data['data'].map((item) => Menu.fromJson(item)),
           );
           menuItems.value = fetchedItems;
-          update();  // Trigger UI update after fetching menu items
+          update(); // Trigger UI update after fetching menu items
         } else {
           throw Exception('Invalid Menu format');
         }
@@ -112,13 +116,13 @@ class FoodCategoryController extends GetxController {
     }
   }
 
-
   Future<void> fetchMenuCategory() async {
     var url = ('$apiBaseAddress/secure/admin/menu-category/all');
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      print("I was pressed to return data and I returned the data: ${response.body}");
+      print(
+          "I was pressed to return data and I returned the data: ${response.body}");
 
       if (response.body.isNotEmpty) {
         final data = jsonDecode(response.body);
@@ -176,29 +180,25 @@ class FoodCategoryController extends GetxController {
 
     selectedCategoryIndex.value = categoryId!;
 
-
     if (categoryId == -1) {
       await fetchAllFoodItems();
       print("Fetched All Food Items: $allFoodItems");
       foodItems.value = List.from(allFoodItems);
     } else {
-      fetchFoodItems(categoryId!);
+      fetchFoodItems(categoryId);
     }
 
     print("Updated Food Items: $foodItems");
   }
-
 
   void filterFoodItems(String query) {
     if (query.isEmpty) {
       foodItems.value = List.from(allFoodItems);
     } else {
       foodItems.value = allFoodItems
-          .where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (item) => item.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
   }
-
-
-
 }

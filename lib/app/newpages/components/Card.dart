@@ -6,9 +6,9 @@ import 'package:wayli/app/newpages/components/colors.dart'
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/newpages/Pages/ProjectDetails.dart';
-import 'package:wayli/app/newpages/components/colors.dart' show mainBlack, mainYellow;
+import 'package:wayli/app/newpages/components/colors.dart'
+    show mainBlack, mainYellow;
 import 'package:get/get.dart';
-
 
 import '../../core/model/food_items.dart';
 import '../../modules/cart/cart_controller.dart';
@@ -19,7 +19,7 @@ class CardMain extends StatelessWidget {
   final FoodItem foodItem;
   final CartController cartController = Get.put(CartController());
 
-  CardMain({Key? key, required this.foodItem}) : super(key: key);
+  CardMain({super.key, required this.foodItem});
 
   @override
   Widget build(BuildContext context) {
@@ -39,106 +39,104 @@ class CardMain extends StatelessWidget {
       child: Column(
         children: [
           GestureDetector(
-          onTap: () {
-    Get.to(
-    () => ProductDetailsView(),
-    arguments: {'FIL': foodItem},
-    );
-    },
-      child: Container(
-        height: containerHeight,
-        width: containerWidth,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: mainYellow,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(height: containerHeight * 0.02),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                // imageUrl,
-                imageUrl.isNotEmpty ? imageUrl : "assets/images/food.png",
-                width: imageWidth,
-                height: imageHeight,
-                fit: BoxFit.cover,
-                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  } else {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: mainYellow,
-                      ),
-                    );
-                  }
-                },
-                errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
-                  return Image.asset("assets/images/food.png", fit: BoxFit.cover, width: imageWidth,
-                    height: imageHeight,
-                    );
-                },
-              ),
-            ),
-            Text(
-              foodItem.name ?? 'N/A',
-              style: GoogleFonts.poppins(
-                fontSize: containerWidth * 0.1,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              "LE " + (foodItem.price.toString() ?? 'N/A'),
-              style: GoogleFonts.poppins(
-                fontSize: containerWidth * 0.09,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Obx(() => GestureDetector(
-              onTap: () => cartController.handleAddToCart(foodItem),
-              child: Container(
-                alignment: Alignment.center,
-                width: buttonWidth,
-                height: buttonHeight,
-                decoration: BoxDecoration(
-                  color: cartController.cartItems.contains(foodItem)
-                      ? mainBlack
-                      : mainYellow,
-                  borderRadius: BorderRadius.circular(5),
+            onTap: () {
+              Get.to(
+                () => ProductDetailsView(),
+                arguments: {'FIL': foodItem},
+              );
+            },
+            child: Container(
+              height: containerHeight,
+              width: containerWidth,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: mainYellow,
+                  width: 2,
                 ),
-                child: cartController.cartItems.contains(foodItem)
-                    ? Icon(Icons.check, color: Colors.white, size: buttonHeight * 0.5)
-                    : Text(
-                  "Add to cart",
-                  style: GoogleFonts.poppins(
-                    fontSize: buttonWidth * 0.12,
-                    fontWeight: FontWeight.w500,
-                    color: mainBlack,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(height: containerHeight * 0.02),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      // imageUrl,
+                      imageUrl.isNotEmpty ? imageUrl : "assets/images/food.png",
+                      width: imageWidth,
+                      height: imageHeight,
+                      fit: BoxFit.cover,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: mainYellow,
+                            ),
+                          );
+                        }
+                      },
+                      errorBuilder: (BuildContext context, Object error,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          "assets/images/food.png",
+                          fit: BoxFit.cover,
+                          width: imageWidth,
+                          height: imageHeight,
+                        );
+                      },
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
+                  Text(
+                    foodItem.name ?? 'N/A',
+                    style: GoogleFonts.poppins(
+                      fontSize: containerWidth * 0.1,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    "LE ${foodItem.price.toString() ?? 'N/A'}",
+                    style: GoogleFonts.poppins(
+                      fontSize: containerWidth * 0.09,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Obx(() => GestureDetector(
+                        onTap: () => cartController.handleAddToCart(foodItem),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: buttonWidth,
+                          height: buttonHeight,
+                          decoration: BoxDecoration(
+                            color: cartController.cartItems.contains(foodItem)
+                                ? mainBlack
+                                : mainYellow,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: cartController.cartItems.contains(foodItem)
+                              ? Icon(Icons.check,
+                                  color: Colors.white, size: buttonHeight * 0.5)
+                              : Text(
+                                  "Add to cart",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: buttonWidth * 0.12,
+                                    fontWeight: FontWeight.w500,
+                                    color: mainBlack,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                        ),
+                      )),
+                  SizedBox(height: containerHeight * 0.02),
+                ],
               ),
-            )),
-
-
-
-
-
-
-            SizedBox(height: containerHeight * 0.02),
-          ],
-        ),
-      ),
-    )
-
-    ],
+            ),
+          )
+        ],
       ),
     );
   }
 }
-

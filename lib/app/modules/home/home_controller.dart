@@ -20,8 +20,7 @@ class HomeController extends GetxController {
   RxList<dynamic> menuItems = <dynamic>[].obs;
   RxList<dynamic> menuItemCategory = <dynamic>[].obs;
   final List<FoodItem> _originalFoodItems = [];
-  
-  
+
   @override
   void onInit() {
     loading.value = true;
@@ -37,38 +36,35 @@ class HomeController extends GetxController {
     fetchMenuCategory();
   }
 
-
-
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-String get dayOfTheWeek {
+  String get dayOfTheWeek {
     List<String> days = [
-      "Sunday", "Monday", "Tuesday", "Wednesday", 
-      "Thursday", "Friday", "Saturday"
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday"
     ];
-    return days[DateTime.now().weekday % 7]; 
+    return days[DateTime.now().weekday % 7];
   }
-
 
   void filterFoodItems(String query) {
     if (query.isEmpty) {
       foodItems.value = List.from(_originalFoodItems);
     } else {
       foodItems.value = _originalFoodItems
-          .where((item) => item.name.toLowerCase().contains(query.toLowerCase()))
+          .where(
+              (item) => item.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
   }
 
-
   Future<void> fetchFoodItems() async {
     try {
       loading.value = true;
-      final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
+      final response = await http
+          .get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -99,16 +95,13 @@ String get dayOfTheWeek {
     }
   }
 
-
-
-
-
   Future<void> fetchMenuItems() async {
     if (menuItems.isNotEmpty) return;
     loading.value = true;
     update();
     try {
-      final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
+      final response =
+          await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
       if (response.statusCode == 200) {
         loading.value = false;
         final data = jsonDecode(response.body);
@@ -133,53 +126,50 @@ String get dayOfTheWeek {
     }
   }
 
-
-
-Future<void> fetchMenuCategory() async {
-  final response = await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu-category/all'));
-  loading.value = true;
-  if (response.statusCode == 200) {
-    if (response.body.isNotEmpty) {
-      final data = jsonDecode(response.body);
-      loading.value = false;
-      if (data['data'] != null && data['data'] is List) {
-        List<MenuCategory> fetchedItems = [];
-        for (var item in data['data']) {
-          if (item != null && item is Map<String, dynamic>) {
-            try {
-              fetchedItems.add(MenuCategory.fromJson(item));
-            } catch (e) {
+  Future<void> fetchMenuCategory() async {
+    final response = await http
+        .get(Uri.parse('$apiBaseAddress/secure/admin/menu-category/all'));
+    loading.value = true;
+    if (response.statusCode == 200) {
+      if (response.body.isNotEmpty) {
+        final data = jsonDecode(response.body);
+        loading.value = false;
+        if (data['data'] != null && data['data'] is List) {
+          List<MenuCategory> fetchedItems = [];
+          for (var item in data['data']) {
+            if (item != null && item is Map<String, dynamic>) {
+              try {
+                fetchedItems.add(MenuCategory.fromJson(item));
+              } catch (e) {
+                loading.value = false;
+                print('Error parsing item: $e');
+              }
+            } else {
               loading.value = false;
-              print('Error parsing item: $e');
+              print('Invalid or null item encountered: $item');
             }
-          } else {
-            loading.value = false;
-            print('Invalid or null item encountered: $item');
           }
-        }
 
-        print('Fetched Menu Category items: $fetchedItems');
-        if (fetchedItems.isNotEmpty) {
-          menuItemCategory.value = fetchedItems;
+          print('Fetched Menu Category items: $fetchedItems');
+          if (fetchedItems.isNotEmpty) {
+            menuItemCategory.value = fetchedItems;
+            loading.value = false;
+          }
+          print('Fetched Menu Category items: ${menuItemCategory.value}');
+        } else {
           loading.value = false;
+          print('Invalid data format: $data');
+          throw Exception('Invalid data format');
         }
-        print('Fetched Menu Category items: ${menuItemCategory.value}');
       } else {
         loading.value = false;
-        print('Invalid data format: ${data}');
-        throw Exception('Invalid data format');
+        print('Response body is empty');
+        throw Exception('Response body is empty');
       }
     } else {
       loading.value = false;
-      print('Response body is empty');
-      throw Exception('Response body is empty');
+      print('Failed to fetch data: ${response.statusCode}');
+      throw Exception('Failed to fetch Menu Category items');
     }
-  } else {
-    loading.value = false;
-    print('Failed to fetch data: ${response.statusCode}');
-    throw Exception('Failed to fetch Menu Category items');
   }
-}
-
-
 }
