@@ -1,11 +1,13 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/modules/food_category/food_category_view.dart';
 import 'package:wayli/app/newpages/Pages/HomePage.dart';
 import '../../core/config/constants.dart';
-import '../../newpages/Pages/Payment.dart';
+import 'package:cupertino_modal_sheet/cupertino_modal_sheet.dart';
 import '../../newpages/components/colors.dart';
 import './cart_controller.dart';
 
@@ -213,10 +215,10 @@ class CartPage extends GetView<CartController> {
                               size,
                               isTotal: true),
                           SizedBox(height: size.height * 0.02),
+
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.yellow,
-                              // Customize the color
                               minimumSize:
                                   Size(size.width * 0.9, size.height * 0.06),
                               shape: RoundedRectangleBorder(
@@ -224,10 +226,9 @@ class CartPage extends GetView<CartController> {
                               ),
                             ),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const PaymentPage()),
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) => const CheckoutModal(),
                               );
                             },
                             child: Text(
@@ -239,6 +240,7 @@ class CartPage extends GetView<CartController> {
                               ),
                             ),
                           ),
+
                           SizedBox(height: size.height * 0.02),
                           // Padding at the bottom
                         ],
@@ -279,5 +281,276 @@ class CartPage extends GetView<CartController> {
         ],
       ),
     );
+  }
+}
+
+// const primaryColor = Colors.blue;
+
+class CheckoutModal extends StatefulWidget {
+  const CheckoutModal({super.key});
+
+  @override
+  State<CheckoutModal> createState() => _CheckoutModalState();
+}
+
+class _CheckoutModalState extends State<CheckoutModal> {
+  String? selectedMethod;
+
+  final List<Map<String, String>> paymentMethods = [
+    {
+      'name': 'Orange Money',
+      'image': 'assets/payment-logo/orange-money.png',
+    },
+    {
+      'name': 'Master Card',
+      'image': 'assets/payment-logo/mastercard.png',
+    },
+    {
+      'name': 'Visa Card',
+      'image': 'assets/payment-logo/visa.png',
+    },
+    {
+      'name': 'Africell',
+      'image': 'assets/payment-logo/afri-money.png',
+    },
+    {
+      'name': 'Qcell',
+      'image': 'assets/payment-logo/qmoney.png',
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+        child: Material(
+      color: Colors.white,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            AutoSizeText(
+              "Checkout",
+              style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w900,
+                fontSize: 24,
+                color: secondaryColor
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            AutoSizeText(
+              "Please select a payment method:",
+              style: GoogleFonts.montserrat(
+                color: secondaryColor,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: paymentMethods.map((methodData) {
+                  final method = methodData['name']!;
+                  final imagePath = methodData['image']!;
+                  final isSelected = selectedMethod == method;
+
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() => selectedMethod = method);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: isSelected ? secondaryColor : Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color:
+                              isSelected ? primaryColor : Colors.grey.shade400,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Image.asset(
+                            imagePath,
+                            width: 24,
+                            height: 24,
+                          ),
+                          const SizedBox(width: 8),
+                          AutoSizeText(
+                            method,
+                            style: GoogleFonts.montserrat(
+                              color: isSelected ? Colors.white : Colors.black87,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+            if (selectedMethod != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (["Orange Money", "Qcell", "Africell"]
+                        .contains(selectedMethod)) ...[
+                      TextField(
+                        keyboardType: TextInputType.phone,
+                        decoration: const InputDecoration(
+                          labelText: "Phone Number",
+                          prefixIcon: Icon(CupertinoIcons.phone),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: secondaryColor, width: 2),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        obscureText: true,
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: "PIN",
+                          prefixIcon: Icon(CupertinoIcons.lock),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: secondaryColor, width: 2),
+                          ),
+                        ),
+                      ),
+                    ] else if (["Master Card", "Visa Card"]
+                        .contains(selectedMethod)) ...[
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        decoration: const InputDecoration(
+                          labelText: "Card Number",
+                          prefixIcon: Icon(CupertinoIcons.creditcard),
+                          border: OutlineInputBorder(),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: secondaryColor, width: 2),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: "CVV",
+                                prefixIcon: Icon(CupertinoIcons.padlock),
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: secondaryColor, width: 2),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: TextField(
+                              keyboardType: TextInputType.datetime,
+                              decoration: const InputDecoration(
+                                labelText: "Expiry Date (MM/YY)",
+                                prefixIcon: Icon(CupertinoIcons.calendar),
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: secondaryColor, width: 2),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            const SizedBox(height: 24),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: MaterialButton(
+                        onPressed: () {},
+                        height: 50,
+                        color: secondaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: selectedMethod == null
+                              ? null
+                              : () {
+                                  Navigator.of(context).pop();
+                                  // Handle selectedMethod
+                                },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            shadowColor: Colors.transparent,
+                          ),
+                          child: Center(
+                            child: AutoSizeText(
+                              "Continue Payment",
+                              style: GoogleFonts.montserrat(
+                                  fontSize: 18,
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.w900),
+                            ),
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    ));
   }
 }
