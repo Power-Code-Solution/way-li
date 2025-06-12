@@ -74,7 +74,23 @@ class _ProductDetailsState extends State<ProductDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: size.height * 0.02),
+              SizedBox(height: size.height * 0.04),
+
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _liked = !_liked;
+                    });
+                  },
+                  icon: Icon(
+                    _liked ? Icons.favorite : Icons.favorite_border,
+                    color: _liked ? Colors.red : Colors.black,
+                    size: size.width * 0.06,
+                  ),
+                ),
+              ),
               // Product Image Container
               Center(
                 child: Container(
@@ -84,24 +100,22 @@ class _ProductDetailsState extends State<ProductDetails> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(width: 2, color: mainYellow),
+                    image: DecorationImage(
+                      image: AssetImage(
+                          imageUrl.isNotEmpty ? imageUrl : "assets/burger.png"),
+                      fit: BoxFit.cover,
+                    ),
+                    // image: DecorationImage(
+                    //   image: AssetImage(
+
+                    //     imageUrl.isNotEmpty
+                    //         ? imageUrl
+                    //         : "assets/images/food.png",
+                    //   ),
+                    // )
                   ),
                   child: Column(
                     children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _liked = !_liked;
-                            });
-                          },
-                          icon: Icon(
-                            _liked ? Icons.favorite : Icons.favorite_border,
-                            color: _liked ? Colors.red : Colors.black,
-                            size: size.width * 0.06,
-                          ),
-                        ),
-                      ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: Image.asset(
