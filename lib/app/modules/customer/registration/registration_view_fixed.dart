@@ -20,7 +20,6 @@ class RegistrationView extends GetView<RegistrationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: GetBuilder<RegistrationController>(
         init: RegistrationController(),
         builder: (ctl) {
@@ -44,19 +43,16 @@ class RegistrationView extends GetView<RegistrationController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Gap(40),
-
                       // Back Button
                       IconButton(
                         onPressed: () => Get.back(),
                         icon: Icon(Icons.arrow_back_ios, color: secondaryColor),
                         padding: EdgeInsets.zero,
                       ),
-
                       const Gap(20),
-
                       // Header
                       FadeInDown(
-                        duration: const Duration(milliseconds: 500),
+                        duration: Duration(milliseconds: 500),
                         child: Text(
                           "Create Account",
                           style: GoogleFonts.poppins(
@@ -66,11 +62,9 @@ class RegistrationView extends GetView<RegistrationController> {
                           ),
                         ),
                       ),
-
                       const Gap(8),
-
                       FadeInDown(
-                        duration: const Duration(milliseconds: 600),
+                        duration: Duration(milliseconds: 600),
                         child: Text(
                           "Please fill in the details to register",
                           style: GoogleFonts.poppins(
@@ -79,9 +73,7 @@ class RegistrationView extends GetView<RegistrationController> {
                           ),
                         ),
                       ),
-
                       const Gap(40),
-
                       // Registration Form
                       Form(
                         key: ctl.registrationViewFormKey,
@@ -89,7 +81,7 @@ class RegistrationView extends GetView<RegistrationController> {
                           children: [
                             // Full Name Field
                             FadeInUp(
-                              duration: const Duration(milliseconds: 700),
+                              duration: Duration(milliseconds: 700),
                               child: CostumFormField(
                                 keyboardType: TextInputType.name,
                                 textController: ctl.firstName,
@@ -103,16 +95,14 @@ class RegistrationView extends GetView<RegistrationController> {
                                 },
                               ),
                             ),
-
                             const Gap(20),
-
                             // Email Field
                             FadeInUp(
-                              duration: const Duration(milliseconds: 800),
+                              duration: Duration(milliseconds: 800),
                               child: CostumFormField(
+                                isPassword: false,
                                 keyboardType: TextInputType.emailAddress,
                                 textController: ctl.email,
-                                isPassword: false,
                                 labelText: "Email",
                                 hintText: "Enter your email address",
                                 icon: Icon(Icons.email_outlined, color: secondaryColor),
@@ -123,16 +113,14 @@ class RegistrationView extends GetView<RegistrationController> {
                                 },
                               ),
                             ),
-
                             const Gap(20),
-
                             // Phone Field
                             FadeInUp(
-                              duration: const Duration(milliseconds: 900),
+                              duration: Duration(milliseconds: 900),
                               child: CostumFormField(
+                                isPassword: false,
                                 keyboardType: TextInputType.phone,
                                 textController: ctl.phone,
-                                isPassword: false,
                                 labelText: "Phone Number",
                                 hintText: "Enter your phone number",
                                 icon: Icon(Icons.phone_outlined, color: secondaryColor),
@@ -142,12 +130,10 @@ class RegistrationView extends GetView<RegistrationController> {
                                 },
                               ),
                             ),
-
                             const Gap(20),
-
                             // Password Field
                             FadeInUp(
-                              duration: const Duration(milliseconds: 1000),
+                              duration: Duration(milliseconds: 1000),
                               child: CostumFormField(
                                 textController: ctl.password,
                                 isPassword: true,
@@ -174,12 +160,10 @@ class RegistrationView extends GetView<RegistrationController> {
                                 ),
                               ),
                             ),
-
                             const Gap(20),
-
                             // Confirm Password Field
                             FadeInUp(
-                              duration: const Duration(milliseconds: 1100),
+                              duration: Duration(milliseconds: 1100),
                               child: CostumFormField(
                                 textController: ctl.confPassword,
                                 isPassword: true,
@@ -206,52 +190,48 @@ class RegistrationView extends GetView<RegistrationController> {
                                 ),
                               ),
                             ),
-
                             const Gap(40),
-
                             // Register Button
                             FadeInUp(
-                              duration: const Duration(milliseconds: 1200),
-                              child: Obx(
-                                    () => SizedBox(
-                                  width: double.infinity,
-                                  height: 56,
-                                  child: ElevatedButton(
-                                    onPressed: ctl.isLoading.value ? null : ctl.createUser,
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: primaryColor,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      elevation: 0,
+                              duration: Duration(milliseconds: 1200),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 56,
+                                child: ElevatedButton(
+                                  onPressed: ctl.isLoading.value ? null : ctl.createUser,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    child: ctl.isLoading.value
-                                        ? const SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                      ),
-                                    )
+                                    elevation: 0,
+                                  ),
+                                  child: Obx(
+                                    () => ctl.isLoading.value
+                                        ? SizedBox(
+                                            height: 24,
+                                            width: 24,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            ),
+                                          )
                                         : Text(
-                                      "Create Account",
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                            "Create Account",
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
                             ),
-
                             const Gap(20),
-
                             // Login Link
                             FadeInUp(
-                              duration: const Duration(milliseconds: 1300),
+                              duration: Duration(milliseconds: 1300),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -263,7 +243,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: () => Get.to(() => const LoginView()),
+                                    onPressed: () => Get.to(() => LoginView()),
                                     child: Text(
                                       "Login",
                                       style: GoogleFonts.poppins(
@@ -276,7 +256,6 @@ class RegistrationView extends GetView<RegistrationController> {
                                 ],
                               ),
                             ),
-
                             const Gap(20),
                           ],
                         ),

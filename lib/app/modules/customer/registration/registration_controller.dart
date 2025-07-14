@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,9 +8,12 @@ import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:wayli/app/core/model/users.dart';
+import 'package:wayli/app/core/model/device_model.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/otp/otp_view.dart';
 import 'package:wayli/app/modules/tabs/tabs_view.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class RegistrationController extends GetxController {
   //TODO: Implement RegistrationController.
@@ -36,12 +40,56 @@ class RegistrationController extends GetxController {
   bool isOuvrierConnected = false;
   get sharePre => null;
 
+  final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
+
   @override
   void onInit() {
     super.onInit();
     otpKey = GlobalKey<FormState>();
     pinController = TextEditingController();
     focusNode = FocusNode();
+  }
+
+  Future<DeviceInfo> getDeviceInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String appVersion = packageInfo.version;
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await _deviceInfoPlugin.androidInfo;
+      return DeviceInfo(
+        name: androidInfo.model,
+        identifier: androidInfo.id,
+        version: androidInfo.version.release,
+        appVersion: appVersion,
+        system: 'Android',
+        os: androidInfo.version.sdkInt.toString(),
+        verified: false,
+        biometric: false,
+      );
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await _deviceInfoPlugin.iosInfo;
+      return DeviceInfo(
+        name: iosInfo.name ?? iosInfo.model!,
+        identifier: iosInfo.identifierForVendor!,
+        version: iosInfo.systemVersion!,
+        appVersion: appVersion,
+        system: 'iOS',
+        os: iosInfo.systemName!,
+        verified: false,
+        biometric: false,
+      );
+    } else {
+      return DeviceInfo(
+        name: 'Unknown',
+        identifier: 'Unknown',
+        version: 'Unknown',
+        appVersion: appVersion,
+        system: 'Unknown',
+        os: 'Unknown',
+        verified: false,
+        biometric: false,
+      );
+    }
   }
 
   @override
@@ -72,6 +120,10 @@ class RegistrationController extends GetxController {
       }
 
       isLoading.value = true;
+
+      // Get device information
+      DeviceInfo deviceInfo = await getDeviceInfo();
+
       final user = CreateUsers(
         firstName: firstName.text,
         lastName: lastName.text,
@@ -81,6 +133,7 @@ class RegistrationController extends GetxController {
         address: address.text,
         fkCityId: int.tryParse(fkCityIdController.text) ?? 0,
         fkCommunityId: int.tryParse(fkCommunityIdController.text) ?? 0,
+        device: deviceInfo,
       );
 
       final response = await http.post(

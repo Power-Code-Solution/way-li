@@ -1,4 +1,5 @@
 import 'package:wayli/app/core/model/base_model.dart';
+import 'package:wayli/app/core/model/device_model.dart';
 
 class Users extends BaseModel {
   final int id;
@@ -122,6 +123,7 @@ class CreateUsers {
   final String address;
   final int fkCityId;
   final int fkCommunityId;
+  final DeviceInfo? device;
 
   CreateUsers({
     required this.firstName,
@@ -132,6 +134,7 @@ class CreateUsers {
     required this.address,
     required this.fkCityId,
     required this.fkCommunityId,
+    this.device,
   });
 
   factory CreateUsers.fromJson(Map<String, dynamic> json) {
@@ -144,6 +147,7 @@ class CreateUsers {
       address: json['address'],
       fkCityId: json['fkCityId'],
       fkCommunityId: json['fkCommunityId'],
+      device: json['device'] != null ? DeviceInfo.fromJson(json['device']) : null,
     );
   }
 
@@ -157,6 +161,7 @@ class CreateUsers {
       "address": address,
       "fkCityId": fkCityId,
       "fkCommunityId": fkCommunityId,
+      "device": device?.toJson(),
     };
   }
 
@@ -169,8 +174,9 @@ class CreateUsers {
     email: $email,
     phone: $phone,
     address: $address,
-    address: $address,
-    address: $address,
+    fkCityId: $fkCityId,
+    fkCommunityId: $fkCommunityId,
+    device: $device,
   }
   ''';
   }

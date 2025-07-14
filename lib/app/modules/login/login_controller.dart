@@ -177,10 +177,6 @@ class LoginController extends GetxController {
             showFingerprint.value = true;
           }
         }
-
-        Get.snackbar(
-            "Login Successful", "Welcome, ${authController.userName.value}",
-            snackPosition: SnackPosition.BOTTOM);
         Get.offAll(() => BottomNavView());
         email.clear();
         pass.clear();

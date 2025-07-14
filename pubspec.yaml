@@ -61,6 +61,8 @@ dependencies:
   shared_preferences: ^2.0.6
   skeletonizer: ^1.4.3
   shimmer: ^3.0.0
+  device_info_plus: ^9.1.2
+  package_info_plus: ^5.0.1
 
   flutter_native_splash: ^2.4.4
   flutter_launcher_icons: ^0.14.3
@@ -111,9 +113,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/gif/
     - assets/svg/
-    - assets/videos/
     - assets/payment-logo/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
