@@ -84,7 +84,7 @@ class RegistrationView extends GetView<RegistrationController> {
                               duration: Duration(milliseconds: 700),
                               child: CostumFormField(
                                 keyboardType: TextInputType.name,
-                                textController: ctl.firstName,
+                                textController: ctl.fullname,
                                 isPassword: false,
                                 labelText: "Full Name",
                                 hintText: "Enter your full name",

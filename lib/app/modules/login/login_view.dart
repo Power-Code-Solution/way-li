@@ -45,7 +45,7 @@ class LoginView extends GetView<LoginController> {
                         FadeInDown(
                           duration: Duration(milliseconds: 500),
                           child: Image.asset(
-                            'assets/images/way-li_logo.png', // Add your logo image
+                            'assets/images/way-li-logo.png', // Add your logo image
                             height: 100,
                           ),
                         ),

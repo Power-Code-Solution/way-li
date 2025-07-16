@@ -53,21 +53,15 @@ class AddFoodItemsController extends GetxController {
     String name,
     String description,
     String type,
-    String fkMenuCategoryId,
+    String? fkMenuCategoryId,
     String servingSize,
     String price,
     List<File> images,
-    List<int> fkTagIds,
-    List<int> fkAllergensId,
-    List<int> fkIngredientsId,
+    List<int>? fkTagIds,
+    List<int>? fkAllergensId,
+    List<int>? fkIngredientsId,
   ) async {
     if (name.isEmpty ||
-        description.isEmpty ||
-        fkMenuCategoryId.isEmpty ||
-        type.isEmpty ||
-        servingSize.isEmpty ||
-        images.isEmpty ||
-        fkTagIds.isEmpty ||
         price.isEmpty) {
       responseMessage.value = 'All fields are required.';
       Get.snackbar(
@@ -85,7 +79,7 @@ class AddFoodItemsController extends GetxController {
         ..fields['Name'] = name
         ..fields['Description'] = description
         ..fields['Type'] = type
-        ..fields['FkMenuCategoryId'] = fkMenuCategoryId
+        ..fields['FkMenuCategoryId'] = fkMenuCategoryId ?? ""
         ..fields['ServingSize'] = servingSize
         ..fields['Price'] = price;
 
@@ -107,9 +101,9 @@ class AddFoodItemsController extends GetxController {
         request.files.add(multipartFile);
       }
 
-      request.fields['FkTagIds'] = fkTagIds.join(',');
-      request.fields['fkAllergensId'] = fkAllergensId.join(',');
-      request.fields['fkIngredientsId'] = fkIngredientsId.join(',');
+      request.fields['FkTagIds'] = fkTagIds?.join(',') ?? '';
+      request.fields['fkAllergensId'] = fkAllergensId?.join(',') ?? '';
+      request.fields['fkIngredientsId'] = fkIngredientsId?.join(',') ?? '';
       print("Request sent to the server:");
       print("URI: $uri");
       print("Fields:");

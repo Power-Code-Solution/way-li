@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/menu.dart';
-import 'package:wayli/app/core/model/menu_category.dart';
 import 'package:wayli/app/core/widgets/collection_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/food_item_list.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
@@ -16,7 +15,6 @@ import 'package:wayli/app/core/widgets/selection_text_view.dart';
 import 'package:wayli/app/modules/favourite_food/outlet_list_view.dart';
 import 'package:wayli/app/modules/food_detail/food_detail_view.dart';
 import 'package:wayli/app/modules/home/collection_list_view.dart';
-import 'package:wayli/app/modules/home/trending_list_view.dart';
 import 'package:wayli/app/modules/sub_menu/sub_menu_view.dart';
 import 'package:wayli/app/modules/sub_menu_food/sub_menu_food_view.dart';
 

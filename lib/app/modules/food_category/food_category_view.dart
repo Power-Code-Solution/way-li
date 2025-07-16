@@ -128,7 +128,7 @@ class FoodCategoryView extends GetView<FoodCategoryController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'assets/images/way-li_logo.png',
+                            'assets/images/way-li-logo.png',
                             height: 200,
                             width: 200,
                           ),

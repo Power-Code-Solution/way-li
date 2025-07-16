@@ -23,9 +23,7 @@ class CardMain extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String imageUrl = foodItem.foodItemsImages.isNotEmpty
-        ? foodItem.foodItemsImages[0].image
-        : '';
+    String imageUrl = (foodItem.foodItemsImages != null && foodItem.foodItemsImages!.isNotEmpty) ? foodItem.foodItemsImages![0].image : '';
     final size = MediaQuery.of(context).size;
     final containerWidth = size.width * 0.4;
     final containerHeight = containerWidth * 1.2;

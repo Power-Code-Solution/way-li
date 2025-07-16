@@ -32,7 +32,7 @@ class AppBarPage extends GetView<AppBarController> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/way-li_logo.png',
+                  'assets/images/way-li-logo.png',
                   width: 100,
                   fit: BoxFit.contain,
                 ),

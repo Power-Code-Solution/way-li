@@ -44,8 +44,8 @@ const headingStyle = TextStyle(
 
 const defaultDuration = Duration(milliseconds: 250);
 // const apiBaseAddress = "http://192.168.1.100:5022/api";  //office
-// const apiBaseAddress = "http://192.168.218.90:5022/api"; //home
-const apiBaseAddress = "http://92.112.194.110:2590/api"; //production
+ const apiBaseAddress = "https://way-li.shop/api"; //home
+// const apiBaseAddress = "http://92.112.194.110:2590/api"; //production
 
 const whatSappLink =
     "https://wa.me/23279366751?text=Hello,%20I%20want%20to%20know%20more%20about%20your%20service,%20can%20you%20tell%20me%20more?%20my%20name%20is%20.....";

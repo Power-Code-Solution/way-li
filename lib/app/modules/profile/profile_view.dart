@@ -1,12 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
-import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/core/widgets/profile_list_item/profile_list_item_page.dart';
 import 'package:wayli/app/modules/admin/settings/settings_view.dart';
 
 import '../../newpages/components/colors.dart';
@@ -153,6 +148,13 @@ class ProfileView extends GetView<ProfileController> {
                   leading: const Icon(Icons.favorite_outline),
                   title: Text('FAQ', style: GoogleFonts.poppins()),
                   onTap: () {},
+                ),
+                ListTile(
+                  leading: const Icon(Icons.favorite_outline),
+                  title: Text('Setting', style: GoogleFonts.poppins()),
+                  onTap: () {
+                    Get.to(() => SettingsView());
+                  },
                 ),
               ],
             ),

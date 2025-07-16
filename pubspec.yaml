@@ -62,14 +62,14 @@ dependencies:
   skeletonizer: ^1.4.3
   shimmer: ^3.0.0
   device_info_plus: ^9.1.2
-  package_info_plus: ^5.0.1
+  package_info_plus: ^8.3.0
 
   flutter_native_splash: ^2.4.4
   flutter_launcher_icons: ^0.14.3
  # flutter pub run flutter_native_splash:create
 flutter_native_splash:
     color: "#272300"
-    image: assets/images/way-li_logo.png
+    image: assets/images/way-li-logo.png
     android: true
     ios: true
     android_gravity: center
@@ -79,24 +79,24 @@ flutter_launcher_icons:
   android: "ic_launcher"
   ios: true
   remove_alpha_ios: true
-  image_path_android: "assets/images/way-li_logo.png"
-  image_path_ios: "assets/images/way-li_logo.png"
-  adaptive_icon_foreground: "assets/images/way-li_logo.png"
+  image_path_android: "assets/images/way-li-logo.png"
+  image_path_ios: "assets/images/way-li-logo.png"
+  adaptive_icon_foreground: "assets/images/way-li-logo.png"
   adaptive_icon_background: "#272300"
-  image_path: "assets/images/way-li_logo.png"
+  image_path: "assets/images/way-li-logo.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
-    image_path: "assets/images/way-li_logo.png"
+    image_path: "assets/images/way-li-logo.png"
     background_color: "#272300"
     theme_color: "#272300"
   windows:
     generate: true
-    image_path: "assets/images/way-li_logo.png"
+    image_path: "assets/images/way-li-logo.png"
     icon_size: 48 # min:48, max:256, default: 48
   macos:
     generate: true
-    image_path: "assets/images/way-li_logo.png"
+    image_path: "assets/images/way-li-logo.png"
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:

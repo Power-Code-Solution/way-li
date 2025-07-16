@@ -1,12 +1,12 @@
 abstract class BaseModel {
-  final bool active;
-  final bool deleted;
+  final bool? active;
+  final bool? deleted;
   final String? createdBy;
   final String? updatedBy;
   final String? deletedBy;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime deletedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final DateTime? deletedAt;
   final String? deletedReason;
 
   BaseModel({
@@ -28,9 +28,9 @@ abstract class BaseModel {
       "createdBy": createdBy,
       "updatedBy": updatedBy,
       "deletedBy": deletedBy,
-      "createdAt": createdAt.toIso8601String(),
-      "updatedAt": updatedAt.toIso8601String(),
-      "deletedAt": deletedAt.toIso8601String(),
+      "createdAt": createdAt?.toIso8601String(),
+      "updatedAt": updatedAt?.toIso8601String(),
+      "deletedAt": deletedAt?.toIso8601String(),
       "deletedReason": deletedReason,
     };
   }

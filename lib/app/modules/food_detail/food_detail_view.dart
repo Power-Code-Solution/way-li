@@ -27,10 +27,7 @@ class FoodDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FoodItem FIL = Get.arguments['FIL'];
-    String imageUrl =
-        FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
-
-    var media = MediaQuery.of(context).size;
+    String imageUrl = (FIL.foodItemsImages != null && FIL.foodItemsImages!.isNotEmpty) ? FIL.foodItemsImages![0].image : '';    var media = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: kWhiteColor,
         body: GetBuilder<FoodDetailController>(
@@ -151,7 +148,7 @@ class FoodDetailView extends StatelessWidget {
                                                   CrossAxisAlignment.end,
                                               children: [
                                                 AutoSizeText(
-                                                  "LE ${FIL.price.toStringAsFixed(2)}",
+                                                  "LE ${(FIL.price ?? 0.0).toStringAsFixed(2)}",
                                                   style: GoogleFonts.montserrat(
                                                       color: secondaryColor,
                                                       fontSize: 31,
@@ -546,7 +543,7 @@ class FoodDetailView extends StatelessWidget {
                                                           ),
                                                           Obx(() {
                                                             return AutoSizeText(
-                                                              "LE ${(FIL.price * ctl.qty.value).toString()}",
+                                                              "LE ${(FIL.price ?? 0 * ctl.qty.value).toString()}",
                                                               style: GoogleFonts.montserrat(
                                                                   color:
                                                                       secondaryColor,
@@ -707,9 +704,7 @@ class FoodDetailViews extends StatelessWidget {
     var media = MediaQuery.of(context).size;
     FoodItem FIL = Get.arguments['FIL'];
 
-    String imageUrl =
-        FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
-
+    String imageUrl = (FIL.foodItemsImages != null && FIL.foodItemsImages!.isNotEmpty) ? FIL.foodItemsImages![0].image : '';
     return Scaffold(
       backgroundColor: Colors.white,
       body: GetBuilder<FoodDetailController>(

@@ -46,7 +46,7 @@ class CartPage extends GetView<CartController> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'assets/images/way-li_logo.png',
+                            'assets/images/way-li-logo.png',
                             height: 200,
                             width: 200,
                           ),
@@ -115,15 +115,16 @@ class CartPage extends GetView<CartController> {
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
                                   image: NetworkImage(
-                                      item.foodItemsImages.isNotEmpty
-                                          ? item.foodItemsImages[0].image
+                                      (item.foodItemsImages != null && item.foodItemsImages!.isNotEmpty)
+                                          ? (item.foodItemsImages![0].image ?? '')
                                           : ''),
+
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                             title: AutoSizeText(
-                              item.name,
+                              item.name ?? 'Unknown Item',
                               style: GoogleFonts.montserrat(
                                   fontWeight: FontWeight.bold),
                             ),
@@ -141,7 +142,7 @@ class CartPage extends GetView<CartController> {
                               children: [
                                 IconButton(
                                   onPressed: () =>
-                                      cartController.decreaseQuantity(item.id),
+                                      cartController.decreaseQuantity(item.id ?? 0),
                                   icon: const Icon(Icons.remove),
                                   color: mainBlack,
                                 ),
@@ -152,13 +153,13 @@ class CartPage extends GetView<CartController> {
                                 ),
                                 IconButton(
                                   onPressed: () =>
-                                      cartController.increaseQuantity(item.id),
+                                      cartController.increaseQuantity(item.id ?? 0),
                                   icon: const Icon(Icons.add),
                                   color: mainBlack,
                                 ),
                                 IconButton(
                                   onPressed: () =>
-                                      cartController.removeItem(item.id),
+                                      cartController.removeItem(item.id ?? 0),
                                   icon: const Icon(Icons.delete),
                                   color: Colors.red,
                                 ),
@@ -295,6 +296,13 @@ class CheckoutModal extends StatefulWidget {
 
 class _CheckoutModalState extends State<CheckoutModal> {
   String? selectedMethod;
+  String? paymentType; // 'Pay Now' or 'Pay on Delivery'
+  int currentStep = 1; // 1: Select payment type, 2: Payment details/delivery address
+
+  // Form controllers
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
   final List<Map<String, String>> paymentMethods = [
     {
@@ -352,198 +360,489 @@ class _CheckoutModalState extends State<CheckoutModal> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            AutoSizeText(
-              "Please select a payment method:",
-              style: GoogleFonts.montserrat(
-                color: secondaryColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w700,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: paymentMethods.map((methodData) {
-                  final method = methodData['name']!;
-                  final imagePath = methodData['image']!;
-                  final isSelected = selectedMethod == method;
 
-                  return GestureDetector(
+            // Step 1: Select payment type
+            if (currentStep == 1) ...[
+              AutoSizeText(
+                "Please select a payment type:",
+                style: GoogleFonts.montserrat(
+                  color: secondaryColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
                     onTap: () {
-                      setState(() => selectedMethod = method);
+                      setState(() {
+                        paymentType = "Pay Now";
+                        currentStep = 2;
+                      });
                     },
                     child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        color: isSelected ? secondaryColor : Colors.white,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color:
-                              isSelected ? primaryColor : Colors.grey.shade400,
+                          color: Colors.grey.shade400,
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            imagePath,
-                            width: 24,
-                            height: 24,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
                           ),
-                          const SizedBox(width: 8),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(CupertinoIcons.creditcard, size: 32, color: secondaryColor),
+                          const SizedBox(height: 8),
                           AutoSizeText(
-                            method,
+                            "Pay Now",
                             style: GoogleFonts.montserrat(
-                              color: isSelected ? Colors.white : Colors.black87,
+                              color: Colors.black87,
                               fontWeight: FontWeight.w900,
+                              fontSize: 16,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  );
-                }).toList(),
-              ),
-            ),
-            if (selectedMethod != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (["Orange Money", "Qcell", "Africell"]
-                        .contains(selectedMethod)) ...[
-                      TextField(
-                        keyboardType: TextInputType.phone,
-                        decoration: const InputDecoration(
-                          labelText: "Phone Number",
-                          prefixIcon: Icon(CupertinoIcons.phone),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: secondaryColor, width: 2),
-                          ),
+                  ),
+
+                  const SizedBox(width: 16),
+
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        paymentType = "Pay on Delivery";
+                        currentStep = 2;
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.grey.shade400,
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        obscureText: true,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: "PIN",
-                          prefixIcon: Icon(CupertinoIcons.lock),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: secondaryColor, width: 2),
-                          ),
-                        ),
-                      ),
-                    ] else if (["Master Card", "Visa Card"]
-                        .contains(selectedMethod)) ...[
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: "Card Number",
-                          prefixIcon: Icon(CupertinoIcons.creditcard),
-                          border: OutlineInputBorder(),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: secondaryColor, width: 2),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              decoration: const InputDecoration(
-                                labelText: "CVV",
-                                prefixIcon: Icon(CupertinoIcons.padlock),
-                                border: OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: secondaryColor, width: 2),
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: TextField(
-                              keyboardType: TextInputType.datetime,
-                              decoration: const InputDecoration(
-                                labelText: "Expiry Date (MM/YY)",
-                                prefixIcon: Icon(CupertinoIcons.calendar),
-                                border: OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: secondaryColor, width: 2),
-                                ),
-                              ),
+                          Icon(CupertinoIcons.home, size: 32, color: secondaryColor),
+                          const SizedBox(height: 8),
+                          AutoSizeText(
+                            "Pay on Delivery",
+                            style: GoogleFonts.montserrat(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            // Step 2: Payment details or delivery address
+            if (currentStep == 2) ...[
+              // Back button
+              Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    setState(() {
+                      currentStep = 1;
+                      paymentType = null;
+                      selectedMethod = null;
+                    });
+                  },
                 ),
               ),
+
+              AutoSizeText(
+                paymentType ?? "",
+                style: GoogleFonts.montserrat(
+                  color: secondaryColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+
+              // Pay Now flow
+              if (paymentType == "Pay Now") ...[
+                AutoSizeText(
+                  "Please select a payment method:",
+                  style: GoogleFonts.montserrat(
+                    color: secondaryColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+
+                // Payment methods
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: paymentMethods.map((methodData) {
+                    final method = methodData['name']!;
+                    final imagePath = methodData['image']!;
+                    final isSelected = selectedMethod == method;
+
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() => selectedMethod = method);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: isSelected ? secondaryColor : Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color:
+                            isSelected ? primaryColor : Colors.grey.shade400,
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              imagePath,
+                              width: 24,
+                              height: 24,
+                            ),
+                            const SizedBox(width: 8),
+                            AutoSizeText(
+                              method,
+                              style: GoogleFonts.montserrat(
+                                color: isSelected ? Colors.white : Colors.black87,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+
+                // Payment form fields
+                if (selectedMethod != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (["Orange Money", "Qcell", "Africell"]
+                            .contains(selectedMethod)) ...[
+                          TextField(
+                            controller: phoneController,
+                            keyboardType: TextInputType.phone,
+                            decoration: const InputDecoration(
+                              labelText: "Phone Number",
+                              prefixIcon: Icon(CupertinoIcons.phone),
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: secondaryColor, width: 2),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            obscureText: true,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: "PIN",
+                              prefixIcon: Icon(CupertinoIcons.lock),
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: secondaryColor, width: 2),
+                              ),
+                            ),
+                          ),
+                        ] else if (["Master Card", "Visa Card"]
+                            .contains(selectedMethod)) ...[
+                          TextField(
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: "Card Number",
+                              prefixIcon: Icon(CupertinoIcons.creditcard),
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: secondaryColor, width: 2),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    labelText: "CVV",
+                                    prefixIcon: Icon(CupertinoIcons.padlock),
+                                    border: OutlineInputBorder(),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: secondaryColor, width: 2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: TextField(
+                                  keyboardType: TextInputType.datetime,
+                                  decoration: const InputDecoration(
+                                    labelText: "Expiry Date (MM/YY)",
+                                    prefixIcon: Icon(CupertinoIcons.calendar),
+                                    border: OutlineInputBorder(),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: secondaryColor, width: 2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+
+                        // Delivery address for Pay Now
+                        if (selectedMethod != null) ...[
+                          const SizedBox(height: 24),
+                          AutoSizeText(
+                            "Delivery Information",
+                            style: GoogleFonts.montserrat(
+                              color: secondaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              labelText: "Full Name",
+                              prefixIcon: Icon(CupertinoIcons.person),
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: secondaryColor, width: 2),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: addressController,
+                            decoration: const InputDecoration(
+                              labelText: "Delivery Address",
+                              prefixIcon: Icon(CupertinoIcons.location),
+                              border: OutlineInputBorder(),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: secondaryColor, width: 2),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          if (["Master Card", "Visa Card"].contains(selectedMethod))
+                            TextField(
+                              controller: phoneController,
+                              keyboardType: TextInputType.phone,
+                              decoration: const InputDecoration(
+                                labelText: "Phone Number",
+                                prefixIcon: Icon(CupertinoIcons.phone),
+                                border: OutlineInputBorder(),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: secondaryColor, width: 2),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ],
+                    ),
+                  ),
+              ],
+
+              // Pay on Delivery flow
+              if (paymentType == "Pay on Delivery") ...[
+                AutoSizeText(
+                  "Please provide your delivery information:",
+                  style: GoogleFonts.montserrat(
+                    color: secondaryColor,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: "Full Name",
+                    prefixIcon: Icon(CupertinoIcons.person),
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: secondaryColor, width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    labelText: "Phone Number",
+                    prefixIcon: Icon(CupertinoIcons.phone),
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: secondaryColor, width: 2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: addressController,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: "Delivery Address",
+                    prefixIcon: Icon(CupertinoIcons.location),
+                    border: OutlineInputBorder(),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: secondaryColor, width: 2),
+                    ),
+                  ),
+                ),
+              ],
+            ],
+
             const SizedBox(height: 24),
+
+            // Continue button
             Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     child: MaterialButton(
-                        onPressed: () {},
-                        height: 50,
-                        color: secondaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
+                      onPressed: () {
+                        if (currentStep == 1) {
+                          // This shouldn't happen as the button is only shown in step 2
+                          return;
+                        }
+
+                        if (paymentType == "Pay Now" && selectedMethod == null) {
+                          // Show error or toast that payment method is required
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Please select a payment method")),
+                          );
+                          return;
+                        }
+
+                        // Validate form fields
+                        if (paymentType == "Pay on Delivery") {
+                          if (nameController.text.isEmpty || 
+                              phoneController.text.isEmpty || 
+                              addressController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Please fill all required fields")),
+                            );
+                            return;
+                          }
+                        } else if (paymentType == "Pay Now" && selectedMethod != null) {
+                          if (nameController.text.isEmpty || addressController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Please fill all required fields")),
+                            );
+                            return;
+                          }
+                        }
+
+                        // Process the order
+                        Navigator.of(context).pop();
+                        // Here you would handle the order processing
+                      },
+                      height: 50,
+                      color: secondaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: AutoSizeText(
+                          currentStep == 1 ? "Continue" : 
+                            (paymentType == "Pay Now" ? "Complete Payment" : "Place Order"),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 18,
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900
+                          ),
                         ),
-                        child: ElevatedButton(
-                          onPressed: selectedMethod == null
-                              ? null
-                              : () {
-                                  Navigator.of(context).pop();
-                                  // Handle selectedMethod
-                                },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            shadowColor: Colors.transparent,
-                          ),
-                          child: Center(
-                            child: AutoSizeText(
-                              "Continue Payment",
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 18,
-                                  color: primaryColor,
-                                  fontWeight: FontWeight.w900),
-                            ),
-                          ),
-                        )),
+                      ),
+                    ),
                   ),
                 ],
               ),

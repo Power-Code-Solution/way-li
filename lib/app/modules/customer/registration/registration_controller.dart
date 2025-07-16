@@ -10,16 +10,13 @@ import 'package:http/http.dart' as http;
 import 'package:wayli/app/core/model/users.dart';
 import 'package:wayli/app/core/model/device_model.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
-import 'package:wayli/app/modules/otp/otp_view.dart';
-import 'package:wayli/app/modules/tabs/tabs_view.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class RegistrationController extends GetxController {
   //TODO: Implement RegistrationController.
 
-  var firstName = TextEditingController();
-  var lastName = TextEditingController();
+  var fullname = TextEditingController();
   var email = TextEditingController();
   var password = TextEditingController();
   var confPassword = TextEditingController();
@@ -94,8 +91,7 @@ class RegistrationController extends GetxController {
 
   @override
   void onClose() {
-    firstName.dispose();
-    lastName.dispose();
+    fullname.dispose();
     email.dispose();
     password.dispose();
     confPassword.dispose();
@@ -125,8 +121,7 @@ class RegistrationController extends GetxController {
       DeviceInfo deviceInfo = await getDeviceInfo();
 
       final user = CreateUsers(
-        firstName: firstName.text,
-        lastName: lastName.text,
+        fullname: fullname.text,
         email: email.text,
         password: password.text,
         phone: phone.text,
@@ -171,8 +166,7 @@ class RegistrationController extends GetxController {
   }
 
   void clearFields() {
-    firstName.clear();
-    lastName.clear();
+    fullname.clear();
     email.clear();
     password.clear();
     phone.clear();

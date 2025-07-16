@@ -18,8 +18,11 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
   Widget build(BuildContext context) {
     FoodItem FIL = Get.arguments['FIL'];
 
-    String imageUrl =
-        FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
+    String imageUrl = (FIL.foodItemsImages != null && FIL.foodItemsImages!.isNotEmpty)
+        ? FIL.foodItemsImages![0].image ?? ''
+        : '';
+
+
     final CartController cartController = Get.find<CartController>();
 
     final size = MediaQuery.of(context).size;
@@ -110,7 +113,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       AutoSizeText(
-                        FIL.name,
+                        FIL.name ?? "Unknown Product",
                         style: GoogleFonts.montserrat(
                           fontSize: size.width * 0.045,
                           fontWeight: FontWeight.w500,
@@ -139,7 +142,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                     ],
                   ),
                   AutoSizeText(
-                    "LE ${FIL.price.toStringAsFixed(2)}",
+                    "LE ${(FIL.price ?? 0).toStringAsFixed(2)}",
                     style: GoogleFonts.montserrat(
                       fontSize: size.width * 0.045,
                       fontWeight: FontWeight.w500,
@@ -173,7 +176,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                               print(
                                   'Decreasing quantity of item: ${FIL.name}, current quantity: ${cartController.itemQuantities[FIL.id]?.value ?? 1}');
                             }
-                            cartController.decreaseQuantity(FIL.id);
+                            cartController.decreaseQuantity(FIL.id ?? 0);
                           },
                           icon: const Icon(Icons.remove),
                           color: mainBlack,
@@ -191,7 +194,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                               print(
                                   'Increasing quantity of item: ${FIL.name}, current quantity: ${cartController.itemQuantities[FIL.id]?.value ?? 1}');
                             }
-                            cartController.increaseQuantity(FIL.id);
+                            cartController.increaseQuantity(FIL.id ?? 0);
                           },
                           icon: Icon(
                             Icons.add,
@@ -215,7 +218,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
               ),
               SizedBox(height: size.height * 0.01),
               AutoSizeText(
-                FIL.description,
+                FIL.description ?? "No description available.",
                 style: GoogleFonts.montserrat(
                   fontSize: size.width * 0.035,
                   fontWeight: FontWeight.w400,

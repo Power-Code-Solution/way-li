@@ -84,7 +84,7 @@ class Assets {
   static const String imagesTrophy = 'assets/images/trophy.png';
   static const String imagesU1 = 'assets/images/u1.png';
   static const String imagesU2 = 'assets/images/u2.png';
-  static const String imagesWayLiLogo = 'assets/images/way-li_logo.png';
+  static const String imagesWayLiLogo = 'assets/images/way-li-logo.png';
   static const String paymentLogoAfriMoney = 'assets/payment-logo/afri-money.png';
   static const String paymentLogoMastercard = 'assets/payment-logo/mastercard.png';
   static const String paymentLogoOrangeMoney = 'assets/payment-logo/orange-money.png';

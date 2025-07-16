@@ -19,8 +19,10 @@ class CartController extends GetxController {
       itemPrices.remove(item.id);
     } else {
       cartItems.add(item);
-      itemQuantities[item.id] = 1.obs;
-      itemPrices[item.id] = (item.price * itemQuantities[item.id]!.value).obs;
+      if (item.id != null && item.price != null) {
+        itemQuantities[item.id!] = 1.obs;
+        itemPrices[item.id!] = (item.price! * itemQuantities[item.id!]!.value).obs;
+      }
     }
     updateTotalPrice();
   }
@@ -30,13 +32,17 @@ class CartController extends GetxController {
       cartItems.add(item);
     }
 
-    if (!itemQuantities.containsKey(item.id)) {
-      itemQuantities[item.id] = 1.obs;
+    if (item.id != null && !itemQuantities.containsKey(item.id)) {
+      itemQuantities[item.id!] = 1.obs;
     }
 
     if (!itemPrices.containsKey(item.id)) {
-      itemPrices[item.id] = (item.price * itemQuantities[item.id]!.value).obs;
+      if (item.id != null && item.price != null) {
+        itemPrices[item.id!] = ((item.price ?? 0.0) * itemQuantities[item.id!]!.value).obs;
+      }
     }
+
+
 
     updateTotalPrice();
   }
@@ -62,7 +68,7 @@ class CartController extends GetxController {
   void updateItemPrice(int itemId) {
     final item = cartItems.firstWhere((item) => item.id == itemId);
     final quantity = itemQuantities[itemId]!.value;
-    final totalPrice = item.price * quantity;
+    final totalPrice = (item.price ?? 0.0) * quantity;
     itemPrices[itemId] = totalPrice.obs;
     updateTotalPrice();
   }

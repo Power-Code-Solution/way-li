@@ -59,7 +59,7 @@ class _SplashScreenViewState extends State<SplashScreenView>
               ),
               child: ClipOval(
                 child: Image.asset(
-                  'assets/images/way-li_logo.png',
+                  'assets/images/way-li-logo.png',
                   fit: BoxFit.cover,
                 ),
               ),
