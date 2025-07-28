@@ -41,7 +41,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
 
-    // Calculate responsive dimensions
+
     final containerWidth = size.width * 0.85;
     final containerHeight = size.height * 0.35;
     final imageWidth = containerWidth * 0.7;

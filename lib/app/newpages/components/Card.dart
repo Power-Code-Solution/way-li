@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:wayli/app/newpages/Pages/ProjectDetails.dart';
 import 'package:wayli/app/newpages/components/colors.dart'
     show mainBlack, mainYellow;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:wayli/app/newpages/Pages/ProjectDetails.dart';
-import 'package:wayli/app/newpages/components/colors.dart'
-    show mainBlack, mainYellow;
 import 'package:get/get.dart';
-
 import '../../core/model/food_items.dart';
-import '../../modules/cart/cart_controller.dart';
-import '../../modules/food_detail/food_detail_view.dart';
+import '../../modules/cart/cart_controller_fixed2.dart';
+import '../../modules/product_details/product_details_controller.dart';
 import '../../modules/product_details/product_details_view.dart';
 
 class CardMain extends StatelessWidget {
@@ -38,8 +33,12 @@ class CardMain extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
+              // Initialize the controller with the food item before navigating
+              final controller = Get.find<ProductDetailsController>();
+              controller.FIL = foodItem;
+
               Get.to(
-                () => ProductDetailsView(),
+                () => const ProductDetailsView(),
                 arguments: {'FIL': foodItem},
               );
             },

@@ -23,6 +23,8 @@ import 'bottom_nav_routes.dart';
 import 'product_details_routes.dart';
 import 'food_category_routes.dart';
 import 'app_bar_routes.dart';
+import 'info_routes.dart';
+import 'feedback_routes.dart';
 
 class AppPages {
   AppPages._();
@@ -49,5 +51,7 @@ class AppPages {
     ...ProductDetailsRoutes.routes,
     ...FoodCategoryRoutes.routes,
     ...AppBarRoutes.routes,
+    ...InfoRoutes.routes,
+    ...FeedbackRoutes.routes,
   ];
 }

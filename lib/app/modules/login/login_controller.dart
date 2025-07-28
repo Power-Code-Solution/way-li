@@ -55,29 +55,34 @@ class LoginController extends GetxController {
 
       if (!isDeviceSupported || !canCheckBiometrics) {
         Get.snackbar(
+          snackPosition: SnackPosition.BOTTOM,
             'Not Supported', 'This device does not support biometrics.');
         return;
       }
-
+      if (email.text.isEmpty || pass.text.isEmpty) {
+        Get.snackbar('Error', 'Please login first before enabling biometric authentication', snackPosition: SnackPosition.BOTTOM,);
+        return;
+      }
       bool didAuthenticate = await localAuth.authenticate(
         localizedReason: 'Confirm your identity to enable fingerprint login',
         options: const AuthenticationOptions(
-          biometricOnly: false, // Allow device password, PIN, etc.
+          biometricOnly: false,
           stickyAuth: true,
         ),
       );
 
       if (didAuthenticate) {
+        await authController.saveBiometricCredentials(email.text, pass.text);
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('is_fingerprint_enabled', true);
-        showFingerprint.value = true; // Update the state if using Obx
-        Get.snackbar('Success', 'Fingerprint login enabled!');
+        showFingerprint.value = true;
+        Get.snackbar(snackPosition: SnackPosition.BOTTOM,'Success', 'Fingerprint login enabled!');
       } else {
-        Get.snackbar('Cancelled', 'Authentication failed or was cancelled.');
+        Get.snackbar(snackPosition: SnackPosition.BOTTOM,'Cancelled', 'Authentication failed or was cancelled.');
       }
     } catch (e) {
       print('Auth error: $e');
-      Get.snackbar('Error', 'An error occurred while enabling fingerprint.');
+      Get.snackbar(snackPosition: SnackPosition.BOTTOM,'Error', 'An error occurred while enabling fingerprint.');
     }
   }
 
@@ -92,13 +97,30 @@ class LoginController extends GetxController {
       );
 
       if (isAuthenticated) {
-        Get.offAll(() => BottomNavView());
-        Get.snackbar('Success', 'Authenticated!');
+        // Get saved credentials using AuthController
+        final credentials = await authController.getBiometricCredentials();
+        final savedEmail = credentials['email'];
+        final savedPassword = credentials['password'];
+
+        if (savedEmail != null && savedPassword != null) {
+          isLoading.value = true;
+          // Use saved credentials to login
+          final result = await authController.login(savedEmail, savedPassword);
+          isLoading.value = false;
+
+          if (result) {
+            Get.offAll(() => BottomNavView());
+          } else {
+            Get.snackbar(snackPosition: SnackPosition.BOTTOM,'Login Failed', 'Biometric authentication succeeded but login failed. Please login manually.');
+          }
+        } else {
+          Get.snackbar(snackPosition: SnackPosition.BOTTOM,'Error', 'No saved credentials found. Please login manually first.');
+        }
       } else {
-        Get.snackbar('Failed', 'Authentication failed');
+        Get.snackbar(snackPosition: SnackPosition.BOTTOM,'Failed', 'Authentication failed');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Error using biometric auth: $e');
+      Get.snackbar(snackPosition: SnackPosition.BOTTOM,'Error', 'Error using biometric auth: $e');
       print('Error using biometric auth: $e');
     }
   }
@@ -171,11 +193,7 @@ class LoginController extends GetxController {
         );
 
         if (enable == true) {
-          if (enable == true) {
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setBool('is_fingerprint_enabled', true);
-            showFingerprint.value = true;
-          }
+          await enableFingerprintLogin();
         }
         Get.offAll(() => BottomNavView());
         email.clear();
@@ -199,3 +217,4 @@ class LoginController extends GetxController {
     }
   }
 }
+

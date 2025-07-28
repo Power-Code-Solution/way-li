@@ -3,6 +3,13 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    // Force a compatible version of BouncyCastle
+    configurations.all {
+        resolutionStrategy {
+            force 'org.bouncycastle:bcprov-jdk18on:1.76.0'
+        }
+    }
 }
 
 rootProject.buildDir = "../build"

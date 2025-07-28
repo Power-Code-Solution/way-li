@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../../core/config/auth_controller.dart';
 import '../../core/config/constants.dart';
 import '../../core/model/food_items.dart';
 import '../../core/model/food_items_dto.dart';
@@ -9,6 +11,11 @@ import '../../core/model/food_items_dto.dart';
 class ProductDetailsController extends GetxController {
   var itemCount = 0.obs;
   var liked = false.obs;
+
+  // Feedback functionality moved to a dedicated controller
+
+
+
 
   void increaseCount() {
     itemCount.value++;
@@ -24,12 +31,23 @@ class ProductDetailsController extends GetxController {
     liked.value = !liked.value;
   }
 
-  FoodItem FIL = Get.arguments['FIL'];
+  late FoodItem FIL;
 
   RxList<dynamic> foodandTagDto = <dynamic>[].obs;
   RxList<dynamic> foodandAllergensDto = <dynamic>[].obs;
   RxList<dynamic> foodandIngredientDto = <dynamic>[].obs;
-  var price = 15.0.obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (Get.arguments != null && Get.arguments.containsKey('FIL')) {
+      FIL = Get.arguments['FIL'];
+      fetchFoodandTagDto();
+      fetchFoodandAllergensDto();
+      fetchFoodandIngredientDto();
+    }
+  }
+  var price = 10.0.obs;
   var qty = 1.obs;
   var isFav = false.obs;
 
@@ -47,13 +65,13 @@ class ProductDetailsController extends GetxController {
     }
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchFoodandTagDto();
-    fetchFoodandAllergensDto();
-    fetchFoodandIngredientDto();
-  }
+
+
+
+  // Feedback functionality moved to a dedicated controller
+
+
+
 
   Future<void> fetchFoodandTagDto() async {
     final url =

@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/food_items.dart';
 import 'package:wayli/app/core/model/food_items_dto.dart';
+import 'package:wayli/app/core/config/auth_controller.dart';
 
 class FoodDetailController extends GetxController {
   FoodItem FIL = Get.arguments['FIL'];
@@ -15,6 +16,15 @@ class FoodDetailController extends GetxController {
   var price = 15.0.obs;
   var qty = 1.obs;
   var isFav = false.obs;
+
+  // Feedback form variables
+  var feedbackRating = 5.0.obs;
+  var feedbackComment = ''.obs;
+  var feedbackEmail = ''.obs;
+  var feedbackName = ''.obs;
+  var isSubmittingFeedback = false.obs;
+  var feedbackSubmitSuccess = false.obs;
+  var feedbackErrorMessage = ''.obs;
 
   void toggleFavorite() {
     isFav.value = !isFav.value;
@@ -36,7 +46,21 @@ class FoodDetailController extends GetxController {
     fetchFoodandTagDto();
     fetchFoodandAllergensDto();
     fetchFoodandIngredientDto();
+    try {
+      final authController = Get.find<AuthController>();
+      if (authController.userEmail.value.isNotEmpty) {
+        feedbackEmail.value = authController.userEmail.value;
+      }
+      if (authController.userName.value.isNotEmpty) {
+        feedbackName.value = authController.userName.value;
+      }
+    } catch (e) {
+      print('Error getting user data: $e');
+    }
   }
+
+
+
 
   Future<void> fetchFoodandTagDto() async {
     final url =
