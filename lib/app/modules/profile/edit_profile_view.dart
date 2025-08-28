@@ -141,16 +141,20 @@ class _EditProfileViewState extends State<EditProfileView> {
           requestBody["address"] = _addressController.text;
         }
 
-        print("Update profile payload: ${jsonEncode(requestBody)}");
-
+        final url = Uri.parse("$apiBaseAddress/secure/admin/user/update");
+        final body = jsonEncode(requestBody);
+        final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
+        print('[DEBUG_LOG] POST ' + url.toString());
+        print('[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' + masked + '}');
+        print('[DEBUG_LOG] Payload: ' + body);
         // Make the API call
         final response = await http.post(
-          Uri.parse("$apiBaseAddress/secure/admin/user/update"),
+          url,
           headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer $token",
           },
-          body: jsonEncode(requestBody),
+          body: body,
         );
 
         print("Update profile response: ${response.body}");

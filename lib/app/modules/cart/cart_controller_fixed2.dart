@@ -86,6 +86,10 @@ class CartController extends GetxController {
 
   void updateItemPrice(int itemId) {
     final item = cartItems.firstWhere((item) => item.id == itemId);
+    // Ensure quantity is initialized to avoid null assertion crashes
+    if (!itemQuantities.containsKey(itemId)) {
+      itemQuantities[itemId] = 1.obs;
+    }
     final quantity = itemQuantities[itemId]!.value;
     final totalPrice = (item.price ?? 0.0) * quantity;
     itemPrices[itemId] = totalPrice.obs;
@@ -156,7 +160,6 @@ class CartController extends GetxController {
           });
         }
       }
-
       if (items.isEmpty) {
         print("[DEBUG_LOG] Cart is empty, cannot submit order");
         orderSubmitMessage.value = "Your cart is empty";
@@ -171,18 +174,19 @@ class CartController extends GetxController {
         "deliveryNotes": deliveryNotes ?? "",
         "items": items
       };
-
-      print("[DEBUG_LOG] Order submission payload: ${jsonEncode(requestBody)}");
-
-      // Make API call
-      print("[DEBUG_LOG] Making API call to submit order");
+      final submitUrl = Uri.parse("$apiBaseAddress/secure/admin/order/submit");
+      final maskedToken = token.length > 12 ? token.substring(0, 6) + '...' + token.substring(token.length - 6) : '***';
+      final requestJson = jsonEncode(requestBody);
+      print("[DEBUG_LOG] POST ${submitUrl.toString()}");
+      print("[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer $maskedToken}");
+      print("[DEBUG_LOG] Payload: $requestJson");
       final response = await http.post(
-        Uri.parse("$apiBaseAddress/secure/admin/order/submit"),
+        submitUrl,
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: jsonEncode(requestBody),
+        body: requestJson,
       );
 
       print("[DEBUG_LOG] Order submission response status code: ${response.statusCode}");
@@ -207,9 +211,6 @@ class CartController extends GetxController {
             deliveryPhone: deliveryPhone,
             deliveryNotes: deliveryNotes,
           );
-
-          // Success is handled in the UI layer
-          // No need to navigate or clear cart here as it's done in the cart_page.dart
           print("[DEBUG_LOG] Returning true to indicate successful submission");
           return true;
         } else {

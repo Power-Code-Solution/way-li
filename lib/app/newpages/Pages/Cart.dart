@@ -144,7 +144,7 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   _buildPriceRow("Subtotal", "Le 1557.00", size),
                   SizedBox(height: size.height * 0.01),
-                  _buildPriceRow("Discount", "Le 122.00", size),
+                  _buildPriceRow("Delivery Fee", "Le 0.00", size),
                   _buildPriceRow("Total", "Le 1557.00", size, isTotal: true),
                   SizedBox(height: size.height * 0.02),
                   ElevatedButton(

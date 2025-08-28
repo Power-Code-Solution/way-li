@@ -22,7 +22,7 @@ class _CartPageState extends State<CartPage> {
   String? paymentType;
   int currentStep = 1;
   String? selectedLocation;
-  final List<String> locations = ['RowdonStreet', 'Lumely', 'Eastern'];
+  final List<String> locations = ['Rawdon St', 'Lumely'];
 
   // Key to track the loading dialog
   final GlobalKey<State> _dialogKey = GlobalKey<State>();
@@ -269,12 +269,7 @@ class _CartPageState extends State<CartPage> {
                                 "Le ${cartController.getTotalPrice().toStringAsFixed(2)}",
                                 size),
                             SizedBox(height: size.height * 0.01),
-                            _buildPriceRow("Discount", "Le 0.00", size),
-                            // Tax calculation commented out as requested
-                            // _buildPriceRow(
-                            //     "Tax (15%)",
-                            //     "Le ${cartController.getTotalTax().toStringAsFixed(2)}",
-                            //     size),
+                            _buildPriceRow("Delivery Fee", "Le 0.00", size),
                             Divider(
                               color: Colors.grey,
                               height: 10,
@@ -301,8 +296,8 @@ class _CartPageState extends State<CartPage> {
                               onPressed: () {
                                 setState(() {
                                   showCheckoutForm = true;
-                                  currentStep = 1;
-                                  paymentType = null;
+                                  currentStep = 2;
+                                  paymentType = "Pay on Delivery";
                                   selectedMethod = null;
                                 });
                               },
@@ -322,7 +317,6 @@ class _CartPageState extends State<CartPage> {
                 );
               }),
             ] else ...[
-              // Checkout form view
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -331,232 +325,36 @@ class _CartPageState extends State<CartPage> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                          decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                CupertinoIcons.cart_fill,
-                                color: secondaryColor,
-                                size: 28,
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Center(
-                                  child: AutoSizeText(
-                                    "Checkout",
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: FontWeight.w900,
-                                      fontSize: 24,
-                                      color: secondaryColor
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        if (currentStep == 1) ...[
-                          Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey.shade300),
-                            ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(CupertinoIcons.creditcard_fill, color: secondaryColor, size: 20),
-                                    const SizedBox(width: 8),
-                                    AutoSizeText(
-                                      "Select Payment Method",
-                                      style: GoogleFonts.montserrat(
-                                        color: secondaryColor,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                AutoSizeText(
-                                  "Choose how you'd like to pay for your order",
-                                  style: GoogleFonts.montserrat(
-                                    color: Colors.grey.shade700,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      paymentType = "Pay Now";
-                                      currentStep = 2;
-                                      selectedMethod = "Orange Money";
-                                    });
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: primaryColor,
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.05),
-                                          spreadRadius: 1,
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            color: primaryColor.withOpacity(0.2),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(CupertinoIcons.creditcard_fill, size: 32, color: secondaryColor),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        AutoSizeText(
-                                          "Pay Now",
-                                          style: GoogleFonts.montserrat(
-                                            color: secondaryColor,
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        AutoSizeText(
-                                          "Orange Money",
-                                          style: GoogleFonts.montserrat(
-                                            color: Colors.grey.shade600,
-                                            fontSize: 12,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      paymentType = "Pay on Delivery";
-                                      currentStep = 2;
-                                    });
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(
-                                        color: primaryColor,
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.05),
-                                          spreadRadius: 1,
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(10),
-                                          decoration: BoxDecoration(
-                                            color: primaryColor.withOpacity(0.2),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(CupertinoIcons.house_fill, size: 32, color: secondaryColor),
-                                        ),
-                                        const SizedBox(height: 12),
-                                        AutoSizeText(
-                                          "Pay on Delivery",
-                                          style: GoogleFonts.montserrat(
-                                            color: secondaryColor,
-                                            fontWeight: FontWeight.w900,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        AutoSizeText(
-                                          "Cash on Delivery",
-                                          style: GoogleFonts.montserrat(
-                                            color: Colors.grey.shade600,
-                                            fontSize: 12,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
                         if (currentStep == 2) ...[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                              icon: const Icon(Icons.arrow_back),
-                              onPressed: () {
-                                setState(() {
-                                  currentStep = 1;
-                                  paymentType = null;
-                                  selectedMethod = null;
-                                });
-                              },
-                            ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back),
+                                onPressed: () {
+                                  setState(() {
+                                    // Show the cart items again so user can add/remove
+                                    showCheckoutForm = false;
+                                    currentStep = 0;
+                                    paymentType = null;
+                                    selectedMethod = null;
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: AutoSizeText(
+                                  paymentType ?? "",
+                                  style: GoogleFonts.montserrat(
+                                    color: secondaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              // This creates space on the right to center the text properly
+                              const SizedBox(width: 48), // Same width as IconButton
+                            ],
                           ),
-                          AutoSizeText(
-                            paymentType ?? "",
-                            style: GoogleFonts.montserrat(
-                              color: secondaryColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
 
                           if (paymentType == "Pay Now") ...[
                             Container(
@@ -769,46 +567,110 @@ class _CartPageState extends State<CartPage> {
                                   ),
                                   const SizedBox(height: 20),
 
-                                  // Location dropdown
-                                  DropdownButtonFormField<String>(
-                                    value: selectedLocation,
-                                    decoration: InputDecoration(
-                                      labelText: "Select Location",
-                                      labelStyle: TextStyle(color: secondaryColor),
-                                      prefixIcon: Icon(CupertinoIcons.location_circle, color: secondaryColor),
-                                      filled: true,
-                                      fillColor: Colors.grey.shade50,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide.none,
+                                  // Location selector (horizontal cards)
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 4.0, bottom: 8),
+                                        child: Row(
+                                          children: [
+                                            Icon(CupertinoIcons.location_circle, color: secondaryColor, size: 20),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "Select Nearest Location",
+                                              style: GoogleFonts.montserrat(
+                                                color: secondaryColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: Colors.grey.shade200),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade50,
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(color: Colors.grey.shade200),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: List.generate(locations.length, (index) {
+                                              final loc = locations[index];
+                                              final bool isSelected = selectedLocation == loc;
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: index == 0 ? 12 : 8,
+                                                  right: index == locations.length - 1 ? 12 : 8,
+                                                ),
+                                                child: InkWell(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedLocation = loc;
+                                                    });
+                                                  },
+                                                  child: AnimatedContainer(
+                                                    duration: const Duration(milliseconds: 200),
+                                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                                    constraints: BoxConstraints(
+                                                      minWidth: size.width * 0.28,
+                                                      maxWidth: size.width * 0.6,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: isSelected ? primaryColor.withOpacity(0.3) : Colors.white,
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      border: Border.all(
+                                                        color: isSelected ? secondaryColor : Colors.grey.shade300,
+                                                        width: isSelected ? 2 : 1,
+                                                      ),
+                                                      boxShadow: [
+                                                        if (isSelected)
+                                                          BoxShadow(
+                                                            color: Colors.black.withOpacity(0.06),
+                                                            blurRadius: 6,
+                                                            offset: const Offset(0, 2),
+                                                          ),
+                                                      ],
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons.location_solid,
+                                                          size: 18,
+                                                          color: isSelected ? secondaryColor : Colors.grey.shade600,
+                                                        ),
+                                                        const SizedBox(width: 8),
+                                                        ConstrainedBox(
+                                                          constraints: BoxConstraints(maxWidth: size.width * 0.5),
+                                                          child: Text(
+                                                            loc,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.montserrat(
+                                                              color: isSelected ? secondaryColor : Colors.grey.shade800,
+                                                              fontSize: 13,
+                                                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        if (isSelected) ...[
+                                                          const SizedBox(width: 8),
+                                                          const Icon(CupertinoIcons.check_mark_circled_solid, size: 16, color: secondaryColor),
+                                                        ]
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                          ),
+                                        ),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: primaryColor, width: 2),
-                                      ),
-                                    ),
-                                    items: locations.map((location) {
-                                      return DropdownMenuItem<String>(
-                                        value: location,
-                                        child: Text(location),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedLocation = value;
-                                      });
-                                    },
-                                    hint: const Text("Select a location"),
-                                    icon: Icon(Icons.arrow_drop_down_circle, color: secondaryColor),
-                                    dropdownColor: Colors.white,
-                                    style: GoogleFonts.montserrat(
-                                      color: secondaryColor,
-                                      fontSize: 14,
-                                    ),
+                                    ],
                                   ),
                                   const SizedBox(height: 16),
 
@@ -889,79 +751,9 @@ class _CartPageState extends State<CartPage> {
 
                           // Pay on Delivery flow
                           if (paymentType == "Pay on Delivery") ...[
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 16),
-                              padding: const EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    primaryColor,
-                                    primaryColor.withOpacity(0.8),
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.1),
-                                              spreadRadius: 1,
-                                              blurRadius: 2,
-                                              offset: const Offset(0, 1),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Icon(CupertinoIcons.house, size: 30, color: secondaryColor),
-                                      ),
-                                      const SizedBox(width: 15),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            AutoSizeText(
-                                              "Cash on Delivery",
-                                              style: GoogleFonts.montserrat(
-                                                color: secondaryColor,
-                                                fontWeight: FontWeight.w900,
-                                                fontSize: 18,
-                                              ),
-                                            ),
-                                            AutoSizeText(
-                                              "Pay when your order arrives",
-                                              style: GoogleFonts.montserrat(
-                                                color: secondaryColor.withOpacity(0.8),
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
 
-                            // Delivery Information Section
+
+
                             Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               padding: const EdgeInsets.all(20),
@@ -1006,47 +798,112 @@ class _CartPageState extends State<CartPage> {
                                   const SizedBox(height: 20),
 
                                   // Location dropdown
-                                  DropdownButtonFormField<String>(
-                                    value: selectedLocation,
-                                    decoration: InputDecoration(
-                                      labelText: "Select Location",
-                                      labelStyle: TextStyle(color: secondaryColor),
-                                      prefixIcon: Icon(CupertinoIcons.location_circle, color: secondaryColor),
-                                      filled: true,
-                                      fillColor: Colors.grey.shade50,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide.none,
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 4.0, bottom: 8),
+                                        child: Row(
+                                          children: [
+                                            Icon(CupertinoIcons.location_circle, color: secondaryColor, size: 20),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "Select Nearest Location",
+                                              style: GoogleFonts.montserrat(
+                                                color: secondaryColor,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: Colors.grey.shade200),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade50,
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(color: Colors.grey.shade200),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 10),
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            children: List.generate(locations.length, (index) {
+                                              final loc = locations[index];
+                                              final bool isSelected = selectedLocation == loc;
+                                              return Padding(
+                                                padding: EdgeInsets.only(
+                                                  left: index == 0 ? 12 : 8,
+                                                  right: index == locations.length - 1 ? 12 : 8,
+                                                ),
+                                                child: InkWell(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  onTap: () {
+                                                    setState(() {
+                                                      selectedLocation = loc;
+                                                    });
+                                                  },
+                                                  child: AnimatedContainer(
+                                                    duration: const Duration(milliseconds: 200),
+                                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                                    constraints: BoxConstraints(
+                                                      minWidth: size.width * 0.28,
+                                                      maxWidth: size.width * 0.6,
+                                                    ),
+                                                    decoration: BoxDecoration(
+                                                      color: isSelected ? primaryColor.withOpacity(0.3) : Colors.white,
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      border: Border.all(
+                                                        color: isSelected ? secondaryColor : Colors.grey.shade300,
+                                                        width: isSelected ? 2 : 1,
+                                                      ),
+                                                      boxShadow: [
+                                                        if (isSelected)
+                                                          BoxShadow(
+                                                            color: Colors.black.withOpacity(0.06),
+                                                            blurRadius: 6,
+                                                            offset: const Offset(0, 2),
+                                                          ),
+                                                      ],
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons.location_solid,
+                                                          size: 18,
+                                                          color: isSelected ? secondaryColor : Colors.grey.shade600,
+                                                        ),
+                                                        const SizedBox(width: 8),
+                                                        ConstrainedBox(
+                                                          constraints: BoxConstraints(maxWidth: size.width * 0.5),
+                                                          child: Text(
+                                                            loc,
+                                                            overflow: TextOverflow.ellipsis,
+                                                            style: GoogleFonts.montserrat(
+                                                              color: isSelected ? secondaryColor : Colors.grey.shade800,
+                                                              fontSize: 13,
+                                                              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        if (isSelected) ...[
+                                                          const SizedBox(width: 8),
+                                                          const Icon(CupertinoIcons.check_mark_circled_solid, size: 16, color: secondaryColor),
+                                                        ]
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                          ),
+                                        ),
                                       ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: primaryColor, width: 2),
-                                      ),
-                                    ),
-                                    items: locations.map((location) {
-                                      return DropdownMenuItem<String>(
-                                        value: location,
-                                        child: Text(location),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedLocation = value;
-                                      });
-                                    },
-                                    hint: const Text("Select a location"),
-                                    icon: Icon(Icons.arrow_drop_down_circle, color: secondaryColor),
-                                    dropdownColor: Colors.white,
-                                    style: GoogleFonts.montserrat(
-                                      color: secondaryColor,
-                                      fontSize: 14,
-                                    ),
+                                    ],
                                   ),
                                   const SizedBox(height: 16),
+
 
                                   TextField(
                                     controller: nameController,

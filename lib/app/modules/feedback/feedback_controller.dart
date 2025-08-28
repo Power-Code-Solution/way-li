@@ -59,15 +59,19 @@ class FeedbackController extends GetxController {
         "name": name.value
       };
       
-      print("Feedback submission payload: ${jsonEncode(requestBody)}");
-      
+      final url = Uri.parse("$apiBaseAddress/feedback/submit");
+      final body = jsonEncode(requestBody);
+      final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
+      print('[DEBUG_LOG] POST ' + url.toString());
+      print('[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' + masked + '}');
+      print('[DEBUG_LOG] Payload: ' + body);
       final response = await http.post(
-        Uri.parse("$apiBaseAddress/feedback/submit"),
+        url,
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: jsonEncode(requestBody),
+        body: body,
       );
       
       if (response.statusCode == 200) {

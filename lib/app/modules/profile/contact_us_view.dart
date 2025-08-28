@@ -51,15 +51,18 @@ class _ContactUsViewState extends State<ContactUsView> {
           "message": _messageController.text,
         };
 
-        print("Sending contact form: ${jsonEncode(payload)}");
-
+        final url = Uri.parse("$apiBaseAddress/contact/send");
+        final body = jsonEncode(payload);
+        print('[DEBUG_LOG] POST ' + url.toString());
+        print('[DEBUG_LOG] Headers: {Content-Type: application/json}');
+        print('[DEBUG_LOG] Payload: ' + body);
         // Make the API call
         final response = await http.post(
-          Uri.parse("$apiBaseAddress/contact/send"),
+          url,
           headers: {
             "Content-Type": "application/json",
           },
-          body: jsonEncode(payload),
+          body: body,
         );
 
         print("Contact form response: ${response.body}");

@@ -90,13 +90,22 @@ class AppBarPage extends GetView<AppBarController> {
                   ),
                   _buildListTile(
                     context: context,
-                    icon: Icons.swap_horiz,
-                    title: 'Transactions',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Get.toNamed('/transactions');
-                    },
+                    icon: Icons.history,
+                    title: 'My Orders',
+                    onTap: () => Get.to(
+                          () => const OrderHistoryView(),
+                      transition: Transition.rightToLeft,
+                    ),
                   ),
+                  // _buildListTile(
+                  //   context: context,
+                  //   icon: Icons.swap_horiz,
+                  //   title: 'Transactions',
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //     Get.toNamed('/transactions');
+                  //   },
+                  // ),
                   const Divider(),
                   _buildListTile(
                     context: context,
@@ -113,7 +122,7 @@ class AppBarPage extends GetView<AppBarController> {
                       Get.toNamed('/help');
                     },
                   ),
-                  _buildListTile(
+            /*      _buildListTile(
                     context: context,
                     icon: Icons.history,
                     title: 'My Orders',
@@ -121,7 +130,7 @@ class AppBarPage extends GetView<AppBarController> {
                           () => const OrderHistoryView(),
                       transition: Transition.rightToLeft,
                     ),
-                  ),
+                  ),*/
                   Obx(() => SwitchListTile(
                     secondary: Icon(
                       Icons.fingerprint,

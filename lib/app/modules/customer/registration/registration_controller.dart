@@ -131,10 +131,15 @@ class RegistrationController extends GetxController {
         device: deviceInfo,
       );
 
+      final url = Uri.parse("$apiBaseAddress/secure/admin/user/create");
+      final body = jsonEncode(user.toJson());
+      print('[DEBUG_LOG] POST ' + url.toString());
+      print('[DEBUG_LOG] Headers: {Content-Type: application/json}');
+      print('[DEBUG_LOG] Payload: ' + body);
       final response = await http.post(
-        Uri.parse("$apiBaseAddress/secure/admin/user/create"),
+        url,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(user.toJson()),
+        body: body,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {

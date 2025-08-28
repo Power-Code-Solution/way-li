@@ -25,13 +25,18 @@ class AuthController extends GetxController {
       final encodedEmail = base64.encode(utf8.encode(email));
       final encodedPassword = base64.encode(utf8.encode(password));
 
+      final loginUrl = Uri.parse("$apiBaseAddress/auth/login");
+      final loginPayload = jsonEncode({
+        "email": encodedEmail,
+        "password": encodedPassword,
+      });
+      print('[DEBUG_LOG] POST ${loginUrl.toString()}');
+      print('[DEBUG_LOG] Headers: {Content-Type: application/json}');
+      print('[DEBUG_LOG] Payload: ' + loginPayload);
       final response = await http.post(
-        Uri.parse("$apiBaseAddress/auth/login"),
+        loginUrl,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": encodedEmail,
-          "password": encodedPassword,
-        }),
+        body: loginPayload,
       );
 
       if (response.statusCode == 200) {
@@ -296,16 +301,20 @@ class AuthController extends GetxController {
         requestBody["address"] = address;
       }
 
-      print("Update profile payload: ${jsonEncode(requestBody)}");
-
+      final url = Uri.parse("$apiBaseAddress/secure/admin/user/update");
+      final body = jsonEncode(requestBody);
+      final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
+      print('[DEBUG_LOG] POST ' + url.toString());
+      print('[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' + masked + '}');
+      print('[DEBUG_LOG] Payload: ' + body);
       // Make the API call
       final response = await http.post(
-        Uri.parse("$apiBaseAddress/secure/admin/user/update"),
+        url,
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: jsonEncode(requestBody),
+        body: body,
       );
 
       print("Update profile response: ${response.body}");
@@ -366,20 +375,24 @@ class AuthController extends GetxController {
         return false;
       }
       final url = "$apiBaseAddress/secure/admin/user/change/password";
-      print("Change password URL: $url");
+      final uri = Uri.parse(url);
       final payload = {
         "oldPassword": currentPassword,
         "newPassword": newPassword,
         "confirmPassword": confirmPassword,
       };
-      print("Change password payload: ${jsonEncode(payload)}");
+      final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
+      final body = jsonEncode(payload);
+      print('[DEBUG_LOG] POST ' + uri.toString());
+      print('[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' + masked + '}');
+      print('[DEBUG_LOG] Payload: ' + body);
       final response = await http.post(
-        Uri.parse(url),
+        uri,
         headers: {
           "Content-Type": "application/json",
           "Authorization": "Bearer $token",
         },
-        body: jsonEncode(payload),
+        body: body,
       );
       if (response.statusCode == 200) {
         final parsedResponse = jsonDecode(response.body);

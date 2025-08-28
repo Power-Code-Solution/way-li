@@ -22,6 +22,7 @@ void main() async {
     Get.put(CartController());
     Get.put(OrderHistoryController());
     Get.put(ProductDetailsController());
+    Get.put(OrderHistoryController());
     final authController = Get.find<AuthController>();
     await authController.checkLoginStatus();
     runApp(

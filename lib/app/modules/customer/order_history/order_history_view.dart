@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
-import 'package:wayli/app/core/model/saved_cart_item.dart';
+// Model no longer used: import 'package:wayli/app/core/model/saved_cart_item.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
 
 import 'order_history_controller.dart';
@@ -45,131 +45,253 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
           );
         }
 
-        if (controller.savedOrders.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  CupertinoIcons.doc_text_search,
-                  size: 80,
-                  color: Colors.grey.shade400,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  'No saved orders found',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.grey.shade700,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Your recent orders will appear here',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 14,
-                    color: Colors.grey.shade600,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          );
-        }
+        final hasData = controller.items.isNotEmpty;
 
-        return RefreshIndicator(
-          onRefresh: controller.refreshOrders,
-          color: primaryColor,
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: controller.savedOrders.length,
-            itemBuilder: (context, index) {
-              final order = controller.savedOrders[index];
-              return _buildOrderCard(context, order);
-            },
-          ),
-        );
+        return hasData
+            ? Column(
+                children: [
+                  _buildSummaryCard(controller),
+                  Expanded(
+                    child: RefreshIndicator(
+                      onRefresh: controller.refreshOrders,
+                      color: primaryColor,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(16),
+                        itemCount: controller.items.length,
+                        itemBuilder: (context, index) {
+                          final order = controller.items[index];
+                          return _buildOrderExpansionCard(context, order);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            : _buildEmptyState();
       }),
     );
   }
 
-  Widget _buildOrderCard(BuildContext context, SavedOrder order) {
-    final remainingDays = controller.getRemainingDays(order.expiresAt);
-
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+  Widget _buildEmptyState() {
+    return Center(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Order header
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: primaryColor,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
+          Icon(
+            CupertinoIcons.doc_text_search,
+            size: 80,
+            color: Colors.grey.shade400,
+          ),
+          const SizedBox(height: 20),
+          Text(
+            'No orders found',
+            style: GoogleFonts.montserrat(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'Your recent orders will appear here',
+            style: GoogleFonts.montserrat(
+              fontSize: 14,
+              color: Colors.grey.shade600,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard(OrderHistoryController controller) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            secondaryColor,
+            secondaryColor.withOpacity(0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Obx(() => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildSummaryItem(
+                icon: CupertinoIcons.shopping_cart,
+                title: 'Orders',
+                value: '${controller.totalItems.value}',
+              ),
+              _buildSummaryItem(
+                icon: Icons.money,
+                title: 'Total Amount',
+                value: 'Le ${controller.totalAmount.value.toStringAsFixed(2)}',
+              ),
+            ],
+          )),
+    );
+  }
+
+  Widget _buildSummaryItem({
+    required IconData icon,
+    required String title,
+    required String value,
+  }) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          color: primaryColor,
+          size: 28,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
+          style: GoogleFonts.montserrat(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: primaryColor.withOpacity(0.8),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: GoogleFonts.montserrat(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: primaryColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildOrderExpansionCard(BuildContext context, OrderHistoryItem order) {
+    final bool isCompleted = order.status.toLowerCase() == 'completed' || order.status.toLowerCase() == 'delivered';
+    final Color statusColor = isCompleted ? Colors.green : Colors.orange;
+    final double orderTotal = order.orderItems.fold<double>(0, (sum, e) => sum + e.lineTotal);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ExpansionTile(
+        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: primaryColor.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          child: const Icon(
+            CupertinoIcons.cart_fill,
+            color: secondaryColor,
+            size: 20,
+          ),
+        ),
+        title: Text(
+          'Order #${order.orderId}',
+          style: GoogleFonts.montserrat(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: secondaryColor,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Text(
+              controller.getFormattedDate(order.orderDate),
+              style: GoogleFonts.montserrat(
+                fontSize: 12,
+                color: Colors.grey.shade600,
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            const SizedBox(height: 4),
+            Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Order #${order.id.substring(0, 8)}',
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: statusColor.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      order.status,
                       style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: statusColor,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: secondaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      order.location,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
                         color: secondaryColor,
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      controller.getFormattedDate(order.savedAt),
-                      style: GoogleFonts.montserrat(
-                        fontSize: 12,
-                        color: secondaryColor.withOpacity(0.8),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: secondaryColor,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    'Expires in $remainingDays days',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: primaryColor,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
               ],
             ),
+          ],
+        ),
+        trailing: Text(
+          'Le ${orderTotal.toStringAsFixed(2)}',
+          style: GoogleFonts.montserrat(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: secondaryColor,
           ),
-
-          // Order details
+          overflow: TextOverflow.ellipsis,
+        ),
+        children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildInfoRow(
-                  icon: CupertinoIcons.location_solid,
-                  title: 'Location',
-                  value: order.location,
-                ),
+                const Divider(),
                 const SizedBox(height: 8),
                 _buildInfoRow(
                   icon: CupertinoIcons.home,
@@ -182,17 +304,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                   title: 'Phone',
                   value: order.deliveryPhone,
                 ),
-                if (order.deliveryNotes != null && order.deliveryNotes!.isNotEmpty) ...[
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    icon: CupertinoIcons.doc_text_fill,
-                    title: 'Notes',
-                    value: order.deliveryNotes!,
-                  ),
-                ],
-
-                const Divider(height: 32),
-
+                const SizedBox(height: 16),
                 Text(
                   'Items',
                   style: GoogleFonts.montserrat(
@@ -201,22 +313,17 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                     color: secondaryColor,
                   ),
                 ),
-                const SizedBox(height: 12),
-
-                // Order items
+                const SizedBox(height: 8),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  itemCount: order.items.length,
+                  itemCount: order.orderItems.length,
                   itemBuilder: (context, index) {
-                    final item = order.items[index];
+                    final item = order.orderItems[index];
                     return _buildItemCard(context, item);
                   },
                 ),
-
-                const Divider(height: 32),
-
-                // Order total
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -229,7 +336,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                       ),
                     ),
                     Text(
-                      'Le ${order.totalAmount.toStringAsFixed(2)}',
+                      'Le ${orderTotal.toStringAsFixed(2)}',
                       style: GoogleFonts.montserrat(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -238,41 +345,44 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-
-          // Order actions
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      // TODO: Implement reorder functionality
-                      Get.snackbar(
-                        'Reorder',
-                        'This feature is coming soon!',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: primaryColor,
-                        colorText: secondaryColor,
-                        margin: const EdgeInsets.all(16),
-                        borderRadius: 10,
-                      );
-                    },
-                    icon: const Icon(CupertinoIcons.arrow_counterclockwise),
-                    label: const Text('Reorder'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: secondaryColor,
-                      foregroundColor: primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                const SizedBox(height: 16),
+                if (order.status.toLowerCase() == 'pending')
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: controller.isProcessing.value
+                          ? null
+                          : () {
+                              Get.defaultDialog(
+                                title: 'Cancel Order',
+                                middleText: 'Are you sure you want to cancel order #${order.orderId}?',
+                                textCancel: 'No',
+                                textConfirm: 'Yes, Cancel',
+                                confirmTextColor: Colors.white,
+                                onConfirm: () async {
+                                  Get.back();
+                                  await controller.cancelOrder(order.orderId);
+                                },
+                              );
+                            },
+                      icon: const Icon(CupertinoIcons.xmark_circle),
+                      label: Text(
+                        'Cancel',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.red),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
@@ -321,7 +431,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
     );
   }
 
-  Widget _buildItemCard(BuildContext context, SavedCartItem item) {
+  Widget _buildItemCard(BuildContext context, OrderItemLine item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -332,44 +442,13 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
       ),
       child: Row(
         children: [
-          // Item image
-          if (item.foodItem.foodItemsImages != null && 
-              item.foodItem.foodItemsImages!.isNotEmpty &&
-              item.foodItem.foodItemsImages![0].image != null)
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                image: DecorationImage(
-                  image: NetworkImage(item.foodItem.foodItemsImages![0].image!),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )
-          else
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                CupertinoIcons.photo,
-                color: Colors.grey.shade500,
-              ),
-            ),
-
-          const SizedBox(width: 12),
-
           // Item details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.foodItem.name ?? 'Unknown Item',
+                  item.foodName,
                   style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -378,7 +457,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Quantity: ${item.quantity}',
+                  'Qty: ${item.quantity} • Unit: Le ${item.unitPrice.toStringAsFixed(2)}',
                   style: GoogleFonts.montserrat(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -390,7 +469,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
 
           // Item price
           Text(
-            'Le ${item.totalPrice.toStringAsFixed(2)}',
+            'Le ${item.lineTotal.toStringAsFixed(2)}',
             style: GoogleFonts.montserrat(
               fontWeight: FontWeight.w600,
               fontSize: 14,
