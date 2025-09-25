@@ -27,8 +27,7 @@ class LoginController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
-    await checkFingerprintStatus();
-
+    // await checkFingerprintStatus();
     if (showFingerprint.value) {
       authenticate();
     }
@@ -95,16 +94,12 @@ class LoginController extends GetxController {
           stickyAuth: true,
         ),
       );
-
       if (isAuthenticated) {
-        // Get saved credentials using AuthController
         final credentials = await authController.getBiometricCredentials();
         final savedEmail = credentials['email'];
         final savedPassword = credentials['password'];
-
         if (savedEmail != null && savedPassword != null) {
           isLoading.value = true;
-          // Use saved credentials to login
           final result = await authController.login(savedEmail, savedPassword);
           isLoading.value = false;
 
@@ -129,7 +124,6 @@ class LoginController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     showFingerprint.value = prefs.getBool('is_fingerprint_enabled') ?? false;
   }
-
   void handleLogin() async {
     if (loginViewFormKey.currentState?.validate() ?? false) {
       isLoading.value = true;
@@ -137,9 +131,7 @@ class LoginController extends GetxController {
 
       if (result) {
         isLoading.value = false;
-
-        // Ask if user wants to enable fingerprint
-        bool enable = await Get.dialog(
+    /*    bool enable = await Get.dialog(
           AlertDialog(
             title: AutoSizeText(
               "Enable Fingerprint?",
@@ -194,7 +186,7 @@ class LoginController extends GetxController {
 
         if (enable == true) {
           await enableFingerprintLogin();
-        }
+        }*/
         Get.offAll(() => BottomNavView());
         email.clear();
         pass.clear();

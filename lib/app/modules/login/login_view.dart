@@ -188,23 +188,23 @@ class LoginView extends GetView<LoginController> {
                                             )),
                                     ),
                                   ),
-                                  if (ctl.showFingerprint.value) ...[
-                                    Gap(16),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: secondaryColor.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: IconButton(
-                                        onPressed: ctl.authenticate,
-                                        icon: SvgPicture.asset(
-                                          'assets/svg/fingerprint.svg',
-                                          color: secondaryColor,
-                                          height: 28,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  // if (ctl.showFingerprint.value) ...[
+                                  //   Gap(16),
+                                  //   Container(
+                                  //     decoration: BoxDecoration(
+                                  //       color: secondaryColor.withOpacity(0.1),
+                                  //       borderRadius: BorderRadius.circular(8),
+                                  //     ),
+                                  //     child: IconButton(
+                                  //       onPressed: ctl.authenticate,
+                                  //       icon: SvgPicture.asset(
+                                  //         'assets/svg/fingerprint.svg',
+                                  //         color: secondaryColor,
+                                  //         height: 28,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ],
                                 ],
                               ),
                             ),
