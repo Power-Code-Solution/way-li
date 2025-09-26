@@ -21,6 +21,7 @@ class _CartPageState extends State<CartPage> {
   String? selectedMethod;
   String? paymentType;
   int currentStep = 1;
+  bool isDelivery = true;
   String? selectedLocation;
   final List<String> locations = ['Rawdon St', 'Lumely'];
 
@@ -264,12 +265,35 @@ class _CartPageState extends State<CartPage> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Delivery Required",
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: size.width * 0.04,
+                                    color: mainBlack,
+                                  ),
+                                ),
+                                Switch(
+                                  value: isDelivery,
+                                  onChanged: (val) {
+                                    setState(() {
+                                      isDelivery = val;
+                                    });
+                                  },
+                                  activeColor: Colors.yellow,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: size.height * 0.01),
                             _buildPriceRow(
                                 "Subtotal",
                                 "Le ${cartController.getTotalPrice().toStringAsFixed(2)}",
                                 size),
                             SizedBox(height: size.height * 0.01),
-                            _buildPriceRow("Delivery Fee", "Le 0.00", size),
+                            _buildPriceRow("Delivery Fee", "Le ${(isDelivery ? 15.0 : 0.0).toStringAsFixed(2)}", size),
                             Divider(
                               color: Colors.grey,
                               height: 10,
@@ -277,12 +301,13 @@ class _CartPageState extends State<CartPage> {
                               indent: 0,
                               endIndent: 0,
                             ),
-                            _buildPriceRow(
-                                "Total",
-                                "Le ${cartController.getTotalPrice().toStringAsFixed(2)}",
-                                size,
-                                isTotal: true),
-                            SizedBox(height: size.height * 0.02),
+                          _buildPriceRow(
+                            "Total",
+                            "Le ${(cartController.getTotalPrice() + (isDelivery ? 15.0 : 0.0)).toStringAsFixed(2)}",
+                            size,
+                            isTotal: true,
+                          ),
+                          SizedBox(height: size.height * 0.02),
 
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -773,46 +798,54 @@ class _CartPageState extends State<CartPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    children: [
-                                      Icon(CupertinoIcons.location_circle_fill, color: secondaryColor),
-                                      const SizedBox(width: 8),
-                                      AutoSizeText(
-                                        "Delivery Information",
-                                        style: GoogleFonts.montserrat(
-                                          color: secondaryColor,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 6),
-                                  AutoSizeText(
-                                    "Tell us where to deliver your order",
-                                    style: GoogleFonts.montserrat(
-                                      color: Colors.grey.shade600,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-
-                                  // Location dropdown
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      Row(
+                                        children: [
+                                          Icon(CupertinoIcons.location_circle_fill, color: secondaryColor),
+                                          const SizedBox(width: 8),
+                                          Expanded( // 👈 Prevents row overflow
+                                            child: AutoSizeText(
+                                              "Delivery Information",
+                                              style: GoogleFonts.montserrat(
+                                                color: secondaryColor,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 6),
+                                      AutoSizeText(
+                                        "Tell us where to deliver your order",
+                                        style: GoogleFonts.montserrat(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 12,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 20),
                                       Padding(
                                         padding: const EdgeInsets.only(left: 4.0, bottom: 8),
                                         child: Row(
                                           children: [
                                             Icon(CupertinoIcons.location_circle, color: secondaryColor, size: 20),
                                             const SizedBox(width: 8),
-                                            Text(
-                                              "Select Nearest Location",
-                                              style: GoogleFonts.montserrat(
-                                                color: secondaryColor,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
+                                            Expanded(
+                                              child: Text(
+                                                "Select Nearest Location",
+                                                style: GoogleFonts.montserrat(
+                                                  color: secondaryColor,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
                                           ],
@@ -848,7 +881,7 @@ class _CartPageState extends State<CartPage> {
                                                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                                                     constraints: BoxConstraints(
                                                       minWidth: size.width * 0.28,
-                                                      maxWidth: size.width * 0.6,
+                                                      maxWidth: size.width * 0.6, // 👈 prevents super-wide chips
                                                     ),
                                                     decoration: BoxDecoration(
                                                       color: isSelected ? primaryColor.withOpacity(0.3) : Colors.white,
@@ -875,11 +908,11 @@ class _CartPageState extends State<CartPage> {
                                                           color: isSelected ? secondaryColor : Colors.grey.shade600,
                                                         ),
                                                         const SizedBox(width: 8),
-                                                        ConstrainedBox(
-                                                          constraints: BoxConstraints(maxWidth: size.width * 0.5),
+                                                        Flexible( // 👈 ensures text never pushes out of chip
                                                           child: Text(
                                                             loc,
                                                             overflow: TextOverflow.ellipsis,
+                                                            maxLines: 1,
                                                             style: GoogleFonts.montserrat(
                                                               color: isSelected ? secondaryColor : Colors.grey.shade800,
                                                               fontSize: 13,
@@ -889,7 +922,11 @@ class _CartPageState extends State<CartPage> {
                                                         ),
                                                         if (isSelected) ...[
                                                           const SizedBox(width: 8),
-                                                          const Icon(CupertinoIcons.check_mark_circled_solid, size: 16, color: secondaryColor),
+                                                          const Icon(
+                                                            CupertinoIcons.check_mark_circled_solid,
+                                                            size: 16,
+                                                            color: secondaryColor,
+                                                          ),
                                                         ]
                                                       ],
                                                     ),
@@ -902,9 +939,10 @@ class _CartPageState extends State<CartPage> {
                                       ),
                                     ],
                                   ),
+
+
+
                                   const SizedBox(height: 16),
-
-
                                   TextField(
                                     controller: nameController,
                                     decoration: InputDecoration(
@@ -1002,6 +1040,8 @@ class _CartPageState extends State<CartPage> {
                                 ],
                               ),
                             ),
+
+
                           ],
                         ],
 
@@ -1036,7 +1076,7 @@ class _CartPageState extends State<CartPage> {
                               }
 
                               // Validate location
-                              if (selectedLocation == null) {
+                              if (isDelivery && selectedLocation == null) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -1055,9 +1095,9 @@ class _CartPageState extends State<CartPage> {
 
                               // Validate form fields
                               if (paymentType == "Pay on Delivery") {
-                                if (nameController.text.isEmpty || 
+                                if (isDelivery && (nameController.text.isEmpty || 
                                     phoneController.text.isEmpty || 
-                                    addressController.text.isEmpty) {
+                                    addressController.text.isEmpty)) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -1074,9 +1114,9 @@ class _CartPageState extends State<CartPage> {
                                   return;
                                 }
                               } else if (paymentType == "Pay Now" && selectedMethod != null) {
-                                if (nameController.text.isEmpty || 
+                                if (isDelivery && (nameController.text.isEmpty || 
                                     phoneController.text.isEmpty || 
-                                    addressController.text.isEmpty) {
+                                    addressController.text.isEmpty)) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -1171,8 +1211,8 @@ class _CartPageState extends State<CartPage> {
                                 final cartController = Get.find<CartController>();
                                 print("[DEBUG_LOG] Found CartController, calling submitOrder");
                                 final success = await cartController.submitOrder(
-                                  location: selectedLocation!,
-                                  deliveryAddress: addressController.text,
+                                  location: selectedLocation ?? "PICKUP",
+                                  deliveryAddress: isDelivery ? addressController.text : "Pickup - will collect",
                                   deliveryPhone: phoneController.text,
                                   deliveryNotes: notesController.text,
                                 );
@@ -1198,25 +1238,14 @@ class _CartPageState extends State<CartPage> {
                                 );
 
                                 if (success) {
-                                  print("[DEBUG_LOG] Order was successful, clearing cart");
-                                  // Clear cart immediately
                                   cartController.clearCart();
-
-                                  // Navigate to order history screen
-                                  print("[DEBUG_LOG] Navigating to order history screen");
                                   Get.offAllNamed('/customer/order-history');
-                                  print("[DEBUG_LOG] Navigation command executed");
                                 } else {
-                                  print("[DEBUG_LOG] Order was not successful, resetting form state");
-                                  // If not successful, reset form state to allow user to try again
-
-                                  // Check if error is related to location
                                   if (cartController.orderSubmitMessage.value.contains("Location not available")) {
-                                    print("[DEBUG_LOG] Location error detected, resetting location selection");
                                     setState(() {
                                       showCheckoutForm = true;
-                                      selectedLocation = null; // Reset location selection
-                                      currentStep = 2; // Keep user on the same step to select a new location
+                                      selectedLocation = null;
+                                      currentStep = 2;
                                     });
                                   } else {
                                     setState(() {
@@ -1225,12 +1254,7 @@ class _CartPageState extends State<CartPage> {
                                   }
                                 }
                               } catch (e) {
-                                print("[DEBUG_LOG] Exception caught during order submission: $e");
-                                // Close loading dialog in case of error
                                 _dismissDialog("error_handler");
-
-                                // Show error message
-                                print("[DEBUG_LOG] Showing error snackbar: ${e.toString()}");
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
@@ -1244,9 +1268,6 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                   ),
                                 );
-
-                                // Reset form state to allow user to try again
-                                print("[DEBUG_LOG] Resetting form state after exception");
                                 setState(() {
                                   showCheckoutForm = true;
                                 });

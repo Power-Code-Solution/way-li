@@ -346,7 +346,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                if (order.status.toLowerCase() == 'pending')
+                if (order.status.toLowerCase() == 'pending' && DateTime.now().difference(order.orderDate).inMinutes <= 25)
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
@@ -383,6 +383,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                       ),
                     ),
                   ),
+
               ],
             ),
           ),

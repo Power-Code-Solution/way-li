@@ -44,7 +44,6 @@ class _ContactUsViewState extends State<ContactUsView> {
       });
 
       try {
-        // Prepare the request payload
         final payload = {
           "name": _nameController.text,
           "email": _emailController.text,
@@ -79,13 +78,10 @@ class _ContactUsViewState extends State<ContactUsView> {
               colorText: Colors.white,
               snackPosition: SnackPosition.BOTTOM,
             );
-
-            // Clear form fields
             _nameController.clear();
             _emailController.clear();
             _messageController.clear();
           } else {
-            // API returned an error
             Get.snackbar(
               'Error',
               parsedResponse["message"] ?? 'Failed to send message',
@@ -95,7 +91,6 @@ class _ContactUsViewState extends State<ContactUsView> {
             );
           }
         } else {
-          // HTTP error
           Get.snackbar(
             'Error',
             'Failed to send message. Please try again later.',
@@ -188,21 +183,15 @@ class _ContactUsViewState extends State<ContactUsView> {
                       _buildInfoRow(
                         Icons.location_on_outlined,
                         'Address',
-                        '12 Rodin Street, Freetown, Sierra Leone',
-                        onTap: () => _launchUrl('https://maps.google.com?q=12+Rodin+Street,+Freetown,+Sierra+Leone')
-                      ),
-                      _buildInfoRow(
-                          Icons.location_on_outlined,
-                          'Address',
-                          '12 Rodin Street, Freetown, Sierra Leone',
-                          onTap: () => _launchUrl('https://maps.google.com?q=12+Rodin+Street,+Freetown,+Sierra+Leone')
+                        '17 Rawdon Street , Freetown, Sierra Leone',
+                        onTap: () => _launchUrl('https://www.google.com/maps/dir/?api=1&destination=8.48909%2C-13.23237&fbclid=IwY2xjawNCwbBleHRuA2FlbQIxMABicmlkETFzWVJaeUU0ZFpGQjBIOGJNAR5Wp8r1rt_kABRf8JINT_-357tgQjPeqDtFR9Y1-mfBv5DrtgdsMTIxfCDmSw_aem_MmO5yxw0tSTBZYZ56eUswQ')
                       ),
                       const Divider(),
                       _buildInfoRow(
                         Icons.phone_outlined,
                         'Phone',
-                        '+232 79 366 751',
-                        onTap: () => _launchUrl('tel:+23279366751'),
+                        '+232 72 111 100',
+                        onTap: () => _launchUrl('tel:+23272111100'),
                       ),
                       const Divider(),
                       _buildInfoRow(
@@ -215,7 +204,7 @@ class _ContactUsViewState extends State<ContactUsView> {
                       _buildInfoRow(
                         Icons.access_time,
                         'Opening Hours',
-                        'Mon-Fri: 9:00 AM - 10:00 PM\nSat-Sun: 10:00 AM - 11:00 PM',
+                        'Mon-Sun: 7:00 AM - 1:00 AM',
                       ),
                     ],
                   ),
@@ -249,19 +238,13 @@ class _ContactUsViewState extends State<ContactUsView> {
                             'Facebook',
                             Icons.facebook,
                             Colors.blue,
-                            () => _launchUrl('https://facebook.com'),
+                            () => _launchUrl('https://www.facebook.com/WayLiiii'),
                           ),
                           _buildSocialButton(
                             'Instagram',
                             Icons.camera_alt,
                             Colors.purple,
-                            () => _launchUrl('https://instagram.com'),
-                          ),
-                          _buildSocialButton(
-                            'Twitter',
-                            Icons.flutter_dash,
-                            Colors.blue[300]!,
-                            () => _launchUrl('https://twitter.com'),
+                            () => _launchUrl('https://www.instagram.com/way_liiii/'),
                           ),
                           _buildSocialButton(
                             'WhatsApp',
@@ -447,7 +430,7 @@ class _ContactUsViewState extends State<ContactUsView> {
                             const SizedBox(height: 16),
                             ElevatedButton.icon(
                               onPressed: () {
-                                _launchUrl('https://maps.google.com');
+                                _launchUrl('https://www.google.com/maps/dir/?api=1&destination=8.48909%2C-13.23237&fbclid=IwY2xjawNCwbBleHRuA2FlbQIxMABicmlkETFzWVJaeUU0ZFpGQjBIOGJNAR5Wp8r1rt_kABRf8JINT_-357tgQjPeqDtFR9Y1-mfBv5DrtgdsMTIxfCDmSw_aem_MmO5yxw0tSTBZYZ56eUswQ');
                               },
                               icon: const Icon(Icons.directions),
                               label: const Text('Get Directions'),

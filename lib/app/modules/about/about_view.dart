@@ -53,7 +53,7 @@ class AboutView extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Serving Sierra Leone since 2020',
+                    'Serving Sierra Leone since 2010',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.montserrat(
                       fontSize: 16,
@@ -74,7 +74,7 @@ class AboutView extends StatelessWidget {
                   _buildSectionTitle('About Us'),
                   const SizedBox(height: 15),
                   _buildParagraph(
-                    'Way Li is a premier restaurant that specializes in modern and country food, offering a diverse range of culinary delights to satisfy every palate. Our commitment to quality and excellence has made us a favorite dining destination in Sierra Leone.',
+                    'Way-Li is a premier restaurant that specializes in modern and country food, offering a diverse range of culinary delights to satisfy every palate. Our commitment to quality and excellence has made us a favorite dining destination in Sierra Leone.',
                   ),
                   const SizedBox(height: 10),
                   _buildParagraph(
@@ -87,16 +87,13 @@ class AboutView extends StatelessWidget {
                   _buildInfoCard(
                     icon: Icons.location_on,
                     title: 'Head Office',
-                    description: 'Rodin Street, Freetown, Sierra Leone',
+                    description: '17 Rawdon Street , Freetown, Sierra Leone',
                   ),
                   
                   const SizedBox(height: 30),
                   _buildSectionTitle('Opening Hours'),
                   const SizedBox(height: 15),
-                  _buildTimeRow('Monday - Friday', '8:00 AM - 10:00 PM'),
-                  _buildTimeRow('Saturday', '9:00 AM - 11:00 PM'),
-                  _buildTimeRow('Sunday', '10:00 AM - 9:00 PM'),
-                  
+                  _buildTimeRow('Monday - Sunday', '7:00 AM - 1:00 AM'),
                   const SizedBox(height: 30),
                   _buildSectionTitle('Our Mission'),
                   const SizedBox(height: 15),
@@ -110,7 +107,7 @@ class AboutView extends StatelessWidget {
                   _buildInfoCard(
                     icon: Icons.phone,
                     title: 'Phone',
-                    description: '+232 79 123 4567',
+                    description: '+232 72 111 100',
                   ),
                   const SizedBox(height: 10),
                   _buildInfoCard(
@@ -135,7 +132,7 @@ class AboutView extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    '© 2023 Way Li Restaurant',
+                    '© 2025 Way Li Restaurant',
                     textAlign: TextAlign.center,
                     style: GoogleFonts.montserrat(
                       fontSize: 14,

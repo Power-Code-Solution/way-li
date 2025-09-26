@@ -26,7 +26,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
             },
           ),
           backgroundColor: mainYellow,
-          title: const AutoSizeText("Product Details"),
+          title: const AutoSizeText("Details"),
           centerTitle: true,
         ),
         body: Center(
@@ -36,7 +36,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
               Icon(Icons.error_outline, size: 64, color: Colors.red),
               SizedBox(height: 16),
               Text(
-                "Error: Product information not found",
+                "Error: Item information not found",
                 style: GoogleFonts.montserrat(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
             },
           ),
           backgroundColor: mainYellow,
-          title: const AutoSizeText("Product Details"),
+          title: const AutoSizeText("Item Details"),
           centerTitle: true,
           actions: const [
             Padding(
@@ -112,86 +112,84 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: size.height * 0.02),
-              // Product Image Container
               Center(
                 child: Container(
                   height: containerHeight,
                   width: containerWidth,
-                  alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(width: 2, color: mainYellow),
                   ),
-                  child: Column(
+                  clipBehavior: Clip.antiAlias, // Ensures child respects borderRadius
+                  child: Stack(
                     children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            onPressed: controller.toggleLiked,
-                            icon: Obx(() => Icon(
-                                  controller.liked.value
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: controller.liked.value
-                                      ? Colors.red
-                                      : Colors.black,
-                                  size: size.width * 0.06,
-                                )),
-                          ),
-                        ),
-                      ),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
+                      // Background image that fills container
+                      Positioned.fill(
                         child: Image.network(
                           imageUrl ?? "assets/images/food.png",
-                          width: imageWidth,
-                          height: imageHeight,
                           fit: BoxFit.cover,
+                        ),
+                      ),
+
+                      // Favorite icon in top-right
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          onPressed: controller.toggleLiked,
+                          icon: Obx(() => Icon(
+                            controller.liked.value ? Icons.favorite : Icons.favorite_border,
+                            color: controller.liked.value ? Colors.red : Colors.black,
+                            size: size.width * 0.06,
+                          )),
                         ),
                       ),
                     ],
                   ),
-                ),
+                )
               ),
               SizedBox(height: size.height * 0.02),
-              // Product Info
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AutoSizeText(
-                        controller.FIL.name ?? "Unknown Product",
-                        style: GoogleFonts.montserrat(
-                          fontSize: size.width * 0.045,
-                          fontWeight: FontWeight.w500,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AutoSizeText(
+                          controller.FIL.name ?? "Unknown Product",
+                          style: GoogleFonts.montserrat(
+                            fontSize: size.width * 0.045,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          maxFontSize: 14,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ),
-                      SizedBox(height: size.height * 0.005),
-                      AutoSizeText(
-                        "In Stock",
-                        style: GoogleFonts.montserrat(
-                          fontSize: size.width * 0.035,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0Xff13b7419),
-                        ),
-                      ),
-                      SizedBox(height: size.height * 0.005),
-                      Row(
-                        children: List.generate(
-                          5,
-                          (index) => Icon(
-                            Icons.star,
-                            color: mainYellow,
-                            size: size.width * 0.04,
+                        SizedBox(height: size.height * 0.005),
+                        AutoSizeText(
+                          "In Stock",
+                          style: GoogleFonts.montserrat(
+                            fontSize: size.width * 0.035,
+                            fontWeight: FontWeight.w400,
+                            color: const Color(0Xff13b7419),
                           ),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: size.height * 0.005),
+                        Row(
+                          children: List.generate(
+                            5,
+                                (index) => Icon(
+                              Icons.star,
+                              color: mainYellow,
+                              size: size.width * 0.04,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  SizedBox(width: size.width * 0.02), // spacing between text and price
                   AutoSizeText(
                     "LE ${(controller.FIL.price ?? 0).toStringAsFixed(2)}",
                     style: GoogleFonts.montserrat(
@@ -201,6 +199,8 @@ class ProductDetailsView extends GetView<ProductDetailsController> {
                   ),
                 ],
               ),
+
+
               SizedBox(height: size.height * 0.02),
               // Quantity Selector
               Row(
