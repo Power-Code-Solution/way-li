@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/modules/food_category/food_category_view.dart';
 import '../../core/config/constants.dart';
+import '../../core/model/delivery_fee.dart';
 import '../../newpages/components/colors.dart';
 import 'cart_controller_fixed2.dart';
 
@@ -67,6 +68,16 @@ class _CartPageState extends State<CartPage> {
       'image': 'assets/payment-logo/orange-money.png',
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    final cartController = Get.find<CartController>();
+    cartController.fetchDeliveryFees();
+    if (cartController.currentDeliveryAddress.isNotEmpty) {
+      addressController.text = cartController.currentDeliveryAddress;
+    }
+  }
 
   @override
   void dispose() {
@@ -281,6 +292,12 @@ class _CartPageState extends State<CartPage> {
                                   onChanged: (val) {
                                     setState(() {
                                       isDelivery = val;
+                                      if (!isDelivery) {
+                                        cartController.clearDeliveryFeeSelection();
+                                        addressController.clear();
+                                      } else {
+                                        cartController.fetchDeliveryFees();
+                                      }
                                     });
                                   },
                                   activeColor: Colors.yellow,
@@ -293,7 +310,80 @@ class _CartPageState extends State<CartPage> {
                                 "Le ${cartController.getTotalPrice().toStringAsFixed(2)}",
                                 size),
                             SizedBox(height: size.height * 0.01),
-                            _buildPriceRow("Delivery Fee", "Le ${(isDelivery ? 15.0 : 0.0).toStringAsFixed(2)}", size),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Delivery Fee",
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: size.width * 0.04,
+                                    color: mainBlack,
+                                  ),
+                                ),
+                                if (!isDelivery)
+                                  Text(
+                                    "Le 0.00",
+                                    style: GoogleFonts.poppins(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: size.width * 0.04,
+                                      color: mainBlack,
+                                    ),
+                                  )
+                                else if (cartController.hasDeliveryFeeSelection)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "Le ${cartController.currentDeliveryFee.toStringAsFixed(2)}",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: size.width * 0.04,
+                                          color: mainBlack,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      TextButton(
+                                        onPressed: () {
+                                          _showDeliveryAddressSheet(
+                                              cartController, size);
+                                        },
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: secondaryColor,
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: const Size(0, 0),
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        child: Text(
+                                          "Change",
+                                          style: GoogleFonts.montserrat(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: size.width * 0.032,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                else
+                                  TextButton(
+                                    onPressed: () {
+                                      _showDeliveryAddressSheet(cartController, size);
+                                    },
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: secondaryColor,
+                                      padding: EdgeInsets.zero,
+                                    ),
+                                    child: Text(
+                                      "Select address",
+                                      style: GoogleFonts.montserrat(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: size.width * 0.035,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                             Divider(
                               color: Colors.grey,
                               height: 10,
@@ -303,7 +393,7 @@ class _CartPageState extends State<CartPage> {
                             ),
                           _buildPriceRow(
                             "Total",
-                            "Le ${(cartController.getTotalPrice() + (isDelivery ? 15.0 : 0.0)).toStringAsFixed(2)}",
+                            "Le ${cartController.getTotalWithDelivery(isDelivery).toStringAsFixed(2)}",
                             size,
                             isTotal: true,
                           ),
@@ -319,6 +409,25 @@ class _CartPageState extends State<CartPage> {
                                 ),
                               ),
                               onPressed: () {
+                                if (isDelivery &&
+                                    !cartController.hasDeliveryFeeSelection) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "Please select a delivery address",
+                                        style: GoogleFonts.montserrat(),
+                                      ),
+                                      backgroundColor: Colors.red.shade700,
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  );
+                                  _showDeliveryAddressSheet(
+                                      cartController, size);
+                                  return;
+                                }
                                 setState(() {
                                   showCheckoutForm = true;
                                   currentStep = 2;
@@ -722,28 +831,10 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-                                  TextField(
-                                    controller: addressController,
-                                    decoration: InputDecoration(
-                                      labelText: "Delivery Address",
-                                      labelStyle: TextStyle(color: secondaryColor),
-                                      prefixIcon: Icon(CupertinoIcons.location, color: secondaryColor),
-                                      filled: true,
-                                      fillColor: Colors.grey.shade50,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: Colors.grey.shade200),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: primaryColor, width: 2),
-                                      ),
-                                    ),
-                                  ),
+                                  if (isDelivery)
+                                    _buildDeliveryAddressSelector(cartController, size)
+                                  else
+                                    _buildPickupNotice(),
                                   const SizedBox(height: 16),
                                   TextField(
                                     controller: notesController,
@@ -990,28 +1081,10 @@ class _CartPageState extends State<CartPage> {
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-                                  TextField(
-                                    controller: addressController,
-                                    decoration: InputDecoration(
-                                      labelText: "Delivery Address",
-                                      labelStyle: TextStyle(color: secondaryColor),
-                                      prefixIcon: Icon(CupertinoIcons.location, color: secondaryColor),
-                                      filled: true,
-                                      fillColor: Colors.grey.shade50,
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: Colors.grey.shade200),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: primaryColor, width: 2),
-                                      ),
-                                    ),
-                                  ),
+                                  if (isDelivery)
+                                    _buildDeliveryAddressSelector(cartController, size)
+                                  else
+                                    _buildPickupNotice(),
                                   const SizedBox(height: 16),
                                   TextField(
                                     controller: notesController,
@@ -1093,11 +1166,27 @@ class _CartPageState extends State<CartPage> {
                                 return;
                               }
 
+                              if (isDelivery && !cartController.hasDeliveryFeeSelection) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "Please select a delivery address",
+                                      style: GoogleFonts.montserrat(),
+                                    ),
+                                    backgroundColor: Colors.red.shade700,
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
+
                               // Validate form fields
                               if (paymentType == "Pay on Delivery") {
-                                if (isDelivery && (nameController.text.isEmpty || 
-                                    phoneController.text.isEmpty || 
-                                    addressController.text.isEmpty)) {
+                                if (isDelivery && (nameController.text.isEmpty ||
+                                    phoneController.text.isEmpty)) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -1114,9 +1203,8 @@ class _CartPageState extends State<CartPage> {
                                   return;
                                 }
                               } else if (paymentType == "Pay Now" && selectedMethod != null) {
-                                if (isDelivery && (nameController.text.isEmpty || 
-                                    phoneController.text.isEmpty || 
-                                    addressController.text.isEmpty)) {
+                                if (isDelivery && (nameController.text.isEmpty ||
+                                    phoneController.text.isEmpty)) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -1208,13 +1296,13 @@ class _CartPageState extends State<CartPage> {
 
                               try {
                                 print("[DEBUG_LOG] Starting order submission in cart_page");
-                                final cartController = Get.find<CartController>();
                                 print("[DEBUG_LOG] Found CartController, calling submitOrder");
                                 final success = await cartController.submitOrder(
                                   location: selectedLocation ?? "PICKUP",
                                   deliveryAddress: isDelivery ? addressController.text : "Pickup - will collect",
                                   deliveryPhone: phoneController.text,
                                   deliveryNotes: notesController.text,
+                                  deliveryFee: isDelivery ? cartController.currentDeliveryFee : 0.0,
                                 );
                                 print("[DEBUG_LOG] Order submission completed, success: $success");
 
@@ -1343,6 +1431,315 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDeliveryAddressSelector(CartController cartController, Size size) {
+    return Obx(() {
+      final DeliveryFee? selected = cartController.selectedDeliveryFee.value;
+      final bool hasSelection = selected != null;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Delivery Address",
+            style: GoogleFonts.montserrat(
+              color: secondaryColor,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          InkWell(
+            borderRadius: BorderRadius.circular(12),
+            onTap: () => _showDeliveryAddressSheet(cartController, size),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Row(
+                children: [
+                  Icon(CupertinoIcons.location, color: secondaryColor),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      hasSelection ? selected.address : "Select delivery area",
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.montserrat(
+                        color: hasSelection ? secondaryColor : Colors.grey.shade600,
+                        fontWeight: hasSelection ? FontWeight.w700 : FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  if (hasSelection)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: primaryColor.withOpacity(0.25),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: primaryColor.withOpacity(0.6)),
+                      ),
+                      child: Text(
+                        "Le ${cartController.currentDeliveryFee.toStringAsFixed(2)}",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          color: secondaryColor,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  Icon(CupertinoIcons.chevron_down, size: 18, color: Colors.grey.shade600),
+                ],
+              ),
+            ),
+          ),
+          if (!hasSelection)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                "Select an address to show delivery fee.",
+                style: GoogleFonts.montserrat(
+                  color: Colors.grey.shade600,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+        ],
+      );
+    });
+  }
+
+  Widget _buildPickupNotice() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        children: [
+          Icon(CupertinoIcons.bag, color: secondaryColor),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              "Pickup selected. No delivery address needed.",
+              style: GoogleFonts.montserrat(
+                color: Colors.grey.shade700,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeliveryAddressSheet(CartController cartController, Size size) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        String searchTerm = '';
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return DraggableScrollableSheet(
+              initialChildSize: 0.85,
+              minChildSize: 0.5,
+              maxChildSize: 0.95,
+              builder: (context, scrollController) {
+                return Container(
+                  padding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    top: 12,
+                    bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Select delivery area",
+                            style: GoogleFonts.montserrat(
+                              color: secondaryColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(CupertinoIcons.xmark_circle_fill),
+                            color: Colors.grey.shade500,
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ],
+                      ),
+                      TextField(
+                        onChanged: (value) {
+                          setModalState(() {
+                            searchTerm = value.trim();
+                          });
+                        },
+                        decoration: InputDecoration(
+                          hintText: "Search by address",
+                          prefixIcon: Icon(CupertinoIcons.search, color: Colors.grey.shade600),
+                          filled: true,
+                          fillColor: Colors.grey.shade50,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey.shade200),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: primaryColor, width: 2),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: Obx(() {
+                          if (cartController.isDeliveryFeesLoading.value) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                              ),
+                            );
+                          }
+
+                          if (cartController.deliveryFeesError.value.isNotEmpty) {
+                            return Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    cartController.deliveryFeesError.value,
+                                    style: GoogleFonts.montserrat(
+                                      color: Colors.red.shade700,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  ElevatedButton(
+                                    onPressed: () => cartController.fetchDeliveryFees(force: true),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: secondaryColor,
+                                      foregroundColor: primaryColor,
+                                    ),
+                                    child: Text(
+                                      "Retry",
+                                      style: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          final query = searchTerm.toLowerCase();
+                          final fees = cartController.deliveryFees
+                              .where((f) => f.address.toLowerCase().contains(query))
+                              .toList();
+
+                          if (fees.isEmpty) {
+                            return Center(
+                              child: Text(
+                                "No addresses found.",
+                                style: GoogleFonts.montserrat(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            );
+                          }
+
+                          return ListView.separated(
+                            controller: scrollController,
+                            itemCount: fees.length,
+                            separatorBuilder: (_, __) => Divider(color: Colors.grey.shade200),
+                            itemBuilder: (context, index) {
+                              final fee = fees[index];
+                              final selectedFee =
+                                  cartController.selectedDeliveryFee.value;
+                              final bool isSelected = selectedFee != null &&
+                                  ((selectedFee.id != null &&
+                                          fee.id != null &&
+                                          selectedFee.id == fee.id) ||
+                                      (selectedFee.id == null &&
+                                          fee.id == null &&
+                                          selectedFee.address.toLowerCase() ==
+                                              fee.address.toLowerCase()));
+                              return ListTile(
+                                onTap: () {
+                                  cartController.selectDeliveryFee(fee);
+                                  addressController.text = fee.address;
+                                  Navigator.pop(context);
+                                },
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+                                title: Text(
+                                  fee.address,
+                                  style: GoogleFonts.montserrat(
+                                    color: secondaryColor,
+                                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                trailing: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: primaryColor.withOpacity(0.25),
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(color: primaryColor.withOpacity(0.6)),
+                                  ),
+                                  child: Text(
+                                    "Le ${fee.fee.toStringAsFixed(2)}",
+                                    style: GoogleFonts.montserrat(
+                                      color: secondaryColor,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

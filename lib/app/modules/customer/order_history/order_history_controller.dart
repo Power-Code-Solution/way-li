@@ -29,6 +29,7 @@ class OrderHistoryItem {
   final String location;
   final String deliveryAddress;
   final String deliveryPhone;
+  final double deliveryFee;
   final String itemStatus;
   final List<OrderItemLine> orderItems;
   OrderHistoryItem({
@@ -39,6 +40,7 @@ class OrderHistoryItem {
     required this.location,
     required this.deliveryAddress,
     required this.deliveryPhone,
+    required this.deliveryFee,
     required this.itemStatus,
     required this.orderItems,
   });
@@ -50,6 +52,7 @@ class OrderHistoryItem {
     location: json['location'] ?? '',
     deliveryAddress: json['deliveryAddress'] ?? '',
     deliveryPhone: json['deliveryPhone'] ?? '',
+    deliveryFee: (json['deliveryFee'] ?? json['deliveryAmount'] ?? 0).toDouble(),
     itemStatus: json['itemStatus'] ?? '',
     orderItems: (json['orderItems'] as List? ?? []).map((e) => OrderItemLine.fromJson(e)).toList(),
   );

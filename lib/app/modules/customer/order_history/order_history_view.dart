@@ -8,9 +8,25 @@ import 'package:wayli/app/newpages/components/colors.dart';
 
 import 'order_history_controller.dart';
 
-class OrderHistoryView extends GetView<OrderHistoryController> {
+class OrderHistoryView extends StatefulWidget {
   static const routeName = 'order-history';
   const OrderHistoryView({super.key});
+
+  @override
+  State<OrderHistoryView> createState() => _OrderHistoryViewState();
+}
+
+class _OrderHistoryViewState extends State<OrderHistoryView> {
+  late final OrderHistoryController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<OrderHistoryController>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.refreshOrders();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +66,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
         return hasData
             ? Column(
                 children: [
-                  _buildSummaryCard(controller),
+                  _buildSummaryCard(),
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: controller.refreshOrders,
@@ -105,7 +121,7 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
     );
   }
 
-  Widget _buildSummaryCard(OrderHistoryController controller) {
+  Widget _buildSummaryCard() {
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -182,7 +198,8 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
   Widget _buildOrderExpansionCard(BuildContext context, OrderHistoryItem order) {
     final bool isCompleted = order.status.toLowerCase() == 'completed' || order.status.toLowerCase() == 'delivered';
     final Color statusColor = isCompleted ? Colors.green : Colors.orange;
-    final double orderTotal = order.orderItems.fold<double>(0, (sum, e) => sum + e.lineTotal);
+    final double itemsTotal = order.orderItems.fold<double>(0, (sum, e) => sum + e.lineTotal);
+    final double orderTotal = itemsTotal + order.deliveryFee;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -324,6 +341,50 @@ class OrderHistoryView extends GetView<OrderHistoryController> {
                   },
                 ),
                 const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Items Total',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: secondaryColor,
+                      ),
+                    ),
+                    Text(
+                      'Le ${itemsTotal.toStringAsFixed(2)}',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: secondaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Delivery Fee',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: secondaryColor,
+                      ),
+                    ),
+                    Text(
+                      'Le ${order.deliveryFee.toStringAsFixed(2)}',
+                      style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: secondaryColor,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/model/delivery_fee.dart';
 import '../../core/model/food_items.dart';
 import '../../core/model/saved_cart_item.dart';
 import '../../core/config/constants.dart';
@@ -17,12 +18,26 @@ class CartController extends GetxController {
   var itemPrices = <int, RxDouble>{}.obs;
   var itemSuccessState = <int, RxBool>{}.obs;
   var totalPrice = 0.0.obs;
+  var deliveryFees = <DeliveryFee>[].obs;
+  var selectedDeliveryFee = Rxn<DeliveryFee>();
+  var isDeliveryFeesLoading = false.obs;
+  var deliveryFeesError = ''.obs;
   var orderSubmitSuccess = false.obs;
   var orderSubmitMessage = ''.obs;
   var orderResponse = RxMap<String, dynamic>({});
 
   // Key for storing saved orders in SharedPreferences
   static const String savedOrdersKey = 'saved_orders';
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchDeliveryFees();
+  }
+
+  double get currentDeliveryFee => selectedDeliveryFee.value?.fee ?? 0.0;
+  String get currentDeliveryAddress => selectedDeliveryFee.value?.address ?? '';
+  bool get hasDeliveryFeeSelection => selectedDeliveryFee.value != null;
 
   // Generate a unique ID based on timestamp and random number
   String _generateUniqueId() {
@@ -123,8 +138,71 @@ class CartController extends GetxController {
     return totalPrice.value * 15 / 100;
   }
 
+  double getTotalWithDelivery(bool isDelivery) {
+    if (!isDelivery) {
+      return totalPrice.value;
+    }
+    return totalPrice.value + currentDeliveryFee;
+  }
+
+  int get totalCartItems {
+    int total = 0;
+    for (final quantity in itemQuantities.values) {
+      total += quantity.value;
+    }
+    return total;
+  }
+
   FoodItem getItemById(int itemId) {
     return cartItems.firstWhere((item) => item.id == itemId);
+  }
+
+  Future<void> fetchDeliveryFees({bool force = false}) async {
+    if (deliveryFees.isNotEmpty && !force) {
+      return;
+    }
+    try {
+      isDeliveryFeesLoading.value = true;
+      deliveryFeesError.value = '';
+      final authController = Get.find<AuthController>();
+      final token = await authController.getToken();
+      final url = Uri.parse("$apiBaseAddress/secure/admin/delivery-fees/all");
+      final headers = <String, String>{
+        "Content-Type": "application/json",
+      };
+      if (token != null) {
+        headers["Authorization"] = "Bearer $token";
+      }
+      final response = await http.get(url, headers: headers);
+      if (response.statusCode == 200) {
+        final parsedResponse = jsonDecode(response.body);
+        if (parsedResponse["status"] == 1) {
+          final list = (parsedResponse["data"] as List? ?? [])
+              .map((e) => DeliveryFee.fromJson(Map<String, dynamic>.from(e)))
+              .toList();
+          list.sort((a, b) => a.address.compareTo(b.address));
+          deliveryFees.assignAll(list);
+          return;
+        }
+        deliveryFeesError.value =
+            parsedResponse["message"] ?? "Failed to load delivery fees";
+        return;
+      }
+      deliveryFeesError.value =
+          "Failed to load delivery fees (${response.statusCode})";
+    } catch (e) {
+      deliveryFeesError.value = "Failed to load delivery fees";
+    } finally {
+      isDeliveryFeesLoading.value = false;
+    }
+  }
+
+  void selectDeliveryFee(DeliveryFee fee) {
+    selectedDeliveryFee.value = fee;
+  }
+
+  void clearDeliveryFeeSelection() {
+    selectedDeliveryFee.value = null;
   }
 
   Future<bool> submitOrder({
@@ -132,6 +210,7 @@ class CartController extends GetxController {
     required String deliveryAddress,
     required String deliveryPhone,
     String? deliveryNotes,
+    double deliveryFee = 0.0,
   }) async {
     try {
       isLoading.value = true;
@@ -187,6 +266,7 @@ class CartController extends GetxController {
             deliveryAddress: deliveryAddress,
             deliveryPhone: deliveryPhone,
             deliveryNotes: deliveryNotes,
+            deliveryFee: deliveryFee,
           );
           return true;
         } else {
@@ -225,6 +305,7 @@ class CartController extends GetxController {
     itemQuantities.clear();
     itemPrices.clear();
     totalPrice.value = 0.0;
+    selectedDeliveryFee.value = null;
   }
 
   void removeSubmittedItems(List<Map<String, dynamic>> submittedItems) {
@@ -242,6 +323,7 @@ class CartController extends GetxController {
     required String deliveryAddress,
     required String deliveryPhone,
     String? deliveryNotes,
+    double deliveryFee = 0.0,
   }) async {
     try {
       print("[DEBUG_LOG] Saving cart items to local storage");
@@ -269,7 +351,7 @@ class CartController extends GetxController {
       final savedOrder = SavedOrder(
         id: _generateUniqueId(), // Generate a unique ID
         items: savedItems,
-        totalAmount: totalPrice.value,
+        totalAmount: totalPrice.value + deliveryFee,
         location: location,
         deliveryAddress: deliveryAddress,
         deliveryPhone: deliveryPhone,
