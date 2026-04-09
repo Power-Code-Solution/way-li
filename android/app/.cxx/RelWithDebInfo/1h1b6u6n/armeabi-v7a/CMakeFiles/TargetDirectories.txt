@@ -1,0 +1,2 @@
+D:/personal/flutter/way-li/way-li/android/app/.cxx/RelWithDebInfo/1h1b6u6n/armeabi-v7a/CMakeFiles/edit_cache.dir
+D:/personal/flutter/way-li/way-li/android/app/.cxx/RelWithDebInfo/1h1b6u6n/armeabi-v7a/CMakeFiles/rebuild_cache.dir

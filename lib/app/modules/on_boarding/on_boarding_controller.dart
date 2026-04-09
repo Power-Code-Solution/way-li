@@ -4,9 +4,28 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
 
 class OnBoardingController extends GetxController {
-  //TODO: Implement OnBoardingController.
   var selectPage = 0.obs;
   var controller = PageController().obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Guard: if user has already completed onboarding, skip this screen
+    _redirectIfCompleted();
+  }
+
+  Future<void> _redirectIfCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasOnboarded = prefs.getBool('hasOnboarded') ?? false;
+    if (hasOnboarded) {
+      // Ensure we don't stack this screen
+      if (Get.currentRoute == '/on-boarding') {
+        Get.offAllNamed('/login');
+      } else {
+        Get.offAllNamed('/login');
+      }
+    }
+  }
 
   List<Map<String, String>> pageArr = [
     {

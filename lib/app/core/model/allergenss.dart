@@ -45,9 +45,9 @@ class Allergens extends BaseModel {
       "createdBy": createdBy,
       "updatedBy": updatedBy,
       "deletedBy": deletedBy,
-      "createdAt": createdAt.toIso8601String(),
-      "updatedAt": updatedAt.toIso8601String(),
-      "deletedAt": deletedAt.toIso8601String(),
+      "createdAt": createdAt?.toIso8601String(),
+      "updatedAt": updatedAt?.toIso8601String(),
+      "deletedAt": deletedAt?.toIso8601String(),
       "deletedreason": deletedReason,
     };
   }

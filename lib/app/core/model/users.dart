@@ -1,9 +1,9 @@
 import 'package:wayli/app/core/model/base_model.dart';
+import 'package:wayli/app/core/model/device_model.dart';
 
 class Users extends BaseModel {
   final int id;
-  final String firstName;
-  final String lastName;
+  final String fullname;
   final String email;
   final String? password;
   final String phone;
@@ -17,8 +17,7 @@ class Users extends BaseModel {
 
   Users({
     required this.id,
-    required this.firstName,
-    required this.lastName,
+    required this.fullname,
     required this.email,
     this.password,
     required this.phone,
@@ -43,8 +42,7 @@ class Users extends BaseModel {
   factory Users.fromJson(Map<String, dynamic> json) {
     return Users(
       id: json['id'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      fullname: json['fullname'],
       email: json['email'],
       password: json['password'],
       phone: json['phone'],
@@ -71,8 +69,7 @@ class Users extends BaseModel {
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "firstName": firstName,
-      "lastName": lastName,
+      "fullname": fullname,
       "email": email,
       "password": password,
       "phone": phone,
@@ -88,9 +85,9 @@ class Users extends BaseModel {
       "createdBy": createdBy,
       "updatedBy": updatedBy,
       "deletedBy": deletedBy,
-      "createdAt": createdAt.toIso8601String(),
-      "updatedAt": updatedAt.toIso8601String(),
-      "deletedAt": deletedAt.toIso8601String(),
+      "createdAt": createdAt?.toIso8601String(),
+      "updatedAt": updatedAt?.toIso8601String(),
+      "deletedAt": deletedAt?.toIso8601String(),
       "deletedreason": deletedReason,
     };
   }
@@ -100,8 +97,7 @@ class Users extends BaseModel {
     return '''
   Users {
     id: $id,
-    firstName: $firstName,
-    lastName: $lastName,
+    fullname: $fullname,
     email: $email,
     phone: $phone,
     address: $address,
@@ -114,49 +110,49 @@ class Users extends BaseModel {
 }
 
 class CreateUsers {
-  final String firstName;
-  final String lastName;
+  final String fullname;
   final String email;
   final String? password;
   final String phone;
   final String address;
   final int fkCityId;
   final int fkCommunityId;
+  final DeviceInfo? device;
 
   CreateUsers({
-    required this.firstName,
-    required this.lastName,
+    required this.fullname,
     required this.email,
     this.password,
     required this.phone,
     required this.address,
     required this.fkCityId,
     required this.fkCommunityId,
+    this.device,
   });
 
   factory CreateUsers.fromJson(Map<String, dynamic> json) {
     return CreateUsers(
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      fullname: json['fullname'],
       email: json['email'],
       password: json['password'],
       phone: json['phone'],
       address: json['address'],
       fkCityId: json['fkCityId'],
       fkCommunityId: json['fkCommunityId'],
+      device: json['device'] != null ? DeviceInfo.fromJson(json['device']) : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "firstName": firstName,
-      "lastName": lastName,
+      "fullname": fullname,
       "email": email,
       "password": password,
       "phone": phone,
       "address": address,
       "fkCityId": fkCityId,
       "fkCommunityId": fkCommunityId,
+      "device": device?.toJson(),
     };
   }
 
@@ -164,13 +160,13 @@ class CreateUsers {
   String toString() {
     return '''
   Users {
-    firstName: $firstName,
-    lastName: $lastName,
+    fullname: $fullname,
     email: $email,
     phone: $phone,
     address: $address,
-    address: $address,
-    address: $address,
+    fkCityId: $fkCityId,
+    fkCommunityId: $fkCommunityId,
+    device: $device,
   }
   ''';
   }

@@ -31,8 +31,8 @@ class AddFoodItemsView extends GetView<AddFoodItemsController> {
                 keyboardType: TextInputType.text,
                 textController: ctl.nameController,
                 isPassword: false,
-                labelText: "Menu Name",
-                hintText: "Enter Menu Name",
+                labelText: "Food Name",
+                hintText: "Enter Food Name",
                 icon: const Icon(Icons.menu),
                 validator: (value) =>
                     value!.isEmpty ? 'Please provide Menu Name!' : null,
@@ -50,67 +50,6 @@ class AddFoodItemsView extends GetView<AddFoodItemsController> {
                     value!.isEmpty ? 'Please provide Type!' : null,
               ),
               const SizedBox(height: 20),
-
-//               Obx(() {
-//   if (ctl.tagsItems.isEmpty) {
-//     return CircularProgressIndicator();  // Show a loading indicator while data is being fetched
-//   } else {
-//     return MultiDropdown<Tag>(
-//       items: ctl.tagsItems.toList(),  // This will automatically update when tagsItems changes
-//       enabled: true,
-//       searchEnabled: true,
-//       chipDecoration: const ChipDecoration(
-//         backgroundColor: Colors.yellow,
-//         wrap: true,
-//         runSpacing: 2,
-//         spacing: 10,
-//       ),
-//       fieldDecoration: FieldDecoration(
-//         hintText: 'Tags',
-//         hintStyle: const TextStyle(color: Colors.black87),
-//         prefixIcon: const Icon(CupertinoIcons.flag),
-//         showClearIcon: false,
-//         border: OutlineInputBorder(
-//           borderRadius: BorderRadius.circular(12),
-//           borderSide: const BorderSide(color: Colors.grey),
-//         ),
-//         focusedBorder: OutlineInputBorder(
-//           borderRadius: BorderRadius.circular(12),
-//           borderSide: const BorderSide(color: Colors.black87),
-//         ),
-//       ),
-//       dropdownDecoration: const DropdownDecoration(
-//         marginTop: 2,
-//         maxHeight: 500,
-//         header: Padding(
-//           padding: EdgeInsets.all(8),
-//           child: Text(
-//             'Select tags from the list',
-//             textAlign: TextAlign.start,
-//             style: TextStyle(
-//               fontSize: 16,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//         ),
-//       ),
-//       dropdownItemDecoration: DropdownItemDecoration(
-//         selectedIcon: const Icon(Icons.check_box, color: Colors.green),
-//         disabledIcon: Icon(Icons.lock, color: Colors.grey.shade300),
-//       ),
-//       validator: (value) {
-//         if (value == null || value.isEmpty) {
-//           return 'Please select a tag';
-//         }
-//         return null;
-//       },
-//       onSelectionChange: (selectedItems) {
-//         debugPrint("OnSelectionChange: $selectedItems");
-//       },
-//     );
-//   }
-// }),
-
               Obx(() {
                 if (ctl.tagsItems.isEmpty) {
                   return CircularProgressIndicator();

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,15 +8,15 @@ import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:wayli/app/core/model/users.dart';
+import 'package:wayli/app/core/model/device_model.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
-import 'package:wayli/app/modules/otp/otp_view.dart';
-import 'package:wayli/app/modules/tabs/tabs_view.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class RegistrationController extends GetxController {
   //TODO: Implement RegistrationController.
 
-  var firstName = TextEditingController();
-  var lastName = TextEditingController();
+  var fullname = TextEditingController();
   var email = TextEditingController();
   var password = TextEditingController();
   var confPassword = TextEditingController();
@@ -36,6 +37,8 @@ class RegistrationController extends GetxController {
   bool isOuvrierConnected = false;
   get sharePre => null;
 
+  final DeviceInfoPlugin _deviceInfoPlugin = DeviceInfoPlugin();
+
   @override
   void onInit() {
     super.onInit();
@@ -44,10 +47,51 @@ class RegistrationController extends GetxController {
     focusNode = FocusNode();
   }
 
+  Future<DeviceInfo> getDeviceInfo() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String appVersion = packageInfo.version;
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await _deviceInfoPlugin.androidInfo;
+      return DeviceInfo(
+        name: androidInfo.model,
+        identifier: androidInfo.id,
+        version: androidInfo.version.release,
+        appVersion: appVersion,
+        system: 'Android',
+        os: androidInfo.version.sdkInt.toString(),
+        verified: false,
+        biometric: false,
+      );
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await _deviceInfoPlugin.iosInfo;
+      return DeviceInfo(
+        name: iosInfo.name ?? iosInfo.model!,
+        identifier: iosInfo.identifierForVendor!,
+        version: iosInfo.systemVersion!,
+        appVersion: appVersion,
+        system: 'iOS',
+        os: iosInfo.systemName!,
+        verified: false,
+        biometric: false,
+      );
+    } else {
+      return DeviceInfo(
+        name: 'Unknown',
+        identifier: 'Unknown',
+        version: 'Unknown',
+        appVersion: appVersion,
+        system: 'Unknown',
+        os: 'Unknown',
+        verified: false,
+        biometric: false,
+      );
+    }
+  }
+
   @override
   void onClose() {
-    firstName.dispose();
-    lastName.dispose();
+    fullname.dispose();
     email.dispose();
     password.dispose();
     confPassword.dispose();
@@ -72,21 +116,30 @@ class RegistrationController extends GetxController {
       }
 
       isLoading.value = true;
+
+      // Get device information
+      DeviceInfo deviceInfo = await getDeviceInfo();
+
       final user = CreateUsers(
-        firstName: firstName.text,
-        lastName: lastName.text,
+        fullname: fullname.text,
         email: email.text,
         password: password.text,
         phone: phone.text,
         address: address.text,
         fkCityId: int.tryParse(fkCityIdController.text) ?? 0,
         fkCommunityId: int.tryParse(fkCommunityIdController.text) ?? 0,
+        device: deviceInfo,
       );
 
+      final url = Uri.parse("$apiBaseAddress/secure/admin/user/create");
+      final body = jsonEncode(user.toJson());
+      print('[DEBUG_LOG] POST ' + url.toString());
+      print('[DEBUG_LOG] Headers: {Content-Type: application/json}');
+      print('[DEBUG_LOG] Payload: ' + body);
       final response = await http.post(
-        Uri.parse("$apiBaseAddress/secure/admin/user/create"),
+        url,
         headers: {"Content-Type": "application/json"},
-        body: jsonEncode(user.toJson()),
+        body: body,
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -118,8 +171,7 @@ class RegistrationController extends GetxController {
   }
 
   void clearFields() {
-    firstName.clear();
-    lastName.clear();
+    fullname.clear();
     email.clear();
     password.clear();
     phone.clear();

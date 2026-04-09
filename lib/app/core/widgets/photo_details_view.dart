@@ -3,8 +3,8 @@ import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/like_user_list_view.dart';
 import 'package:wayli/app/core/widgets/popup_layout.dart';
 import 'package:wayli/app/core/widgets/user_photo_row.dart';
-import 'package:wayli/app/modules/home/comment_list_view.dart';
 
+import '../../modules/home/comment_list_view.dart';
 
 class PhotoDetailsView extends StatefulWidget {
   final String images;

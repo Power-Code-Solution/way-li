@@ -34,6 +34,9 @@ class IngredentsController extends GetxController {
       var body = json.encode({
         'name': name,
       });
+      print('[DEBUG_LOG] POST ' + uri.toString());
+      print('[DEBUG_LOG] Headers: {Content-Type: application/json}');
+      print('[DEBUG_LOG] Payload: ' + body);
       var response = await http.post(
         uri,
         headers: {

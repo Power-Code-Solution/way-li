@@ -55,7 +55,7 @@ class HomeController extends GetxController {
     } else {
       foodItems.value = _originalFoodItems
           .where(
-              (item) => item.name.toLowerCase().contains(query.toLowerCase()))
+              (item) => item?.name?.toLowerCase().contains(query.toLowerCase()) ?? false)
           .toList();
     }
   }

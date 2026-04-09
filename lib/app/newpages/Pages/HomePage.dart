@@ -40,7 +40,7 @@ class Homepage extends GetView<HomeController> {
             backgroundColor: mainYellow,
             title: Row(
               children: [
-                Image.asset("assets/images/way-li_logo.png", width: 75),
+                Image.asset("assets/images/way-li-logo.png", width: 75),
               ],
             ),
             actions: const [
@@ -92,7 +92,7 @@ class Homepage extends GetView<HomeController> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Image.asset(
-                                        'assets/images/way-li_logo.png',
+                                        'assets/images/way-li-logo.png',
                                         height: 200,
                                         width: 200,
                                       ),

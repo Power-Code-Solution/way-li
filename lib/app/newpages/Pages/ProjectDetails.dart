@@ -35,13 +35,13 @@ class _ProductDetailsState extends State<ProductDetails> {
   @override
   Widget build(BuildContext context) {
     FoodItem FIL = Get.arguments['FIL'];
-    String imageUrl =
-        FIL.foodItemsImages.isNotEmpty ? FIL.foodItemsImages[0].image : '';
-
+    String imageUrl = (FIL.foodItemsImages != null && FIL.foodItemsImages!.isNotEmpty)
+        ? FIL.foodItemsImages![0].image ?? ''
+        : '';
     final size = MediaQuery.of(context).size;
     final padding = MediaQuery.of(context).padding;
 
-    // Calculate responsive dimensions
+
     final containerWidth = size.width * 0.85;
     final containerHeight = size.height * 0.35;
     final imageWidth = containerWidth * 0.7;

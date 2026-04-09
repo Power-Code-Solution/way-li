@@ -14,8 +14,9 @@ class FoodItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var media = MediaQuery.of(context).size;
-    String imageUrl = foodItem.foodItemsImages.isNotEmpty
-        ? foodItem.foodItemsImages[0].image
+
+    String imageUrl = (foodItem.foodItemsImages != null && foodItem.foodItemsImages!.isNotEmpty)
+        ? foodItem.foodItemsImages![0].image
         : '';
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
@@ -64,7 +65,7 @@ class FoodItemList extends StatelessWidget {
                   minFontSize: 12,
                 ),
                 AutoSizeText(
-                  foodItem.menuCategory.name ?? '',
+                  foodItem?.menuCategory?.name ?? '',
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.montserrat(
