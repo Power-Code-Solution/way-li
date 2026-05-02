@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/model/delivery_fee.dart';
 import '../../core/model/food_items.dart';
 import '../../core/model/saved_cart_item.dart';
+import '../../core/model/monime_payment_response.dart';
 import '../../core/config/constants.dart';
 import '../../core/config/auth_controller.dart';
 import '../login/login_view.dart';
@@ -25,6 +27,9 @@ class CartController extends GetxController {
   var orderSubmitSuccess = false.obs;
   var orderSubmitMessage = ''.obs;
   var orderResponse = RxMap<String, dynamic>({});
+  var monimePaymentResult = Rxn<MonimePaymentResult>();
+  var isMonimeLoading = false.obs;
+  var monimeError = ''.obs;
 
   // Key for storing saved orders in SharedPreferences
   static const String savedOrdersKey = 'saved_orders';
@@ -38,6 +43,76 @@ class CartController extends GetxController {
   double get currentDeliveryFee => selectedDeliveryFee.value?.fee ?? 0.0;
   String get currentDeliveryAddress => selectedDeliveryFee.value?.address ?? '';
   bool get hasDeliveryFeeSelection => selectedDeliveryFee.value != null;
+
+  String _formatAmount(double amount) {
+    return amount == amount.truncateToDouble()
+        ? amount.toStringAsFixed(0)
+        : amount.toStringAsFixed(2);
+  }
+
+  String _normalizePhoneNumber(String phoneNumber) {
+    final digits = phoneNumber.replaceAll(RegExp(r'\D'), '');
+    if (digits.length < 8) {
+      return digits;
+    }
+    return '232${digits.substring(digits.length - 8)}';
+  }
+
+  String _extractErrorMessage(
+    Map<String, dynamic> response, {
+    required String fallback,
+  }) {
+    final message = response['message']?.toString();
+    if (message != null && message.trim().isNotEmpty) {
+      return message;
+    }
+
+    final messages = response['messages'];
+    if (messages is List && messages.isNotEmpty) {
+      return messages.first.toString();
+    }
+
+    return fallback;
+  }
+
+  void _logMobileApiResponse({
+    required String name,
+    required String method,
+    required Uri url,
+    required http.Response response,
+  }) {
+    if (!kDebugMode) {
+      return;
+    }
+
+    debugPrint("[MOBILE_API][$name] $method $url");
+    debugPrint("[MOBILE_API][$name] Status: ${response.statusCode}");
+    debugPrint(
+      "[MOBILE_API][$name] Response:\n${_formatResponseForDebug(response.body)}",
+    );
+  }
+
+  void _logMobileApiError(String name, Object error, StackTrace stackTrace) {
+    if (!kDebugMode) {
+      return;
+    }
+
+    debugPrint("[MOBILE_API][$name] Error: $error");
+    debugPrint("[MOBILE_API][$name] StackTrace: $stackTrace");
+  }
+
+  String _formatResponseForDebug(String body) {
+    if (body.trim().isEmpty) {
+      return "<empty-response>";
+    }
+
+    try {
+      const encoder = JsonEncoder.withIndent('  ');
+      return encoder.convert(jsonDecode(body));
+    } catch (_) {
+      return body;
+    }
+  }
 
   // Generate a unique ID based on timestamp and random number
   String _generateUniqueId() {
@@ -57,7 +132,8 @@ class CartController extends GetxController {
       cartItems.add(item);
       if (item.id != null && item.price != null) {
         itemQuantities[item.id!] = 1.obs;
-        itemPrices[item.id!] = (item.price! * itemQuantities[item.id!]!.value).obs;
+        itemPrices[item.id!] =
+            (item.price! * itemQuantities[item.id!]!.value).obs;
       }
     }
     updateTotalPrice();
@@ -74,7 +150,8 @@ class CartController extends GetxController {
 
     if (!itemPrices.containsKey(item.id)) {
       if (item.id != null && item.price != null) {
-        itemPrices[item.id!] = ((item.price ?? 0.0) * itemQuantities[item.id!]!.value).obs;
+        itemPrices[item.id!] =
+            ((item.price ?? 0.0) * itemQuantities[item.id!]!.value).obs;
       }
     }
 
@@ -211,6 +288,7 @@ class CartController extends GetxController {
     required String deliveryPhone,
     String? deliveryNotes,
     double deliveryFee = 0.0,
+    String? monimePaymentId,
   }) async {
     try {
       isLoading.value = true;
@@ -225,6 +303,7 @@ class CartController extends GetxController {
         return false;
       }
       List<Map<String, dynamic>> items = [];
+      final normalizedDeliveryPhone = _normalizePhoneNumber(deliveryPhone);
       for (var item in cartItems) {
         if (item.id != null) {
           items.add({
@@ -240,12 +319,15 @@ class CartController extends GetxController {
       final requestBody = {
         "location": location,
         "deliveryAddress": deliveryAddress,
-        "deliveryPhone": deliveryPhone,
+        "deliveryPhone": normalizedDeliveryPhone.isNotEmpty
+            ? normalizedDeliveryPhone
+            : deliveryPhone.trim(),
         "deliveryNotes": deliveryNotes ?? "",
+        if (monimePaymentId != null && monimePaymentId.trim().isNotEmpty)
+          "monimePaymentId": monimePaymentId.trim(),
         "items": items
       };
       final submitUrl = Uri.parse("$apiBaseAddress/secure/admin/order/submit");
-      final maskedToken = token.length > 12 ? token.substring(0, 6) + '...' + token.substring(token.length - 6) : '***';
       final requestJson = jsonEncode(requestBody);
       final response = await http.post(
         submitUrl,
@@ -255,36 +337,49 @@ class CartController extends GetxController {
         },
         body: requestJson,
       );
+      _logMobileApiResponse(
+        name: "ORDER_CREATE",
+        method: "POST",
+        url: submitUrl,
+        response: response,
+      );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final parsedResponse = jsonDecode(response.body);
         if (parsedResponse["status"] == 1) {
           orderResponse.value = Map<String, dynamic>.from(parsedResponse);
           orderSubmitSuccess.value = true;
-          orderSubmitMessage.value = parsedResponse["message"] ?? "Order submitted successfully";
+          orderSubmitMessage.value =
+              parsedResponse["message"] ?? "Order submitted successfully";
           await saveCartItemsToLocalStorage(
             location: location,
             deliveryAddress: deliveryAddress,
-            deliveryPhone: deliveryPhone,
+            deliveryPhone: normalizedDeliveryPhone.isNotEmpty
+                ? normalizedDeliveryPhone
+                : deliveryPhone.trim(),
             deliveryNotes: deliveryNotes,
             deliveryFee: deliveryFee,
           );
           return true;
         } else {
           isLoading.value = false;
-          orderSubmitMessage.value = parsedResponse["message"] ?? "Failed to submit order";
+          orderSubmitMessage.value =
+              parsedResponse["message"] ?? "Failed to submit order";
           return false;
         }
       } else {
         try {
           final errorResponse = jsonDecode(response.body);
           isLoading.value = false;
-          if (response.statusCode == 500 && errorResponse["message"] != null &&
+          if (response.statusCode == 500 &&
+              errorResponse["message"] != null &&
               errorResponse["message"].toString().contains("Requested value")) {
             isLoading.value = false;
-            orderSubmitMessage.value = "Location not available. Please select a different location.";
+            orderSubmitMessage.value =
+                "Location not available. Please select a different location.";
           } else {
             isLoading.value = false;
-            orderSubmitMessage.value = errorResponse["message"] ?? "Failed to submit order";
+            orderSubmitMessage.value =
+                errorResponse["message"] ?? "Failed to submit order";
           }
         } catch (e) {
           isLoading.value = false;
@@ -292,7 +387,8 @@ class CartController extends GetxController {
         }
         return false;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _logMobileApiError("ORDER_CREATE", e, stackTrace);
       orderSubmitMessage.value = e.toString();
       return false;
     } finally {
@@ -306,6 +402,138 @@ class CartController extends GetxController {
     itemPrices.clear();
     totalPrice.value = 0.0;
     selectedDeliveryFee.value = null;
+    monimePaymentResult.value = null;
+    monimeError.value = '';
+  }
+
+  Future<MonimePaymentResult?> initiateMonimePayment({
+    required double amount,
+    required String customerName,
+    required String phoneNumber,
+    int? orderId,
+  }) async {
+    try {
+      isMonimeLoading.value = true;
+      monimeError.value = '';
+      final authController = Get.find<AuthController>();
+      final token = await authController.getToken();
+
+      if (token == null) {
+        monimeError.value = "You are not logged in";
+        return null;
+      }
+
+      final trimmedCustomerName = customerName.trim();
+      if (trimmedCustomerName.isEmpty) {
+        monimeError.value = "Customer name is required";
+        return null;
+      }
+
+      final normalizedPhoneNumber = _normalizePhoneNumber(phoneNumber);
+      if (normalizedPhoneNumber.length != 11) {
+        monimeError.value = "Please enter a valid Sierra Leone phone number";
+        return null;
+      }
+
+      final url = Uri.parse(
+        "$apiBaseAddress/secure/admin/payment/monime/initiate",
+      ).replace(
+        queryParameters: {
+          "amount": _formatAmount(amount),
+          "customerName": trimmedCustomerName,
+          "phoneNumber": normalizedPhoneNumber,
+          if (orderId != null) "orderId": "$orderId",
+        },
+      );
+
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+      _logMobileApiResponse(
+        name: "MONIME_INITIATE",
+        method: "POST",
+        url: url,
+        response: response,
+      );
+
+      final parsedResponse = response.body.isNotEmpty
+          ? Map<String, dynamic>.from(jsonDecode(response.body))
+          : <String, dynamic>{};
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final monimeResponse = MonimePaymentResponse.fromJson(parsedResponse);
+        if (monimeResponse.success && monimeResponse.result != null) {
+          monimePaymentResult.value = monimeResponse.result;
+          return monimeResponse.result;
+        } else {
+          monimeError.value = monimeResponse.messages.isNotEmpty
+              ? monimeResponse.messages.first
+              : (monimeResponse.message ?? "Failed to initiate payment");
+        }
+      } else {
+        monimeError.value = _extractErrorMessage(
+          parsedResponse,
+          fallback: "Server error: ${response.statusCode}",
+        );
+      }
+    } catch (e, stackTrace) {
+      _logMobileApiError("MONIME_INITIATE", e, stackTrace);
+      monimeError.value = "Error: $e";
+    } finally {
+      isMonimeLoading.value = false;
+    }
+    return null;
+  }
+
+  Future<MonimePaymentResult?> checkMonimePaymentStatus(String monimeId) async {
+    try {
+      final authController = Get.find<AuthController>();
+      final token = await authController.getToken();
+
+      if (token == null) return null;
+
+      final url = Uri.parse(
+          "$apiBaseAddress/secure/admin/payment/monime/status/$monimeId");
+
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
+      );
+      _logMobileApiResponse(
+        name: "MONIME_STATUS",
+        method: "GET",
+        url: url,
+        response: response,
+      );
+
+      if (response.statusCode == 200) {
+        final parsedResponse =
+            Map<String, dynamic>.from(jsonDecode(response.body));
+        final monimeResponse = MonimePaymentResponse.fromJson(parsedResponse);
+        if (monimeResponse.success && monimeResponse.result != null) {
+          monimePaymentResult.value = monimeResponse.result;
+          return monimeResponse.result;
+        }
+      } else if (response.body.isNotEmpty) {
+        final parsedResponse =
+            Map<String, dynamic>.from(jsonDecode(response.body));
+        monimeError.value = _extractErrorMessage(
+          parsedResponse,
+          fallback: "Unable to refresh payment status",
+        );
+      }
+    } catch (e, stackTrace) {
+      _logMobileApiError("MONIME_STATUS", e, stackTrace);
+      print("Error checking payment status: $e");
+    }
+    return null;
   }
 
   void removeSubmittedItems(List<Map<String, dynamic>> submittedItems) {
@@ -368,8 +596,7 @@ class CartController extends GetxController {
       savedOrders.removeWhere((order) => order.isExpired());
       savedOrders.add(savedOrder);
       await prefs.setString(savedOrdersKey, SavedOrder.encode(savedOrders));
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<SavedOrder>> loadSavedOrders() async {

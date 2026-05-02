@@ -196,7 +196,7 @@ class _OrderHistoryViewState extends State<OrderHistoryView> {
   }
 
   Widget _buildOrderExpansionCard(BuildContext context, OrderHistoryItem order) {
-    final bool isCompleted = order.status.toLowerCase() == 'completed' || order.status.toLowerCase() == 'delivered';
+    final bool isCompleted = order.status.toLowerCase() == 'completed' || order.status.toLowerCase() == 'delivered' || order.status.toLowerCase() == 'paid';
     final Color statusColor = isCompleted ? Colors.green : Colors.orange;
     final double itemsTotal = order.orderItems.fold<double>(0, (sum, e) => sum + e.lineTotal);
     final double orderTotal = itemsTotal + order.deliveryFee;
