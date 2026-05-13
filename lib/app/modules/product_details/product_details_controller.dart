@@ -14,9 +14,6 @@ class ProductDetailsController extends GetxController {
 
   // Feedback functionality moved to a dedicated controller
 
-
-
-
   void increaseCount() {
     itemCount.value++;
   }
@@ -47,6 +44,7 @@ class ProductDetailsController extends GetxController {
       fetchFoodandIngredientDto();
     }
   }
+
   var price = 10.0.obs;
   var qty = 1.obs;
   var isFav = false.obs;
@@ -65,17 +63,10 @@ class ProductDetailsController extends GetxController {
     }
   }
 
-
-
-
   // Feedback functionality moved to a dedicated controller
 
-
-
-
   Future<void> fetchFoodandTagDto() async {
-    final url =
-        '$apiBaseAddress/secure/admin/food-items/findForTags-byfkFoodItemId?id=${FIL.id}';
+    final url = '$publicCatalogBaseAddress/food-items/${FIL.id}/tags';
     print('Request URL: $url');
 
     final response = await http.get(Uri.parse(url));
@@ -118,8 +109,7 @@ class ProductDetailsController extends GetxController {
   }
 
   Future<void> fetchFoodandAllergensDto() async {
-    final url =
-        '$apiBaseAddress/secure/admin/food-items/findForAllergens-byfkFoodItemId?id=${FIL.id}';
+    final url = '$publicCatalogBaseAddress/food-items/${FIL.id}/allergens';
     print('Request URL: $url');
 
     final response = await http.get(Uri.parse(url));
@@ -162,8 +152,7 @@ class ProductDetailsController extends GetxController {
   }
 
   Future<void> fetchFoodandIngredientDto() async {
-    final url =
-        '$apiBaseAddress/secure/admin/food-items/findby-fkingredientId?id=${FIL.id}';
+    final url = '$publicCatalogBaseAddress/food-items/${FIL.id}/ingredients';
     print('Request URL: $url');
 
     final response = await http.get(Uri.parse(url));

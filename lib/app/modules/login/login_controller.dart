@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
-import '../bottom_nav/bottom_nav_view.dart';
 
 class LoginController extends GetxController {
   static final GlobalKey loginBottomNavigationKey = GlobalKey();
@@ -31,8 +30,6 @@ class LoginController extends GetxController {
     pass.dispose();
   }
 
-
-
   void handleLogin() async {
     if (loginViewFormKey.currentState?.validate() ?? false) {
       isLoading.value = true;
@@ -40,14 +37,12 @@ class LoginController extends GetxController {
 
       if (result) {
         isLoading.value = false;
-        Get.offAll(() => BottomNavView());
+        authController.completePostLoginFlow();
         email.clear();
         pass.clear();
-      } else {
-      }
+      } else {}
       isLoading.value = false;
-    } else {
-    }
+    } else {}
   }
 
   void togglePasswordVisibility() {
@@ -57,4 +52,3 @@ class LoginController extends GetxController {
     }
   }
 }
-

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wayli/app/core/config/constants.dart';
+import 'package:wayli/app/modules/cart/cart_page.dart';
 import 'package:wayli/app/modules/login/login_view.dart';
 
 class AuthController extends GetxController {
@@ -18,6 +19,7 @@ class AuthController extends GetxController {
   var userPhone = ''.obs;
   var userRole = ''.obs;
   var userData = RxMap<String, dynamic>({});
+  var pendingCheckoutAfterLogin = false.obs;
 
   Future<bool> login(String email, String password) async {
     try {
@@ -57,14 +59,14 @@ class AuthController extends GetxController {
               snackPosition: SnackPosition.BOTTOM,
               colorText: Colors.white,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.red);
+              backgroundColor: Colors.red);
           throw Exception(parsedResponse["message"]);
         }
       } else {
         Get.snackbar("Login Failed", "Unexpected server response.",
             snackPosition: SnackPosition.BOTTOM,
             duration: const Duration(seconds: 3),
-            backgroundColor:  Colors.red);
+            backgroundColor: Colors.red);
         throw Exception('Login failed');
       }
     } catch (e) {
@@ -77,7 +79,9 @@ class AuthController extends GetxController {
   Future<void> logout() async {
     await _storage.delete(key: 'auth_token');
     final prefs = await SharedPreferences.getInstance();
+    final hasOnboarded = prefs.getBool('hasOnboarded') ?? false;
     await prefs.clear();
+    await prefs.setBool('hasOnboarded', hasOnboarded);
     isLoggedIn.value = false;
     userName.value = '';
     userEmail.value = '';
@@ -85,12 +89,14 @@ class AuthController extends GetxController {
     userPhone.value = '';
     userRole.value = '';
     userData.clear();
-    Get.offAll(() => LoginView());
+    pendingCheckoutAfterLogin.value = false;
+    Get.offAllNamed('/bottom-nav');
   }
 
   Future<void> _saveToken(String token) async {
     await _storage.write(key: 'auth_token', value: token);
   }
+
   Future<void> _saveUserData(Map<String, dynamic> userData) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_id', userData["id"]?.toString() ?? '');
@@ -115,9 +121,9 @@ class AuthController extends GetxController {
         String? userDataJson = prefs.getString('user_data');
         if (userDataJson != null && userDataJson.isNotEmpty) {
           try {
-            userData.value = Map<String, dynamic>.from(jsonDecode(userDataJson));
-          } catch (e) {
-          }
+            userData.value =
+                Map<String, dynamic>.from(jsonDecode(userDataJson));
+          } catch (e) {}
         }
       } else {
         isLoggedIn.value = false;
@@ -125,16 +131,63 @@ class AuthController extends GetxController {
     } catch (e) {
       try {
         await _storage.deleteAll();
-      } catch (cleanupError) {
-      }
+      } catch (cleanupError) {}
       isLoggedIn.value = false;
     }
   }
 
+  Future<bool> ensureAuthenticated({
+    bool redirectToCheckout = false,
+    String? message,
+  }) async {
+    await checkLoginStatus();
+    if (isLoggedIn.value) {
+      return true;
+    }
+
+    if (redirectToCheckout) {
+      pendingCheckoutAfterLogin.value = true;
+    }
+
+    final prompt = message ?? "Please sign in to continue with this action.";
+    Get.snackbar(
+      "Login Required",
+      prompt,
+      snackPosition: SnackPosition.BOTTOM,
+      duration: const Duration(seconds: 3),
+      backgroundColor: Colors.black87,
+      colorText: Colors.white,
+    );
+    Get.to(
+      () => const LoginView(),
+      arguments: {
+        "redirectToCheckout": redirectToCheckout,
+        "loginReason": prompt,
+      },
+    );
+    return false;
+  }
+
+  void completePostLoginFlow() {
+    final shouldReturnToCheckout = pendingCheckoutAfterLogin.value;
+    pendingCheckoutAfterLogin.value = false;
+
+    Get.offAllNamed('/bottom-nav');
+
+    if (shouldReturnToCheckout) {
+      Future.delayed(const Duration(milliseconds: 150), () {
+        Get.to(
+          () => const CartPage(),
+          arguments: {"openCheckout": true},
+        );
+      });
+    }
+  }
 
   Future<String?> getToken() async {
     return await _storage.read(key: 'auth_token');
   }
+
   Future<void> saveBiometricCredentials(String email, String password) async {
     await _storage.write(key: 'biometric_email', value: email);
     await _storage.write(key: 'biometric_password', value: password);
@@ -161,7 +214,7 @@ class AuthController extends GetxController {
   }
 
   Map<String, dynamic> getCompleteUserData() {
-    return userData.value;
+    return Map<String, dynamic>.from(userData);
   }
 
   Future<bool> fetchUserProfile() async {
@@ -169,7 +222,7 @@ class AuthController extends GetxController {
       isLoading.value = true;
       final token = await getToken();
       if (token == null) {
-Get.offAllNamed('/login');
+        isLoggedIn.value = false;
         return false;
       }
       final response = await http.get(
@@ -179,7 +232,6 @@ Get.offAllNamed('/login');
           "Authorization": "Bearer $token",
         },
       );
-
 
       if (response.statusCode == 200) {
         final parsedResponse = jsonDecode(response.body);
@@ -194,11 +246,14 @@ Get.offAllNamed('/login');
           await _saveUserData(profileData);
           return true;
         } else {
-          Get.snackbar("Error", parsedResponse["message"] ?? "Failed to fetch profile", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+          Get.snackbar(
+              "Error", parsedResponse["message"] ?? "Failed to fetch profile",
+              snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
           return false;
         }
       } else {
-        Get.snackbar("Error", "Failed to fetch profile", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+        Get.snackbar("Error", "Failed to fetch profile",
+            snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
         return false;
       }
     } catch (e) {
@@ -218,8 +273,9 @@ Get.offAllNamed('/login');
       isLoading.value = true;
       final token = await getToken();
       if (token == null) {
-        Get.snackbar("Error", "You are not logged in", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
-        Get.offAllNamed('/login');
+        await ensureAuthenticated(
+          message: "Please sign in to update your profile.",
+        );
         return false;
       }
       final requestBody = {
@@ -232,7 +288,6 @@ Get.offAllNamed('/login');
       }
       final url = Uri.parse("$apiBaseAddress/secure/admin/user/update");
       final body = jsonEncode(requestBody);
-      final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
       final response = await http.post(
         url,
         headers: {
@@ -251,18 +306,25 @@ Get.offAllNamed('/login');
           userEmail.value = updatedUserData["email"] ?? '';
           userPhone.value = updatedUserData["phone"] ?? '';
           await _saveUserData(updatedUserData);
-          Get.snackbar("Success", "Profile updated successfully", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.green);
+          Get.snackbar("Success", "Profile updated successfully",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green);
           return true;
         } else {
-          Get.snackbar("Error", parsedResponse["message"] ?? "Failed to update profile", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+          Get.snackbar(
+              "Error", parsedResponse["message"] ?? "Failed to update profile",
+              snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
           return false;
         }
       } else {
         try {
           final errorResponse = jsonDecode(response.body);
-          Get.snackbar("Error", errorResponse["message"] ?? "Failed to update profile", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+          Get.snackbar(
+              "Error", errorResponse["message"] ?? "Failed to update profile",
+              snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
         } catch (e) {
-          Get.snackbar("Error", "Failed to update profile", snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
+          Get.snackbar("Error", "Failed to update profile",
+              snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
         }
         return false;
       }
@@ -282,7 +344,9 @@ Get.offAllNamed('/login');
       isLoading.value = true;
       final token = await getToken();
       if (token == null) {
-        Get.snackbar("Error", "You are not logged in");
+        await ensureAuthenticated(
+          message: "Please sign in to change your password.",
+        );
         return false;
       }
       final url = "$apiBaseAddress/secure/admin/user/change/password";
@@ -292,7 +356,6 @@ Get.offAllNamed('/login');
         "newPassword": newPassword,
         "confirmPassword": confirmPassword,
       };
-      final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
       final body = jsonEncode(payload);
       final response = await http.post(
         uri,
@@ -306,36 +369,37 @@ Get.offAllNamed('/login');
         final parsedResponse = jsonDecode(response.body);
         if (parsedResponse["status"] == 1) {
           Get.offAllNamed('login');
-          Get.snackbar("Success", parsedResponse["data"] ?? "Password changed successfully",
+          Get.snackbar("Success",
+              parsedResponse["data"] ?? "Password changed successfully",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.green);
+              backgroundColor: Colors.green);
           return true;
         } else {
-          Get.snackbar("Error", parsedResponse["message"] ?? "Failed to change password",
+          Get.snackbar(
+              "Error", parsedResponse["message"] ?? "Failed to change password",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.red);
+              backgroundColor: Colors.red);
           return false;
         }
       } else {
         try {
           final errorResponse = jsonDecode(response.body);
-          Get.snackbar("Error", errorResponse["message"] ?? "Failed to change password",
+          Get.snackbar(
+              "Error", errorResponse["message"] ?? "Failed to change password",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.red);
+              backgroundColor: Colors.red);
         } catch (e) {
           Get.snackbar("Error", "Failed to change password",
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor:  Colors.red);
+              snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
         }
         return false;
       }
     } catch (e) {
       Get.snackbar("Error", "An Error occurred while changing password",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor:  Colors.red);
+          snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red);
       return false;
     } finally {
       isLoading.value = false;
@@ -347,10 +411,9 @@ Get.offAllNamed('/login');
       isLoading.value = true;
       final token = await getToken();
       if (token == null) {
-        Get.snackbar("Error", "You are not logged in",
-            snackPosition: SnackPosition.BOTTOM,
-            duration: const Duration(seconds: 3),
-            backgroundColor:  Colors.red);
+        await ensureAuthenticated(
+          message: "Please sign in to manage your account.",
+        );
         return false;
       }
       final response = await http.post(
@@ -366,7 +429,9 @@ Get.offAllNamed('/login');
         if (parsedResponse["status"] == 1) {
           await _storage.delete(key: 'auth_token');
           final prefs = await SharedPreferences.getInstance();
+          final hasOnboarded = prefs.getBool('hasOnboarded') ?? false;
           await prefs.clear();
+          await prefs.setBool('hasOnboarded', hasOnboarded);
           isLoggedIn.value = false;
           userName.value = '';
           userEmail.value = '';
@@ -374,32 +439,36 @@ Get.offAllNamed('/login');
           userPhone.value = '';
           userRole.value = '';
           userData.clear();
-          Get.snackbar("Success", parsedResponse["message"] ?? "User Deleted Successfully",
+          pendingCheckoutAfterLogin.value = false;
+          Get.snackbar("Success",
+              parsedResponse["message"] ?? "User Deleted Successfully",
               snackPosition: SnackPosition.BOTTOM,
               colorText: Colors.white,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.green);
-          Get.offAllNamed('/login');
+              backgroundColor: Colors.green);
+          Get.offAllNamed('/bottom-nav');
           return true;
         } else {
-          Get.snackbar("Error", parsedResponse["message"] ?? "Failed to delete account",
+          Get.snackbar(
+              "Error", parsedResponse["message"] ?? "Failed to delete account",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.red);
+              backgroundColor: Colors.red);
           return false;
         }
       } else {
         try {
           final errorResponse = jsonDecode(response.body);
-          Get.snackbar("Error", errorResponse["message"] ?? "Failed to delete account",
+          Get.snackbar(
+              "Error", errorResponse["message"] ?? "Failed to delete account",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.red);
+              backgroundColor: Colors.red);
         } catch (e) {
           Get.snackbar("Error", "Failed to delete account",
               snackPosition: SnackPosition.BOTTOM,
               duration: const Duration(seconds: 3),
-              backgroundColor:  Colors.red );
+              backgroundColor: Colors.red);
         }
         return false;
       }
@@ -407,7 +476,7 @@ Get.offAllNamed('/login');
       Get.snackbar("Error", "An error occurred while deleting the account",
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 3),
-          backgroundColor:  Colors.red);
+          backgroundColor: Colors.red);
       return false;
     } finally {
       isLoading.value = false;

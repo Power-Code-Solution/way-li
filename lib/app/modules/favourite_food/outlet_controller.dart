@@ -27,8 +27,8 @@ class OutletController extends GetxController {
   }
 
   Future<void> fetchMenuCategory() async {
-    final response = await http.get(Uri.parse(
-        '$apiBaseAddress/secure/admin/menu-category/findby-FkMenuId?FkMenuId=${menuItem.id}'));
+    final response = await http.get(
+        Uri.parse('$publicCatalogBaseAddress/menus/${menuItem.id}/categories'));
 
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {

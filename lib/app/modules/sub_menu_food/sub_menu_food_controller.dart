@@ -30,7 +30,7 @@ class SubMenuFoodController extends GetxController {
 
   Future<void> fetchFoodItems() async {
     final response = await http.get(Uri.parse(
-        '$apiBaseAddress/secure/admin/food-items/findby-fkMenuCategoryId?FkMenuCategoryId=${menuItemCategory.id}'));
+        '$publicCatalogBaseAddress/menu-categories/${menuItemCategory.id}/food-items'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['data'] != null && data['data'] is List) {

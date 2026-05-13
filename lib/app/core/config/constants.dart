@@ -43,9 +43,11 @@ const headingStyle = TextStyle(
 );
 
 const defaultDuration = Duration(milliseconds: 250);
- // const apiBaseAddress = "http://192.168.1.137:5022/api";  //office
+// const apiBaseAddress = "http://192.168.1.137:5022/api";  //office
 
 const apiBaseAddress = "https://way-li.shop/api"; //home
+const publicCatalogBaseAddress = "$apiBaseAddress/public/catalog";
+const publicDeliveryFeesBaseAddress = "$apiBaseAddress/public/delivery-fees";
 
 // const apiBaseAddress = "http://92.112.194.110:2590/api"; //production
 
@@ -136,5 +138,3 @@ final kLightTheme = ThemeData(
       .copyWith(secondary: kAccentColor)
       .copyWith(surface: kLightSecondaryColor),
 );
-
-

@@ -1,7 +1,3 @@
-
-
-
-
 // ignore_for_file: constant_identifier_names
 
 import 'home_routes.dart';
@@ -29,7 +25,7 @@ import 'feedback_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = '/login';
+  static const INITIAL = '/bottom-nav';
 
   static final routes = [
     ...SplashScreenRoutes.routes,

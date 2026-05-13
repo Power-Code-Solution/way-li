@@ -41,7 +41,7 @@ class FoodCategoryController extends GetxController {
     try {
       final response = await http.get(
         Uri.parse(
-            '$apiBaseAddress/secure/admin/food-items/findby-fkMenuCategoryId?FkMenuCategoryId=$categoryId'),
+            '$publicCatalogBaseAddress/menu-categories/$categoryId/food-items'),
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -66,8 +66,8 @@ class FoodCategoryController extends GetxController {
   Future<void> fetchAllFoodItems() async {
     isLoading.value = true;
     try {
-      final response = await http
-          .get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
+      final response =
+          await http.get(Uri.parse('$publicCatalogBaseAddress/food-items'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['data'] != null && data['data'] is List) {
@@ -94,7 +94,7 @@ class FoodCategoryController extends GetxController {
     isLoading.value = true;
     try {
       final response =
-          await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
+          await http.get(Uri.parse('$publicCatalogBaseAddress/menus'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['data'] != null && data['data'] is List) {
@@ -117,7 +117,7 @@ class FoodCategoryController extends GetxController {
   }
 
   Future<void> fetchMenuCategory() async {
-    var url = ('$apiBaseAddress/secure/admin/menu-category/all');
+    var url = ('$publicCatalogBaseAddress/menu-categories');
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

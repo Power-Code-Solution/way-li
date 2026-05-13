@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wayli/app/modules/login/login_view.dart';
 
 class OnBoardingController extends GetxController {
   var selectPage = 0.obs;
@@ -18,12 +17,7 @@ class OnBoardingController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     final hasOnboarded = prefs.getBool('hasOnboarded') ?? false;
     if (hasOnboarded) {
-      // Ensure we don't stack this screen
-      if (Get.currentRoute == '/on-boarding') {
-        Get.offAllNamed('/login');
-      } else {
-        Get.offAllNamed('/login');
-      }
+      Get.offAllNamed('/bottom-nav');
     }
   }
 
@@ -55,7 +49,7 @@ class OnBoardingController extends GetxController {
 
   void goToNextPage() {
     if (selectPage.value >= pageArr.length - 1) {
-      Get.to(() => LoginView());
+      completeOnboarding();
     } else {
       selectPage.value++;
       controller.value.animateToPage(
@@ -69,6 +63,6 @@ class OnBoardingController extends GetxController {
   Future<void> completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasOnboarded', true);
-    Get.offAllNamed('/login'); // Or wherever you want to go next
+    Get.offAllNamed('/bottom-nav');
   }
 }

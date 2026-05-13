@@ -22,7 +22,6 @@ void main() async {
     Get.put(CartController());
     Get.put(OrderHistoryController());
     Get.put(ProductDetailsController());
-    Get.put(OrderHistoryController());
     final authController = Get.find<AuthController>();
     await authController.checkLoginStatus();
     runApp(
@@ -30,11 +29,7 @@ void main() async {
         debugShowCheckedModeBanner: false,
         title: 'WAY LI',
         initialBinding: ApplicationBindings(),
-        initialRoute: !hasOnboarded
-            ? "/on-boarding"
-            : authController.isLoggedIn.value
-                ? "/login"
-                : "/login",
+        initialRoute: !hasOnboarded ? "/on-boarding" : "/bottom-nav",
         getPages: AppPages.routes,
       ),
     );
@@ -47,5 +42,3 @@ void main() async {
     }
   }
 }
-
-

@@ -10,15 +10,20 @@ class OrderItemLine {
   final double unitPrice;
   final double lineTotal;
   final int? foodItemId;
-  OrderItemLine({required this.foodName, required this.quantity, required this.unitPrice, required this.lineTotal, this.foodItemId});
+  OrderItemLine(
+      {required this.foodName,
+      required this.quantity,
+      required this.unitPrice,
+      required this.lineTotal,
+      this.foodItemId});
   factory OrderItemLine.fromJson(Map<String, dynamic> json) => OrderItemLine(
-    foodName: json['foodName'] ?? '',
-    quantity: json['quantity'] ?? 0,
-    unitPrice: (json['unitPrice'] ?? 0).toDouble(),
-    lineTotal: (json['lineTotal'] ?? 0).toDouble(),
-    // Prefer foodItemId, but keep fkFoodItemId fallback for older payloads
-    foodItemId: json['foodItemId'] ?? json['fkFoodItemId'],
-  );
+        foodName: json['foodName'] ?? '',
+        quantity: json['quantity'] ?? 0,
+        unitPrice: (json['unitPrice'] ?? 0).toDouble(),
+        lineTotal: (json['lineTotal'] ?? 0).toDouble(),
+        // Prefer foodItemId, but keep fkFoodItemId fallback for older payloads
+        foodItemId: json['foodItemId'] ?? json['fkFoodItemId'],
+      );
 }
 
 class OrderHistoryItem {
@@ -44,18 +49,22 @@ class OrderHistoryItem {
     required this.itemStatus,
     required this.orderItems,
   });
-  factory OrderHistoryItem.fromJson(Map<String, dynamic> json) => OrderHistoryItem(
-    orderItemId: json['orderItemId'] ?? 0,
-    orderId: json['orderId'] ?? 0,
-    orderDate: DateTime.tryParse(json['orderDate'] ?? '') ?? DateTime.now(),
-    status: json['status'] ?? '',
-    location: json['location'] ?? '',
-    deliveryAddress: json['deliveryAddress'] ?? '',
-    deliveryPhone: json['deliveryPhone'] ?? '',
-    deliveryFee: (json['deliveryFee'] ?? json['deliveryAmount'] ?? 0).toDouble(),
-    itemStatus: json['itemStatus'] ?? '',
-    orderItems: (json['orderItems'] as List? ?? []).map((e) => OrderItemLine.fromJson(e)).toList(),
-  );
+  factory OrderHistoryItem.fromJson(Map<String, dynamic> json) =>
+      OrderHistoryItem(
+        orderItemId: json['orderItemId'] ?? 0,
+        orderId: json['orderId'] ?? 0,
+        orderDate: DateTime.tryParse(json['orderDate'] ?? '') ?? DateTime.now(),
+        status: json['status'] ?? '',
+        location: json['location'] ?? '',
+        deliveryAddress: json['deliveryAddress'] ?? '',
+        deliveryPhone: json['deliveryPhone'] ?? '',
+        deliveryFee:
+            (json['deliveryFee'] ?? json['deliveryAmount'] ?? 0).toDouble(),
+        itemStatus: json['itemStatus'] ?? '',
+        orderItems: (json['orderItems'] as List? ?? [])
+            .map((e) => OrderItemLine.fromJson(e))
+            .toList(),
+      );
 }
 
 class OrderHistorySummary {
@@ -63,13 +72,20 @@ class OrderHistorySummary {
   final int totalItems;
   final double totalAmount;
   final List<OrderHistoryItem> items;
-  OrderHistorySummary({required this.userId, required this.totalItems, required this.totalAmount, required this.items});
-  factory OrderHistorySummary.fromJson(Map<String, dynamic> json) => OrderHistorySummary(
-    userId: json['userId'] ?? 0,
-    totalItems: json['totalItems'] ?? 0,
-    totalAmount: (json['totalAmount'] ?? 0).toDouble(),
-    items: (json['items'] as List? ?? []).map((e) => OrderHistoryItem.fromJson(e)).toList(),
-  );
+  OrderHistorySummary(
+      {required this.userId,
+      required this.totalItems,
+      required this.totalAmount,
+      required this.items});
+  factory OrderHistorySummary.fromJson(Map<String, dynamic> json) =>
+      OrderHistorySummary(
+        userId: json['userId'] ?? 0,
+        totalItems: json['totalItems'] ?? 0,
+        totalAmount: (json['totalAmount'] ?? 0).toDouble(),
+        items: (json['items'] as List? ?? [])
+            .map((e) => OrderHistoryItem.fromJson(e))
+            .toList(),
+      );
 }
 
 class OrderHistoryController extends GetxController {
@@ -99,13 +115,20 @@ class OrderHistoryController extends GetxController {
       isLoading.value = true;
       final token = await authController.getToken();
       if (token == null) {
-        Get.snackbar('Error', 'You are not logged in', snackPosition: SnackPosition.BOTTOM);
+        items.clear();
+        totalItems.value = 0;
+        totalAmount.value = 0;
         return;
       }
       final url = Uri.parse("$apiBaseAddress/secure/admin/order/my-items");
-      final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
+      final masked = token.length > 12
+          ? token.substring(0, 6) + '...' + token.substring(token.length - 6)
+          : '***';
       print('[DEBUG_LOG] GET ' + url.toString());
-      print('[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' + masked + '}');
+      print(
+          '[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' +
+              masked +
+              '}');
       final resp = await http.get(url, headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -114,19 +137,23 @@ class OrderHistoryController extends GetxController {
         final json = jsonDecode(resp.body);
         if (json['status'] == 1) {
           final data = json['data'];
-          final summary = OrderHistorySummary.fromJson(Map<String, dynamic>.from(data));
+          final summary =
+              OrderHistorySummary.fromJson(Map<String, dynamic>.from(data));
           items.assignAll(summary.items);
           totalItems.value = summary.totalItems;
           totalAmount.value = summary.totalAmount;
         } else {
-          Get.snackbar('Error', json['message'] ?? 'Failed to fetch history', snackPosition: SnackPosition.BOTTOM);
+          Get.snackbar('Error', json['message'] ?? 'Failed to fetch history',
+              snackPosition: SnackPosition.BOTTOM);
         }
       } else {
-        Get.snackbar('Error', 'Server error: ${resp.statusCode}', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar('Error', 'Server error: ${resp.statusCode}',
+            snackPosition: SnackPosition.BOTTOM);
       }
     } catch (e) {
       print('[DEBUG_LOG] Error fetching order history: $e');
-      Get.snackbar('Error', "Failed to fetch order history", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('Error', "Failed to fetch order history",
+          snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
     }
@@ -141,13 +168,20 @@ class OrderHistoryController extends GetxController {
       isProcessing.value = true;
       final token = await authController.getToken();
       if (token == null) {
-        Get.snackbar('Error', 'You are not logged in', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar('Error', 'You are not logged in',
+            snackPosition: SnackPosition.BOTTOM);
         return false;
       }
-      final url = Uri.parse("$apiBaseAddress/secure/admin/order/cancel?id=$orderId");
-      final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
+      final url =
+          Uri.parse("$apiBaseAddress/secure/admin/order/cancel?id=$orderId");
+      final masked = token.length > 12
+          ? token.substring(0, 6) + '...' + token.substring(token.length - 6)
+          : '***';
       print('[DEBUG_LOG] POST ' + url.toString());
-      print('[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' + masked + '}');
+      print(
+          '[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' +
+              masked +
+              '}');
       print('[DEBUG_LOG] Payload: <no body>');
       final resp = await http.post(url, headers: {
         'Content-Type': 'application/json',
@@ -156,24 +190,27 @@ class OrderHistoryController extends GetxController {
       if (resp.statusCode == 200) {
         final json = jsonDecode(resp.body);
         if (json['status'] == 1) {
-          Get.snackbar('Success', 'Order #$orderId cancelled', snackPosition: SnackPosition.BOTTOM);
+          Get.snackbar('Success', 'Order #$orderId cancelled',
+              snackPosition: SnackPosition.BOTTOM);
           await fetchOrderHistory();
           return true;
         } else {
-          Get.snackbar('Error', json['message'] ?? 'Failed to cancel order', snackPosition: SnackPosition.BOTTOM);
+          Get.snackbar('Error', json['message'] ?? 'Failed to cancel order',
+              snackPosition: SnackPosition.BOTTOM);
         }
       } else {
-        Get.snackbar('Error', 'Server error: ${resp.statusCode}', snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar('Error', 'Server error: ${resp.statusCode}',
+            snackPosition: SnackPosition.BOTTOM);
       }
       return false;
     } catch (e) {
-      Get.snackbar('Error', "Failed to cancel order", snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar('Error', "Failed to cancel order",
+          snackPosition: SnackPosition.BOTTOM);
       return false;
     } finally {
       isProcessing.value = false;
     }
   }
-
 
   String getFormattedDate(DateTime date) {
     return "${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}";

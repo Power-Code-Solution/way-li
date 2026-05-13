@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wayli/app/modules/food_category/food_category_view.dart';
 
+import '../../core/config/auth_controller.dart';
 import '../../core/config/constants.dart';
 import '../../core/model/delivery_fee.dart';
 import '../../core/model/monime_payment_response.dart';
@@ -97,6 +98,27 @@ class _CartPageState extends State<CartPage> {
       addressController.text = cartController.currentDeliveryAddress;
     }
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final shouldOpenCheckout =
+          Get.arguments is Map && Get.arguments["openCheckout"] == true;
+      if (!shouldOpenCheckout) {
+        return;
+      }
+
+      final authController = Get.find<AuthController>();
+      await authController.checkLoginStatus();
+      if (!mounted || !authController.isLoggedIn.value) {
+        return;
+      }
+
+      setState(() {
+        showCheckoutForm = true;
+        currentStep = 1;
+        paymentType = null;
+        selectedMethod = null;
+      });
+    });
+
     // Listen for Monime payment success
     _monimeStatusWorker =
         ever(cartController.monimePaymentResult, (result) async {
@@ -136,6 +158,26 @@ class _CartPageState extends State<CartPage> {
     notesController.dispose();
 
     super.dispose();
+  }
+
+  Future<void> _startCheckoutFlow(
+    CartController cartController,
+  ) async {
+    final authController = Get.find<AuthController>();
+    final canContinue = await authController.ensureAuthenticated(
+      redirectToCheckout: true,
+      message: "Please sign in before proceeding to checkout.",
+    );
+    if (!canContinue || !mounted) {
+      return;
+    }
+
+    setState(() {
+      showCheckoutForm = true;
+      currentStep = 1;
+      paymentType = null;
+      selectedMethod = null;
+    });
   }
 
   @override
@@ -450,33 +492,8 @@ class _CartPageState extends State<CartPage> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              onPressed: () {
-                                if (isDelivery &&
-                                    !cartController.hasDeliveryFeeSelection) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "Please select a delivery address",
-                                        style: GoogleFonts.montserrat(),
-                                      ),
-                                      backgroundColor: Colors.red.shade700,
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  );
-                                  _showDeliveryAddressSheet(
-                                      cartController, size);
-                                  return;
-                                }
-                                setState(() {
-                                  showCheckoutForm = true;
-                                  currentStep = 1;
-                                  paymentType = null;
-                                  selectedMethod = null;
-                                });
-                              },
+                              onPressed: () =>
+                                  _startCheckoutFlow(cartController),
                               child: Text(
                                 "Checkout",
                                 style: GoogleFonts.montserrat(

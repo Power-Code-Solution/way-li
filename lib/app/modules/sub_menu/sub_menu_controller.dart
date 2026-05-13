@@ -18,8 +18,8 @@ class SubMenuController extends GetxController {
   }
 
   Future<void> fetchMenuCategory() async {
-    final response = await http
-        .get(Uri.parse('$apiBaseAddress/secure/admin/menu-category/all'));
+    final response =
+        await http.get(Uri.parse('$publicCatalogBaseAddress/menu-categories'));
 
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {

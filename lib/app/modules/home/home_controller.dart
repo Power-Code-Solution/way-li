@@ -54,8 +54,8 @@ class HomeController extends GetxController {
       foodItems.value = List.from(_originalFoodItems);
     } else {
       foodItems.value = _originalFoodItems
-          .where(
-              (item) => item?.name?.toLowerCase().contains(query.toLowerCase()) ?? false)
+          .where((item) =>
+              item?.name?.toLowerCase().contains(query.toLowerCase()) ?? false)
           .toList();
     }
   }
@@ -63,8 +63,8 @@ class HomeController extends GetxController {
   Future<void> fetchFoodItems() async {
     try {
       loading.value = true;
-      final response = await http
-          .get(Uri.parse('$apiBaseAddress/secure/admin/food-items/all'));
+      final response =
+          await http.get(Uri.parse('$publicCatalogBaseAddress/food-items'));
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -101,7 +101,7 @@ class HomeController extends GetxController {
     update();
     try {
       final response =
-          await http.get(Uri.parse('$apiBaseAddress/secure/admin/menu/all'));
+          await http.get(Uri.parse('$publicCatalogBaseAddress/menus'));
       if (response.statusCode == 200) {
         loading.value = false;
         final data = jsonDecode(response.body);
@@ -127,8 +127,8 @@ class HomeController extends GetxController {
   }
 
   Future<void> fetchMenuCategory() async {
-    final response = await http
-        .get(Uri.parse('$apiBaseAddress/secure/admin/menu-category/all'));
+    final response =
+        await http.get(Uri.parse('$publicCatalogBaseAddress/menu-categories'));
     loading.value = true;
     if (response.statusCode == 200) {
       if (response.body.isNotEmpty) {

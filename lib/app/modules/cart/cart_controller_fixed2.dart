@@ -10,7 +10,6 @@ import '../../core/model/saved_cart_item.dart';
 import '../../core/model/monime_payment_response.dart';
 import '../../core/config/constants.dart';
 import '../../core/config/auth_controller.dart';
-import '../login/login_view.dart';
 
 class CartController extends GetxController {
   var isLoading = false.obs;
@@ -241,16 +240,10 @@ class CartController extends GetxController {
     try {
       isDeliveryFeesLoading.value = true;
       deliveryFeesError.value = '';
-      final authController = Get.find<AuthController>();
-      final token = await authController.getToken();
-      final url = Uri.parse("$apiBaseAddress/secure/admin/delivery-fees/all");
-      final headers = <String, String>{
+      final url = Uri.parse(publicDeliveryFeesBaseAddress);
+      final response = await http.get(url, headers: {
         "Content-Type": "application/json",
-      };
-      if (token != null) {
-        headers["Authorization"] = "Bearer $token";
-      }
-      final response = await http.get(url, headers: headers);
+      });
       if (response.statusCode == 200) {
         final parsedResponse = jsonDecode(response.body);
         if (parsedResponse["status"] == 1) {
@@ -298,7 +291,10 @@ class CartController extends GetxController {
 
       if (token == null) {
         orderSubmitMessage.value = "You are not logged in";
-        Get.to(() => LoginView());
+        await authController.ensureAuthenticated(
+          redirectToCheckout: true,
+          message: "Please sign in to place your order securely.",
+        );
         isLoading.value = false;
         return false;
       }
@@ -420,6 +416,10 @@ class CartController extends GetxController {
 
       if (token == null) {
         monimeError.value = "You are not logged in";
+        await authController.ensureAuthenticated(
+          redirectToCheckout: true,
+          message: "Please sign in before generating a payment code.",
+        );
         return null;
       }
 

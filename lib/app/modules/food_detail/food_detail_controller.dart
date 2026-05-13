@@ -59,12 +59,8 @@ class FoodDetailController extends GetxController {
     }
   }
 
-
-
-
   Future<void> fetchFoodandTagDto() async {
-    final url =
-        '$apiBaseAddress/secure/admin/food-items/findForTags-byfkFoodItemId?id=${FIL.id}';
+    final url = '$publicCatalogBaseAddress/food-items/${FIL.id}/tags';
     print('Request URL: $url');
 
     final response = await http.get(Uri.parse(url));
@@ -107,8 +103,7 @@ class FoodDetailController extends GetxController {
   }
 
   Future<void> fetchFoodandAllergensDto() async {
-    final url =
-        '$apiBaseAddress/secure/admin/food-items/findForAllergens-byfkFoodItemId?id=${FIL.id}';
+    final url = '$publicCatalogBaseAddress/food-items/${FIL.id}/allergens';
     print('Request URL: $url');
 
     final response = await http.get(Uri.parse(url));
@@ -151,8 +146,7 @@ class FoodDetailController extends GetxController {
   }
 
   Future<void> fetchFoodandIngredientDto() async {
-    final url =
-        '$apiBaseAddress/secure/admin/food-items/findby-fkingredientId?id=${FIL.id}';
+    final url = '$publicCatalogBaseAddress/food-items/${FIL.id}/ingredients';
     print('Request URL: $url');
 
     final response = await http.get(Uri.parse(url));
