@@ -7,8 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
+import 'package:wayli/app/core/widgets/notification_empty_dialog.dart';
 import 'package:wayli/app/core/widgets/popular_food_item_cell.dart';
-import 'package:wayli/app/core/widgets/selection_text_view.dart';
 import 'package:wayli/app/modules/sub_menu_food/sub_menu_food_view.dart';
 
 import 'sub_menu_controller.dart';
@@ -19,7 +19,6 @@ class SubMenuView extends GetView<SubMenuController> {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.put(AuthController());
-    var media = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: GetBuilder<SubMenuController>(
@@ -65,7 +64,7 @@ class SubMenuView extends GetView<SubMenuController> {
                       height: 20,
                       color: primaryColor,
                     ),
-                    onPressed: () {},
+                    onPressed: () => showNotificationEmptyDialog(),
                   ),
                   IconButton(
                     icon: SvgPicture.asset(

@@ -10,6 +10,7 @@ import 'package:wayli/app/core/model/menu.dart';
 import 'package:wayli/app/core/widgets/collection_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/food_item_list.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
+import 'package:wayli/app/core/widgets/notification_empty_dialog.dart';
 import 'package:wayli/app/core/widgets/popular_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/selection_text_view.dart';
 import 'package:wayli/app/modules/favourite_food/outlet_list_view.dart';
@@ -79,7 +80,7 @@ class HomeView extends GetView<HomeController> {
                           height: 20,
                           color: primaryColor,
                         ),
-                        onPressed: () {},
+                        onPressed: () => showNotificationEmptyDialog(),
                       ),
                       IconButton(
                         icon: SvgPicture.asset(

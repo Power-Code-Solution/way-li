@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,6 +8,7 @@ import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/model/menu.dart';
 import 'package:wayli/app/core/widgets/collection_food_item_cell.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
+import 'package:wayli/app/core/widgets/notification_empty_dialog.dart';
 import 'package:wayli/app/modules/favourite_food/outlet_list_view.dart';
 
 import 'home_controller.dart';
@@ -65,7 +65,7 @@ class CollectionListView extends GetView<HomeController> {
                       height: 30,
                       color: primaryColor,
                     ),
-                    onPressed: () {},
+                    onPressed: () => showNotificationEmptyDialog(),
                   ),
                   IconButton(
                     icon: SvgPicture.asset(

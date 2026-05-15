@@ -46,7 +46,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     // Initialize controllers with current user data
     final userData = authController.getCompleteUserData();
 
-    _fullnameController = TextEditingController(text: userData['fullname'] ?? '');
+    _fullnameController =
+        TextEditingController(text: userData['fullname'] ?? '');
     _emailController = TextEditingController(text: userData['email'] ?? '');
     _phoneController = TextEditingController(text: userData['phone'] ?? '');
     _addressController = TextEditingController(text: userData['address'] ?? '');
@@ -96,9 +97,14 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
         final url = Uri.parse("${apiBaseAddress}/secure/admin/user/update");
         final body = jsonEncode(requestBody);
-        final masked = token.length > 12 ? token.substring(0,6) + '...' + token.substring(token.length-6) : '***';
+        final masked = token.length > 12
+            ? token.substring(0, 6) + '...' + token.substring(token.length - 6)
+            : '***';
         print('[DEBUG_LOG] POST ' + url.toString());
-        print('[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' + masked + '}');
+        print(
+            '[DEBUG_LOG] Headers: {Content-Type: application/json, Authorization: Bearer ' +
+                masked +
+                '}');
         print('[DEBUG_LOG] Payload: ' + body);
         // Make the API call
         final response = await http.post(
@@ -119,15 +125,18 @@ class _ProfileEditViewState extends State<ProfileEditView> {
             final updatedUserData = parsedResponse["data"];
 
             // Update the user data in memory
-            authController.userData.value = Map<String, dynamic>.from(updatedUserData);
+            authController.userData.value =
+                Map<String, dynamic>.from(updatedUserData);
             authController.userName.value = updatedUserData["fullname"] ?? '';
             authController.userEmail.value = updatedUserData["email"] ?? '';
             authController.userPhone.value = updatedUserData["phone"] ?? '';
 
             final prefs = await SharedPreferences.getInstance();
-            await prefs.setString('user_id', updatedUserData["id"]?.toString() ?? '');
+            await prefs.setString(
+                'user_id', updatedUserData["id"]?.toString() ?? '');
             await prefs.setString('user_email', updatedUserData["email"] ?? '');
-            await prefs.setString('user_name', updatedUserData["fullname"] ?? '');
+            await prefs.setString(
+                'user_name', updatedUserData["fullname"] ?? '');
             await prefs.setString('user_phone', updatedUserData["phone"] ?? '');
             await prefs.setString('user_role', updatedUserData["role"] ?? '');
             await prefs.setString('user_data', jsonEncode(updatedUserData));
@@ -135,13 +144,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
             Get.snackbar("Success", "Profile updated successfully");
             Get.back();
           } else {
-            Get.snackbar("Error", parsedResponse["message"] ?? "Failed to update profile");
+            Get.snackbar("Error",
+                parsedResponse["message"] ?? "Failed to update profile");
           }
         } else {
           // Handle error response
           try {
             final errorResponse = jsonDecode(response.body);
-            Get.snackbar("Error", errorResponse["message"] ?? "Failed to update profile");
+            Get.snackbar("Error",
+                errorResponse["message"] ?? "Failed to update profile");
           } catch (e) {
             Get.snackbar("Error", "Failed to update profile");
           }
@@ -185,28 +196,16 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     children: [
                       // Profile picture
                       Center(
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            const CircleAvatar(
-                              radius: 50,
-                              backgroundColor: mainYellow,
-                              child: Text('U',
-                                  style: TextStyle(
-                                      fontSize: 40, color: Colors.white)),
+                        child: const CircleAvatar(
+                          radius: 50,
+                          backgroundColor: mainYellow,
+                          child: Text(
+                            'U',
+                            style: TextStyle(
+                              fontSize: 40,
+                              color: Colors.white,
                             ),
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundColor: mainYellow,
-                              child: IconButton(
-                                icon: const Icon(Icons.camera_alt, size: 20),
-                                color: Colors.white,
-                                onPressed: () {
-                                  // TODO: Implement image picker
-                                },
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),

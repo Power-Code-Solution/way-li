@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/core/widgets/line_textfield.dart';
+import 'package:wayli/app/core/widgets/notification_empty_dialog.dart';
 import 'package:wayli/app/core/widgets/selection_text_view.dart';
 import 'package:wayli/app/modules/favourite_food/favorite_food_item_cell.dart';
 
@@ -64,7 +65,7 @@ class FavouriteFoodView extends GetView<FavouriteFoodController> {
                       height: 30,
                       color: primaryColor,
                     ),
-                    onPressed: () {},
+                    onPressed: () => showNotificationEmptyDialog(),
                   ),
                   IconButton(
                     icon: SvgPicture.asset(

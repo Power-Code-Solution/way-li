@@ -7,6 +7,7 @@ import 'package:wayli/app/newpages/components/Card.dart';
 import 'package:wayli/app/newpages/components/colors.dart';
 
 import '../../core/config/constants.dart';
+import '../../core/widgets/notification_empty_dialog.dart';
 import '../../core/widgets/animated_textfield/view.dart';
 import '../../core/widgets/skelton_loading.dart';
 import '../../modules/app_bar/app_bar_page.dart';
@@ -43,10 +44,12 @@ class Homepage extends GetView<HomeController> {
                 Image.asset("assets/images/way-li-logo.png", width: 75),
               ],
             ),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 15.0),
-                child: Icon(Icons.notifications),
+            actions: [
+              IconButton(
+                padding: const EdgeInsets.only(right: 15.0),
+                icon: const Icon(Icons.notifications),
+                tooltip: 'Notifications',
+                onPressed: () => showNotificationEmptyDialog(),
               ),
             ],
           ),

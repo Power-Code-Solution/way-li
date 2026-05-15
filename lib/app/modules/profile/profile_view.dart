@@ -194,48 +194,33 @@ class ProfileView extends GetView<ProfileController> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      Obx(() {
-                        String initials = '';
-                        if (authController.userName.value.isNotEmpty) {
-                          final nameParts =
-                              authController.userName.value.split(' ');
-                          if (nameParts.isNotEmpty &&
-                              nameParts.first.isNotEmpty) {
-                            initials += nameParts.first[0].toUpperCase();
-                          }
-                          if (nameParts.length > 1 && nameParts[1].isNotEmpty) {
-                            initials += nameParts[1][0].toUpperCase();
-                          }
-                        }
-                        if (initials.isEmpty) {
-                          initials = 'U';
-                        }
-                        return CircleAvatar(
-                          radius: 40,
-                          backgroundColor: mainYellow,
-                          child: Text(
-                            initials,
-                            style: const TextStyle(
-                              fontSize: 32,
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
-                      }),
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: mainYellow,
-                        child: IconButton(
-                          icon: const Icon(Icons.edit, size: 18),
+                  Obx(() {
+                    String initials = '';
+                    if (authController.userName.value.isNotEmpty) {
+                      final nameParts =
+                          authController.userName.value.split(' ');
+                      if (nameParts.isNotEmpty && nameParts.first.isNotEmpty) {
+                        initials += nameParts.first[0].toUpperCase();
+                      }
+                      if (nameParts.length > 1 && nameParts[1].isNotEmpty) {
+                        initials += nameParts[1][0].toUpperCase();
+                      }
+                    }
+                    if (initials.isEmpty) {
+                      initials = 'U';
+                    }
+                    return CircleAvatar(
+                      radius: 40,
+                      backgroundColor: mainYellow,
+                      child: Text(
+                        initials,
+                        style: const TextStyle(
+                          fontSize: 32,
                           color: Colors.white,
-                          onPressed: () {},
                         ),
                       ),
-                    ],
-                  ),
+                    );
+                  }),
                   const SizedBox(height: 16),
                   const SizedBox(height: 12),
                   Obx(
