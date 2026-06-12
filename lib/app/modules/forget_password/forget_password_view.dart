@@ -1,4 +1,3 @@
-import 'package:wayli/app/modules/login/login_view.dart';
 import 'package:wayli/app/modules/otp/otp_view.dart';
 
 import 'forget_password_controller.dart';
@@ -162,7 +161,7 @@ class ForgetPasswordView extends GetView<ForgetPasswordController> {
                                         duration: Duration(milliseconds: 1500),
                                         child: GestureDetector(
                                           onTap: () {
-                                            Get.to(() => LoginView());
+                                            Get.toNamed('/login');
                                           },
                                           child: Container(
                                             alignment: Alignment.centerLeft,

@@ -13,7 +13,7 @@ class AppBarPage extends GetView<AppBarController> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.put(AuthController());
+    final AuthController authController = Get.find<AuthController>();
     final isGuest = !authController.isLoggedIn.value;
 
     return Drawer(

@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pinput/pinput.dart';
-import 'package:wayli/app/modules/bottom_nav/bottom_nav_view.dart';
 import 'package:wayli/app/modules/customer/registration/registration_controller.dart';
-import 'package:wayli/app/modules/login/login_view.dart';
-import 'package:wayli/app/modules/otp/otp_view.dart';
-
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:gap/gap.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -88,9 +82,11 @@ class RegistrationView extends GetView<RegistrationController> {
                                 isPassword: false,
                                 labelText: "Full Name",
                                 hintText: "Enter your full name",
-                                icon: Icon(Icons.person_outline, color: secondaryColor),
+                                icon: Icon(Icons.person_outline,
+                                    color: secondaryColor),
                                 validator: (value) {
-                                  if (value!.isEmpty) return 'Full name is required';
+                                  if (value!.isEmpty)
+                                    return 'Full name is required';
                                   return null;
                                 },
                               ),
@@ -105,10 +101,13 @@ class RegistrationView extends GetView<RegistrationController> {
                                 textController: ctl.email,
                                 labelText: "Email",
                                 hintText: "Enter your email address",
-                                icon: Icon(Icons.email_outlined, color: secondaryColor),
+                                icon: Icon(Icons.email_outlined,
+                                    color: secondaryColor),
                                 validator: (value) {
-                                  if (value!.isEmpty) return 'Email is required';
-                                  if (!GetUtils.isEmail(value)) return 'Enter a valid email';
+                                  if (value!.isEmpty)
+                                    return 'Email is required';
+                                  if (!GetUtils.isEmail(value))
+                                    return 'Enter a valid email';
                                   return null;
                                 },
                               ),
@@ -123,9 +122,11 @@ class RegistrationView extends GetView<RegistrationController> {
                                 textController: ctl.phone,
                                 labelText: "Phone Number",
                                 hintText: "Enter your phone number",
-                                icon: Icon(Icons.phone_outlined, color: secondaryColor),
+                                icon: Icon(Icons.phone_outlined,
+                                    color: secondaryColor),
                                 validator: (value) {
-                                  if (value!.isEmpty) return 'Phone number is required';
+                                  if (value!.isEmpty)
+                                    return 'Phone number is required';
                                   return null;
                                 },
                               ),
@@ -139,11 +140,14 @@ class RegistrationView extends GetView<RegistrationController> {
                                 isPassword: true,
                                 labelText: "Password",
                                 hintText: "Enter your password",
-                                icon: Icon(Icons.lock_outline, color: secondaryColor),
+                                icon: Icon(Icons.lock_outline,
+                                    color: secondaryColor),
                                 obscureText: ctl.visiblePassword,
                                 validator: (value) {
-                                  if (value!.isEmpty) return 'Password is required';
-                                  if (value.length < 6) return 'Password must be at least 6 characters';
+                                  if (value!.isEmpty)
+                                    return 'Password is required';
+                                  if (value.length < 6)
+                                    return 'Password must be at least 6 characters';
                                   return null;
                                 },
                                 suffixIcon: IconButton(
@@ -169,11 +173,14 @@ class RegistrationView extends GetView<RegistrationController> {
                                 isPassword: true,
                                 labelText: "Confirm Password",
                                 hintText: "Confirm your password",
-                                icon: Icon(Icons.lock_outline, color: secondaryColor),
+                                icon: Icon(Icons.lock_outline,
+                                    color: secondaryColor),
                                 obscureText: ctl.visiblePassword,
                                 validator: (value) {
-                                  if (value!.isEmpty) return 'Please confirm your password';
-                                  if (value != ctl.password.text) return 'Passwords do not match';
+                                  if (value!.isEmpty)
+                                    return 'Please confirm your password';
+                                  if (value != ctl.password.text)
+                                    return 'Passwords do not match';
                                   return null;
                                 },
                                 suffixIcon: IconButton(
@@ -198,7 +205,9 @@ class RegistrationView extends GetView<RegistrationController> {
                                 width: double.infinity,
                                 height: 56,
                                 child: ElevatedButton(
-                                  onPressed: ctl.isLoading.value ? null : ctl.createUser,
+                                  onPressed: ctl.isLoading.value
+                                      ? null
+                                      : ctl.createUser,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: primaryColor,
                                     shape: RoundedRectangleBorder(
@@ -213,7 +222,9 @@ class RegistrationView extends GetView<RegistrationController> {
                                             width: 24,
                                             child: CircularProgressIndicator(
                                               strokeWidth: 2,
-                                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                              valueColor:
+                                                  AlwaysStoppedAnimation<Color>(
+                                                      Colors.white),
                                             ),
                                           )
                                         : Text(
@@ -243,7 +254,7 @@ class RegistrationView extends GetView<RegistrationController> {
                                     ),
                                   ),
                                   TextButton(
-                                    onPressed: () => Get.to(() => LoginView()),
+                                    onPressed: () => Get.toNamed('/login'),
                                     child: Text(
                                       "Login",
                                       style: GoogleFonts.poppins(

@@ -6,7 +6,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/modules/cart/cart_page.dart';
-import 'package:wayli/app/modules/login/login_view.dart';
 
 class AuthController extends GetxController {
   final _storage = const FlutterSecureStorage();
@@ -21,11 +20,28 @@ class AuthController extends GetxController {
   var userData = RxMap<String, dynamic>({});
   var pendingCheckoutAfterLogin = false.obs;
 
+  void openLogin({
+    String? message,
+    bool redirectToCheckout = false,
+  }) {
+    if (redirectToCheckout) {
+      pendingCheckoutAfterLogin.value = true;
+    }
+
+    Get.toNamed(
+      '/login',
+      arguments: {
+        "redirectToCheckout": redirectToCheckout,
+        "loginReason": message ?? "Sign in to continue",
+      },
+    );
+  }
+
   Future<bool> login(String email, String password) async {
     try {
       isLoading.value = true;
-
-      final encodedEmail = base64.encode(utf8.encode(email));
+      final normalizedEmail = email.trim();
+      final encodedEmail = base64.encode(utf8.encode(normalizedEmail));
       final encodedPassword = base64.encode(utf8.encode(password));
 
       final loginUrl = Uri.parse("$apiBaseAddress/auth/login");
@@ -63,13 +79,30 @@ class AuthController extends GetxController {
           throw Exception(parsedResponse["message"]);
         }
       } else {
-        Get.snackbar("Login Failed", "Unexpected server response.",
-            snackPosition: SnackPosition.BOTTOM,
-            duration: const Duration(seconds: 3),
-            backgroundColor: Colors.red);
+        String errorMessage = "Unexpected server response.";
+        try {
+          final parsedResponse = jsonDecode(response.body);
+          errorMessage = parsedResponse["message"] ?? errorMessage;
+        } catch (_) {}
+        Get.snackbar(
+          "Login Failed",
+          errorMessage,
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        );
         throw Exception('Login failed');
       }
     } catch (e) {
+      if (e is! Exception) {
+        Get.snackbar(
+          "Login Failed",
+          "Unable to sign in right now. Please try again.",
+          snackPosition: SnackPosition.BOTTOM,
+          duration: const Duration(seconds: 3),
+          backgroundColor: Colors.red,
+        );
+      }
       return false;
     } finally {
       isLoading.value = false;
@@ -158,12 +191,9 @@ class AuthController extends GetxController {
       backgroundColor: Colors.black87,
       colorText: Colors.white,
     );
-    Get.to(
-      () => const LoginView(),
-      arguments: {
-        "redirectToCheckout": redirectToCheckout,
-        "loginReason": prompt,
-      },
+    openLogin(
+      message: prompt,
+      redirectToCheckout: redirectToCheckout,
     );
     return false;
   }
@@ -368,7 +398,7 @@ class AuthController extends GetxController {
       if (response.statusCode == 200) {
         final parsedResponse = jsonDecode(response.body);
         if (parsedResponse["status"] == 1) {
-          Get.offAllNamed('login');
+          Get.offAllNamed('/login');
           Get.snackbar("Success",
               parsedResponse["data"] ?? "Password changed successfully",
               snackPosition: SnackPosition.BOTTOM,

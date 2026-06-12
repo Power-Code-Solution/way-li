@@ -19,15 +19,14 @@ class LoginView extends GetView<LoginController> {
     final loginReason =
         Get.arguments is Map ? Get.arguments["loginReason"] as String? : null;
     final authController = Get.find<AuthController>();
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (_, __) {
         authController.pendingCheckoutAfterLogin.value = false;
-        return true;
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: GetBuilder<LoginController>(
-          init: LoginController(),
           builder: (ctl) {
             return Container(
               width: double.infinity,
@@ -188,62 +187,50 @@ class LoginView extends GetView<LoginController> {
                               Gap(24),
                               FadeInUp(
                                 duration: Duration(milliseconds: 1200),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        onPressed: ctl.isLoading.value
-                                            ? null
-                                            : ctl.handleLogin,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: primaryColor,
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 16),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
+                                child: Obx(
+                                  () => Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: ctl.isLoading.value
+                                              ? null
+                                              : () => ctl.handleLogin(),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: primaryColor,
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 16,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
                                           ),
+                                          child: ctl.isLoading.value
+                                              ? SizedBox(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                            Color>(
+                                                      Colors.white,
+                                                    ),
+                                                  ),
+                                                )
+                                              : Text(
+                                                  "LOGIN",
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                         ),
-                                        child: Obx(() => ctl.isLoading.value
-                                            ? SizedBox(
-                                                height: 20,
-                                                width: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                          Color>(Colors.white),
-                                                ),
-                                              )
-                                            : Text(
-                                                "LOGIN",
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Colors.white,
-                                                ),
-                                              )),
                                       ),
-                                    ),
-                                    // if (ctl.showFingerprint.value) ...[
-                                    //   Gap(16),
-                                    //   Container(
-                                    //     decoration: BoxDecoration(
-                                    //       color: secondaryColor.withOpacity(0.1),
-                                    //       borderRadius: BorderRadius.circular(8),
-                                    //     ),
-                                    //     child: IconButton(
-                                    //       onPressed: ctl.authenticate,
-                                    //       icon: SvgPicture.asset(
-                                    //         'assets/svg/fingerprint.svg',
-                                    //         color: secondaryColor,
-                                    //         height: 28,
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ],
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

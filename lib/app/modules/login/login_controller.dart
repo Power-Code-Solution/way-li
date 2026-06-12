@@ -5,13 +5,13 @@ import 'package:wayli/app/core/config/auth_controller.dart';
 
 class LoginController extends GetxController {
   static final GlobalKey loginBottomNavigationKey = GlobalKey();
-  final AuthController authController = Get.put(AuthController());
-  var email = TextEditingController();
-  var pass = TextEditingController();
+  final AuthController authController = Get.find<AuthController>();
+  final email = TextEditingController();
+  final pass = TextEditingController();
 
-  var loginViewFormKey = GlobalKey<FormState>();
-  var visiblePassword = true.obs;
-  var isLoading = false.obs;
+  final loginViewFormKey = GlobalKey<FormState>();
+  final visiblePassword = true.obs;
+  final isLoading = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -30,19 +30,22 @@ class LoginController extends GetxController {
     pass.dispose();
   }
 
-  void handleLogin() async {
+  Future<void> handleLogin() async {
     if (loginViewFormKey.currentState?.validate() ?? false) {
+      FocusManager.instance.primaryFocus?.unfocus();
       isLoading.value = true;
-      final result = await authController.login(email.text, pass.text);
+      final result = await authController.login(
+        email.text.trim(),
+        pass.text,
+      );
 
       if (result) {
-        isLoading.value = false;
         authController.completePostLoginFlow();
         email.clear();
         pass.clear();
-      } else {}
+      }
       isLoading.value = false;
-    } else {}
+    }
   }
 
   void togglePasswordVisibility() {

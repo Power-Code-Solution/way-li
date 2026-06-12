@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wayli/app/core/config/auth_controller.dart';
 import 'package:wayli/app/core/config/constants.dart';
 import 'package:wayli/app/modules/customer/registration/registration_view.dart';
-import 'package:wayli/app/modules/login/login_view.dart';
 
 import '../../newpages/components/colors.dart';
 import 'profile_controller.dart';
@@ -15,7 +14,7 @@ class ProfileView extends GetView<ProfileController> {
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.put(AuthController());
+    final AuthController authController = Get.find<AuthController>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (authController.isLoggedIn.value) {
@@ -25,14 +24,17 @@ class ProfileView extends GetView<ProfileController> {
 
     return Obx(() {
       if (!authController.isLoggedIn.value) {
-        return _buildGuestScaffold(context);
+        return _buildGuestScaffold(context, authController);
       }
 
       return _buildAuthenticatedScaffold(context, authController);
     });
   }
 
-  Scaffold _buildGuestScaffold(BuildContext context) {
+  Scaffold _buildGuestScaffold(
+    BuildContext context,
+    AuthController authController,
+  ) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -90,7 +92,10 @@ class ProfileView extends GetView<ProfileController> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () => Get.to(() => const LoginView()),
+                      onPressed: () => authController.openLogin(
+                        message:
+                            "Sign in to place orders and manage your account.",
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: secondaryColor,
                         foregroundColor: Colors.white,

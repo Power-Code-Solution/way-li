@@ -16,13 +16,12 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final hasOnboarded = prefs.getBool('hasOnboarded') ?? false;
   try {
-    Get.put(AuthController());
+    final authController = Get.put(AuthController(), permanent: true);
     Get.put(FoodCategoryController());
     Get.put(HomeController());
     Get.put(CartController());
     Get.put(OrderHistoryController());
     Get.put(ProductDetailsController());
-    final authController = Get.find<AuthController>();
     await authController.checkLoginStatus();
     runApp(
       GetMaterialApp(
